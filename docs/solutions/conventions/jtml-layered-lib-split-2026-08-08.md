@@ -34,7 +34,7 @@ behavior change** (R15). The structure now is:
 |---|---|---|
 | `jtml_domain` | STATIC | pure logic (9 modules); Qt/GPU-free — the future FFI surface |
 | `jtml_services` | STATIC | model/stl/optimizer_settings/location_storage/calibration (Qt-linked, purity decouples deferred) |
-| `jtml_coordinator` | STATIC | optimize_coordinator + optimizer_manager (QObject) |
+| `jtml_coordinator` | STATIC | optimizer_run_controller (fka optimize_coordinator) + optimizer_manager (QObject) |
 | `jtml_view` | STATIC | the Qt Widgets classes (`.ui`/`.qrc`/`Resources` atomic under `include/view`) |
 | `jtml_compute` | SHARED | the merged GPU + cost-functions surface (`src/compute`) |
 | `app` (exe) | exe | thin composition root `main.cpp` + `Study2Grid` |

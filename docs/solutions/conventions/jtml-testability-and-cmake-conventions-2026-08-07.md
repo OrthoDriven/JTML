@@ -1,7 +1,10 @@
 ---
 title: Headless Testing and Testability-Refactor Conventions for a Qt/GPU Desktop App (JTML)
 date: 2026-08-07
-last_updated: 2026-08-08
+last_updated: 2026-08-28
+last_refreshed: 2026-08-28
+status: refreshed
+note: "2026-08-28: graph executor stack removed; OptimizeCoordinator → OptimizerRunController."
 category: conventions
 module: JTML
 problem_type: convention
@@ -42,7 +45,7 @@ A **prior agent attempt was abandoned**, and its two failure modes are load-bear
 1. **False confidence** — passing tests covered pure math and a GPU-bound "run the real MainScreen" test while never touching the thread/orchestration seams (idle→running→finished→re-launch) where the actual hangs lived.
 2. **Circular tests** — test helpers re-derived the code-under-test's own math (pose-file and denormalization tests reimplemented production logic), so a green suite proved nothing.
 
-This session's outcome (all green via `pixi run test`, no GPU/GUI): a headless harness, a pure extracted `DirectOptimizer`, a headless `OptimizeCoordinator` thread seam, a two-tier golden oracle, extracted `pose_file_io`/`session_state` services, and the Qt5->Qt6 migration — the foundation the MVVM refactor is sequenced onto.
+This session's outcome (all green via `pixi run test`, no GPU/GUI): a headless harness, a pure extracted `DirectOptimizer`, a headless `OptimizerRunController` thread seam (fka `OptimizeCoordinator`), a two-tier golden oracle, extracted `pose_file_io`/`session_state` services, and the Qt5->Qt6 migration — the foundation the MVVM refactor is sequenced onto.
 
 ## Guidance
 
@@ -78,7 +81,7 @@ set_tests_properties(jtml.direct_optimizer PROPERTIES LABELS "headless" TIMEOUT 
 
 ### 2. CMake AUTOMOC gotcha: list Q_OBJECT headers in `add_executable`
 
-AUTOMOC does **not** auto-moc an included shared header. If a Q_OBJECT class lives in a header you only `#include`, its moc is never generated → undefined-symbol link error. Fix: list the header in the target's sources. See the `jtml_test_coordinator` target (`test/CMakeLists.txt`) — note `include/coordinator/optimize_coordinator.h` explicitly listed.
+AUTOMOC does **not** auto-moc an included shared header. If a Q_OBJECT class lives in a header you only `#include`, its moc is never generated → undefined-symbol link error. Fix: list the header in the target's sources. See the `jtml_test_coordinator` target (`test/CMakeLists.txt`) — note `include/coordinator/optimizer_run_controller.h` explicitly listed (fka `optimize_coordinator.h`, renamed 2026-08).
 
 **Sibling trap (disambiguation, 2026-08-11):** a `multiple definition of <Class>::<accessor>` between a `.cpp.o` and `mocs_compilation.cpp.o` is a DIFFERENT moc failure — a `signals:` section placed mid-class turns every following accessor into a signal (moc generates emitter bodies for them). Undefined symbol = header never moc'd (this section); duplicate definition = mis-scoped `signals:` region (see `docs/solutions/build-errors/jtml-moc-signals-section-placement-duplicate-definition-2026-08-11.md`).
 
@@ -129,7 +132,7 @@ Correctness rules to preserve during extraction (R15):
 
 ### 5. One persistent worker thread, not per-run threads (U4)
 
-The headless `OptimizeCoordinator` owns the state machine and a **single persistent worker thread** reused across runs via a queued `RunRequested` signal (`src/coordinator/optimize_coordinator.cpp`). Do **not** create/`deleteLater` a thread per run — that caused a dangling-pointer segfault in the destructor. Teardown: `RequestStop(); quit(); wait(5000); delete worker_`.
+The headless `OptimizerRunController` (fka `OptimizeCoordinator`) owns the state machine and a **single persistent worker thread** reused across runs via a queued `RunRequested` signal (`src/coordinator/optimizer_run_controller.cpp`, fka `optimize_coordinator.cpp`). Do **not** create/`deleteLater` a thread per run — that caused a dangling-pointer segfault in the destructor. Teardown: `RequestStop(); quit(); wait(5000); delete worker_`.
 
 Threading rules that make it spy-able and crash-free:
 
@@ -160,7 +163,7 @@ manual-visual for presentation-only cuts. Two worked examples from this session:
   `MainScreen::LaunchOptimizer`. It takes **plain values** (no widgets) and returns a typed
   `Intent{status, primary_model_index, current_frame}`. `MainScreen` keeps only the error
   presentation + the real GPU `OptimizerManager` binding (R15 — do NOT rewire to the stub
-  `OptimizeCoordinator`).
+  `OptimizerRunController` (fka `OptimizeCoordinator`)).
 - **Builder — `ModelListBuilder` (`include/domain/model_list_builder.h`):** a pure `std::string`
   service owning the model name-dedup (two-pass "scan-restart" quirk preserved verbatim —
   `["A","A","A"]` → `["A(2)","A(3)","A"]`) + the frame same-size checks. View keeps only
@@ -206,7 +209,7 @@ The hybrid Catch2/QtTest split (pure math vs threading seam) is key: don't force
 - Lifecycle seam — `test/lifecycle/coordinator_test.cpp` (QtTest): stub cost drives Idle→Running→Finished→Idle, re-launches, refuses double-start, recovers from injected cost-init failure, and a stuck worker fails via timeout (AE5).
 - MVVM controller+builder — `test/unit/test_optimize_intent_controller.cpp`, `test/unit/test_model_list_builder.cpp` (+ hegel PBT `test/unit/test_model_list_builder_properties.cpp`): lock the widget-free intent predicate and the dedup quirks.
 - Tier-2 oracle (U11, multi-frame) — `test/oracle/oracle_test.cpp` (Catch2, `oracle` label): loops all 3 Kneel_1 frames, each empirically mapped to its label, optimizes, renders at the optimized pose, compares the silhouette to `Labels/fem/` (IoU > 0.85 gate). Labels are vertically flipped (bottom-left vs top-left y-origin); the oracle runs from the repo root (fixture-relative paths).
-- Seam boundary — `include/domain/direct_optimizer.h` + `include/coordinator/optimize_coordinator.h`: `DirectOptimizer(std::function<double(const Point6D&)>, range, start, budget)`; `OptimizeCoordinator` re-emits Succeeded/Failed/StateChanged on the main thread for `QSignalSpy`.
+- Seam boundary — `include/domain/direct_optimizer.h` + `include/coordinator/optimizer_run_controller.h` (fka `optimize_coordinator.h`): `DirectOptimizer(std::function<double(const Point6D&)>, range, start, budget)`; `OptimizerRunController` re-emits Succeeded/Failed/StateChanged on the main thread for `QSignalSpy`.
 
 ## Related
 

@@ -33,11 +33,13 @@ Layout under `test/`, all registered in `test/CMakeLists.txt`:
 - `test/unit/` — **Catch2** logic and fast compute-lifecycle tests (no GUI/display or VTK render):
   data structures, the pure `DirectOptimizer` (Tier-1 analytic golden), CUDA ownership seams, future persistence.
 - `test/lifecycle/` — **QtTest** for QObject/QThread/QSignalSpy seams (the headless
-  `OptimizeCoordinator`), run under `QCoreApplication` with zero GPU/display.
+  `OptimizerRunController` — fka `OptimizeCoordinator`), run under `QCoreApplication` with zero GPU/display.
 - `test/golden/` — golden-oracle baseline (`baseline.json`, `fem_golden.jts`,
   `fem_oracle_captured.jtak`, `calibration.txt`).
-- `test/oracle/` — GPU-labeled oracles: Tier-2 appearance, bit-identity, layered-correctness,
-  evaluation-executor, and the U8 throughput harness (plan 011). Never in the headless default.
+- `test/oracle/` — GPU-labeled oracles: Tier-2 appearance, bit-identity (Tier-1 is
+  analytic). The CUDA-graph evaluation-executor / layered-correctness / throughput
+  oracles were removed 2026-08-28 with the graph stack; `oracle`/`gpu` labels remain
+  for future GPU gates. Never in the headless default.
 - `test/qml/` — **Qt Quick Test** for the view layer (plan 007 U6):
   `quick_test_main` harness over the REAL `src/app/experimental/*.qml`
   sources (qrc-aliased, no drift) with injected fake bridges; headless
@@ -69,13 +71,11 @@ solutions (`docs/solutions/` — bugs, best practices, and workflow patterns org
 category with YAML frontmatter `module`/`tags`/`problem_type`). Search it before
 implementing or debugging in a documented area.
 
-## Current work (plan 012 — CUDA-graph executor admission and lifecycle)
+## Current work (2026-08-28 — graph stack removed; D2H hot-path)
 
-- **Active plan:** `docs/plans/2026-08-20-012-feat-cuda-graph-executor-admission-plan.md`
-  (replaces remaining Plan 011 U6–U8). Plan 011 U1–U5 stay landed; do not reimplement them.
-- **Status / what's next:** `docs/handoff-2026-08-20-cuda-graph-executor-admission.md`.
-  Plan 011 U1–U5 status remains in the historical 011 handoff. Do not implement 011 U6.
-- Requirements: `docs/brainstorms/2026-08-19-cuda-graph-greedy-evaluation-executor-requirements.org`
+- **CUDA graphs / evaluation_context / evaluation_executor / graph_recipe / bank_state** were removed in `cleanup: removing a TON of old, useless files` (2026-08-28). Do not reintroduce them; the host-visible graph executor approach was measured as host-bound (`probe_measurement.md`, `graph_performance_baseline.json: reverted`).
+- **Current hot-path focus:** `docs/jtml_cuda_d2h_hotpath_notes.org` — single-pose DIRECT_DILATION cost: ~16 kernel launches, ~5 D2H copies, 32 bytes payload; priority is D2H sync / launch overhead / kernel fusion before any multi-pose batching.
+- **Historical plans 011/012/013** remain in `docs/plans/` as record but are superseded; `AGENTS.md` no longer points at 012 as active.
 
 ## Prior refactor (testability + MVVM) — landed / historical
 
@@ -91,13 +91,9 @@ Architecture seams introduced so far:
   injected `std::function<double(const Point6D&)>` cost. **Preserves the cumulative budget**
   (effective 20k/25k/30k across trunk/branch/leaf). Has call-offset + iteration/improvement
   callbacks for the production caller.
-- `include/coordinator/optimize_coordinator.h` / `src/coordinator/optimize_coordinator.cpp` — headless
+- `include/coordinator/optimizer_run_controller.h` / `src/coordinator/optimizer_run_controller.cpp` (fka `optimize_coordinator`) — headless
   state machine (Idle→Running→Idle) + persistent worker thread, for the GUI to bind to.
-- Plan-011 compute layer (CUDA-graph executor): `include/compute/evaluation_context.h`
-  (context + pool), `include/compute/evaluation_executor.h` (greedy `RunBatch`),
-  `include/compute/graph_recipe.h` + `src/compute/graph_recipe_direct_dilation.cu`
-  (per-context graph capture of the production render+metric chain) — see the plan-011
-  handoff for details.
+- `include/domain/direct_optimizer.h` / `src/domain/direct_optimizer.cpp` is the pure CPU optimizer used by `OptimizerManager::RunDirectStage` via `BuildGpuCostAdapter` (the single production cost path).
 
 > **003 layered layout:** `src/core`+`include/core` was split into `domain/` (pure
 > logic), `services/` (non-pure headless services), `coordinator/` (QObject

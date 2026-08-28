@@ -1,5 +1,8 @@
 ---
-title: "JTML three-layer optimizer architecture: DirectOptimizer, OptimizeCoordinator, and OptimizerManager"
+title: "JTML three-layer optimizer architecture: DirectOptimizer, OptimizerRunController, and OptimizerManager"
+last_refreshed: 2026-08-28
+status: refreshed
+note: "2026-08-28: Graph executor (evaluation_context/evaluation_executor/graph_recipe/bank_state) removed; CUDA hot-path is now single-pose D2H/launch (docs/jtml_cuda_d2h_hotpath_notes.org). OptimizerManager no longer owns evaluation_executor_; OptimizeCoordinator → OptimizerRunController."
 date: 2026-08-25
 category: docs/solutions/architecture-patterns
 module: JTML optimizer / FFI seam
@@ -69,7 +72,7 @@ This is the single production boundary between the C++ optimizer shell and the G
 
 2. **Construct DirectOptimizer** — `DirectOptimizer opt(serial_cost, range, starting_point_, budget_, direct_options_)` at `:1317-1318`. This is the single production construction site. The optimizer is fully parameterized through its constructor.
 
-3. **Conditionally install batch path** — `:1324-1353`. Only when `capacity_service_ != null && poolSize > 1 && !biplane && DIRECT_DILATION`. This is the U12 GPU graph execution admission gate.
+3. **(Removed 2026-08-28) Former batch/graph path** — the conditional `evaluation_executor_` / `GraphRecipe` / `capacity_service_` admission block at `:1324-1353` was deleted in the graph-executor cleanup. The single-pose `BuildGpuCostAdapter` path is now the only cost path; hot-path focus is `docs/jtml_cuda_d2h_hotpath_notes.org` (D2H copies, kernel fusion). Any future batch/concurrent path will be re-introduced from that baseline, not restored from the deleted graph stack.
 
 4. **Set cumulative call offset** — `opt.SetCallOffset(cost_function_calls_)` at `:1485`. DirectOptimizer's loop guard runs `offset_ + its_own_count >= budget_`, so the cumulative budget (20k trunk → +5k per branch → +5k leaf) gates correctly across stages.
 
@@ -109,15 +112,15 @@ The A/B switch replaces these two lines: instead of constructing a C++ `DirectOp
 
 | Class | Owns | Production? |
 |---|---|---|
-| `OptimizerManager` | `calibration_`, `direct_options_`, 3× `CostFunctionManager`, `gpu_principal_model_`, `capacity_service_`, `evaluation_executor_`, 18+ GPU frame vectors, `stage_script_`, budget/calls/optimum state | Yes — the only production optimizer driver |
-| `OptimizeCoordinator` | `cost_` (stub), `range_`, `starting_point_`, `budget_`, `state_`, `worker_thread_` | No — test-only, used only in `coordinator_test.cpp` |
+| `OptimizerManager` | `calibration_`, `direct_options_`, 3× `CostFunctionManager`, `gpu_principal_model_`, 18+ GPU frame vectors, `stage_script_`, budget/calls/optimum state | Yes — the only production optimizer driver (graph `evaluation_executor_`/`capacity_service_` removed 2026-08-28) |
+| `OptimizerRunController` (was `OptimizeCoordinator`) | `cost_` (stub), `range_`, `starting_point_`, `budget_`, `state_`, `worker_thread_` | No — test-only, used only in `coordinator_test.cpp` / `optimizer_run_controller_test.cpp` (renamed from `optimize_coordinator`) |
 
 ### Construction sites (43 total)
 
 | Site | Count | Notes |
 |---|---|---|
 | `OptimizerManager::RunDirectStage` | 1 | The ONE production site |
-| `OptimizeCoordinator` (test-headless) | 1 | Stub cost, never production |
+| `OptimizerRunController` (test-headless, fka `OptimizeCoordinator`) | 1 | Stub cost, never production |
 | Oracle test | 1 | Real GPU cost, Tier-2 validation |
 | Unit tests | 28 | `test/unit/test_direct_optimizer.cpp` |
 | Lifecycle tests | 6 | `test/lifecycle/coordinator_test.cpp` |
@@ -196,5 +199,5 @@ The Rust switch boards `serial_cost` into `CppCost`, then calls the Rust DIRECT 
 - `rust/Cargo.toml` — Rust workspace (CXX 1.0.199, member `direct-rs`)
 - `src/coordinator/optimizer_manager.cpp:1303-1531` — `RunDirectStage`, the production A/B switch point
 - `src/coordinator/optimizer_manager.cpp:1745-1788` — `BuildGpuCostAdapter`, the shared cost lambda
-- `src/coordinator/optimize_coordinator.cpp:36` — test-only DirectOptimizer site (stub cost)
-- `docs/plans/2026-08-14-010-feat-direct-variants-capacity-launch-plan.org` — the U12 batch-path admission plan
+- `src/coordinator/optimizer_run_controller.cpp:36` — test-only DirectOptimizer site (stub cost, fka `optimize_coordinator.cpp`)
+- `docs/jtml_cuda_d2h_hotpath_notes.org` — current CUDA hot-path plan (single-pose D2H/launch; graph executor removed 2026-08-28)

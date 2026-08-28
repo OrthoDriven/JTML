@@ -17,10 +17,14 @@ tags:
   - lifecycle
   - plan-012
   - plan-011
+status: historical
+note: "Plans 011/012 graph executor removed 2026-08-28 (cleanup commit); guidance remains general for any GPU/executor lifecycle work. Current hot-path focus: docs/jtml_cuda_d2h_hotpath_notes.org."
 related_components:
   - documentation
   - tooling
 ---
+
+> **Historical context (2026-08-28):** Plans 011 (U1–U5 landed) and 012 (graph executor admission) were removed in the `cleanup: removing a TON of old, useless files` commit. The CUDA-graph evaluation_context/evaluation_executor/graph_recipe stack and related oracle tests were deleted; remaining work is the single-pose D2H/launch hot-path (`docs/jtml_cuda_d2h_hotpath_notes.org`). The planning-completeness guidance below remains general and is not tied to the deleted graph plan.
 
 # A deepened remaining unit is not automatically implementation-ready
 
@@ -81,16 +85,11 @@ Do not apply this to small, already-landed units with a closed ownership story (
 | Learning | Stage it guards |
 |---|---|
 | This doc | Planning completeness *before* `ce-work` |
-| `jtml-cuda-graph-stub-failure-2026-08-19.md` | Verification completeness *before* `[x]` |
-| `jtml-cuda-evaluation-context-executor-2026-08-17.md` | Target architecture once the unit is actually implementable |
-| `graph-tiered-correctness-2026-08-19.md` | Aspirational Layer A/B/C gate until Plan 012 U6 proves it |
+| `jtml-cuda-graph-stub-failure-2026-08-19.md` | Verification completeness *before* `[x]` (now historical — graph executor removed) |
 
 ## Related
 
-- `docs/plans/2026-08-20-012-feat-cuda-graph-executor-admission-plan.md` (replacement plan)
-- `docs/plans/2026-08-19-011-feat-cuda-graph-greedy-evaluation-executor-plan.md` (U1–U5 landed; U6–U8 superseded)
-- `docs/handoff-2026-08-19-cuda-graph-greedy-evaluation-executor.md`
-- `docs/solutions/logic-errors/jtml-cuda-graph-stub-failure-2026-08-19.md`
-- `docs/solutions/architecture-patterns/jtml-cuda-evaluation-context-executor-2026-08-17.md`
-- `docs/solutions/architecture-patterns/graph-tiered-correctness-2026-08-19.md` (aspirational)
-- `docs/brainstorms/2026-08-19-cuda-graph-greedy-evaluation-executor-requirements.org`
+- `docs/jtml_cuda_d2h_hotpath_notes.org` (current hot-path focus — single-pose D2H/launch overhead)
+- `docs/solutions/logic-errors/jtml-cuda-graph-stub-failure-2026-08-19.md` (historical — workflow lesson remains general)
+- `docs/plans/2026-08-19-011-feat-cuda-graph-greedy-evaluation-executor-plan.md` (historical — graph executor, U1–U5 landed, remainder removed)
+- `docs/handoff-2026-08-19-cuda-graph-greedy-evaluation-executor.md` (historical)

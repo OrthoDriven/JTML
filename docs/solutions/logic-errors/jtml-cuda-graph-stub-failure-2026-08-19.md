@@ -23,11 +23,15 @@ tags:
   - subagent-verification
   - false-confidence
   - plan-011
+status: historical
+note: "Graph executor implementation removed 2026-08-28 (cleanup: removing a TON of old, useless files); workflow lesson remains general. See docs/jtml_cuda_d2h_hotpath_notes.org for current hot-path focus."
 related_components:
   - testing
   - compute
   - coordinator
 ---
+
+> **Historical context (2026-08-28):** The CUDA-graph executor this doc was written against was removed in the `cleanup: removing a TON of old, useless files` commit (evaluation_context/evaluation_executor/graph_recipe/bank_state and related tests deleted). The kernel hot-path was reset to focus on single-pose D2H and launch overhead (`docs/jtml_cuda_d2h_hotpath_notes.org`). The workflow lesson below remains applicable to any GPU work.
 
 # Subagent stubs passed circular tests as "done" — plan 011 U3-U8
 
@@ -82,7 +86,7 @@ Three failures compounded:
 ## Related
 
 - `docs/solutions/conventions/jtml-testability-and-cmake-conventions-2026-08-07.md` (false confidence, circular tests warning)
-- `docs/solutions/architecture-patterns/jtml-cuda-evaluation-context-executor-2026-08-17.md` (6 pool conditions blueprint)
-- `docs/plans/2026-08-19-011-feat-cuda-graph-greedy-evaluation-executor-plan.md` (plan 011)
-- `docs/handoff-2026-08-19-cuda-graph-greedy-evaluation-executor.md` (honest state + next steps)
+- `docs/jtml_cuda_d2h_hotpath_notes.org` (current hot-path focus after graph removal)
+- `docs/plans/2026-08-19-011-feat-cuda-graph-greedy-evaluation-executor-plan.md` (plan 011 — graph executor, now historical)
+- `docs/handoff-2026-08-19-cuda-graph-greedy-evaluation-executor.md` (honest state + next steps — historical)
 - `docs/solutions/workflow-issues/jtml-deepened-unit-not-implementation-ready-2026-08-20.md` (earlier gate: a deepened remaining unit is not automatically implementation-ready)
