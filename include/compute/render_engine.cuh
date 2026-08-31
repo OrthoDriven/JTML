@@ -283,13 +283,8 @@ private:
         int* bounding_box_host = nullptr;
     };
 
-    bool CaptureBank0Pointers();
-    void RestoreBank0Pointers();
-
-    RenderPointerSet bank0_pointers_;
     unsigned char* active_output_device_ = nullptr;
     int* active_bounding_box_host_ = nullptr;
-    bool bank0_pointers_captured_ = false;
 };
 }  // namespace gpu_cost_function
 #endif /* RENDER_ENGINE_H */
