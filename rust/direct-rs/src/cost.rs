@@ -1,4 +1,4 @@
-use crate::direct_data_storage::Pose;
+use crate::direct::geometry::Pose;
 
 pub trait Cost {
     fn eval(&self, poses: &[Pose]) -> Vec<f64>;

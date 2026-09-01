@@ -2,7 +2,10 @@ use std::convert::Infallible;
 
 use basin::{Bobyqa, BobyqaState, BoxConstraints, CostFunction, Executor, MaxCostEvals};
 
-use crate::{cost::Cost, direct_data_storage::Pose, direct_optimizer::DirectOptimizer};
+use crate::{
+    cost::Cost,
+    direct::{geometry::Pose, DirectOptimizer},
+};
 
 struct BobyqaProblem<'a, T> {
     direct: &'a DirectOptimizer,
