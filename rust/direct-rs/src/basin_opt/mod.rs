@@ -4,7 +4,8 @@ use basin::{Bobyqa, BobyqaState, BoxConstraints, CostFunction, Executor, MaxCost
 
 use crate::{
     cost::Cost,
-    direct::{geometry::Pose, DirectOptimizer},
+    direct::DirectOptimizer,
+    pose::Pose,
 };
 
 struct BobyqaProblem<'a, T> {

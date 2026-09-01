@@ -1,12 +1,17 @@
-use crate::direct::geometry::Pose;
+//! Shared helpers for the optimizer test suites. Compiled only under `cargo test`.
 
-#[cfg(test)]
-mod tests {
+use crate::pose::Pose;
 
+/// `(size, cost)` scatter plots of a box tree via plotters.
+pub(crate) mod viz {
     use std::error::Error;
     use std::path::Path;
 
     use plotters::prelude::*;
+
+    use crate::direct::poh::{convex_hull, POHPoint};
+    use crate::direct::tree::Hyperbox;
+    use crate::direct::DirectOptimizer;
 
     /// The three layers of the (size, cost) diagram.
     struct Layers {
@@ -44,7 +49,7 @@ mod tests {
             .iter()
             .map(|&(size, cost)| POHPoint { size, cost })
             .collect();
-        let hull = DirectOptimizer::convex_hull(&poh)
+        let hull = convex_hull(&poh)
             .into_iter()
             .map(|p| (p.size, p.cost))
             .collect();
@@ -69,6 +74,7 @@ mod tests {
             let pad = hi.abs().max(1.0) * 0.1;
             return (lo - pad, hi + pad);
         }
+
         (lo - span * 0.05, hi + span * 0.05)
     }
 
@@ -143,6 +149,7 @@ mod tests {
             .draw()?;
 
         root.present()?;
+
         Ok(())
     }
 
@@ -160,41 +167,42 @@ mod tests {
         draw_2d_graph(&opt.snapshot_boxes(), &path)
             .unwrap_or_else(|e| panic!("failed to plot {}: {e}", path.display()));
     }
-    use crate::direct::geometry::POHPoint;
-    use crate::direct::tree::Hyperbox;
-    use crate::direct::DirectOptimizer;
 
-    use super::*;
-    #[test]
-    fn draw() -> Result<(), Box<dyn std::error::Error>> {
-        let root = SVGBackend::new("plotters-doc-data/0.svg", (640, 480)).into_drawing_area();
-        root.fill(&WHITE)?;
-        let mut chart = ChartBuilder::on(&root)
-            .caption("y=x^2", ("sans-serif", 50).into_font())
-            .margin(5)
-            .x_label_area_size(30)
-            .y_label_area_size(30)
-            .build_cartesian_2d(-1f32..1f32, -0.1f32..1f32)?;
+    #[cfg(test)]
+    mod test {
+        use super::*;
 
-        chart.configure_mesh().draw()?;
+        #[test]
+        fn draw() -> Result<(), Box<dyn std::error::Error>> {
+            let root = SVGBackend::new("plotters-doc-data/0.svg", (640, 480)).into_drawing_area();
+            root.fill(&WHITE)?;
+            let mut chart = ChartBuilder::on(&root)
+                .caption("y=x^2", ("sans-serif", 50).into_font())
+                .margin(5)
+                .x_label_area_size(30)
+                .y_label_area_size(30)
+                .build_cartesian_2d(-1f32..1f32, -0.1f32..1f32)?;
 
-        chart
-            .draw_series(LineSeries::new(
-                (-50..=50).map(|x| x as f32 / 50.0).map(|x| (x, x * x)),
-                &RED,
-            ))?
-            .label("y = x^2")
-            .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
+            chart.configure_mesh().draw()?;
 
-        chart
-            .configure_series_labels()
-            .background_style(&WHITE.mix(0.8))
-            .border_style(&BLACK)
-            .draw()?;
+            chart
+                .draw_series(LineSeries::new(
+                    (-50..=50).map(|x| x as f32 / 50.0).map(|x| (x, x * x)),
+                    &RED,
+                ))?
+                .label("y = x^2")
+                .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
 
-        root.present()?;
+            chart
+                .configure_series_labels()
+                .background_style(&WHITE.mix(0.8))
+                .border_style(&BLACK)
+                .draw()?;
 
-        Ok(())
+            root.present()?;
+
+            Ok(())
+        }
     }
 }
 

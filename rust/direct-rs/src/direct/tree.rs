@@ -2,7 +2,10 @@ use std::collections::BTreeMap;
 
 use ordered_float::OrderedFloat;
 
-use crate::direct::geometry::{Pose, DIRECTIONS};
+use crate::pose::{Pose, DIRECTIONS};
+
+#[cfg(test)]
+mod test;
 
 pub type SizeKey = OrderedFloat<f64>;
 pub type CostKey = (OrderedFloat<f64>, u64);

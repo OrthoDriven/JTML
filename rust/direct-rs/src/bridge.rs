@@ -1,5 +1,6 @@
 use super::*;
 use crate::{cost::Cost, direct::settings::MinBoxSize};
+use crate::bridge::ffi::RunOutcome;
 
 #[cxx::bridge]
 pub mod ffi {
@@ -100,4 +101,17 @@ pub fn new_rust_opt(
         budget,
         settings,
     ));
+}
+/// FFI entry point: run DIRECT against a C++ cost, marshaling the result
+/// into the C++-facing `RunOutcome`.
+impl DirectOptimizer {
+    pub fn run_rust_opt(&mut self, cost: &CppCost) -> RunOutcome {
+        self.run(cost);
+        let (best_pose, best_cost) = self.best();
+        return RunOutcome {
+            num_iter: self.calls,
+            optimal_value: best_cost,
+            optimal_location: best_pose.to_array(),
+        };
+    }
 }

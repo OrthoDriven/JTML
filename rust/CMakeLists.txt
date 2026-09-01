@@ -12,7 +12,7 @@ corrosion_import_crate(
 corrosion_add_cxxbridge(direct-rs_bridge
   CRATE direct_rs
   REGEN_TARGET direct_rs_bridge_regen
-  FILES lib.rs
+  FILES bridge.rs
 )
 
 option(USE_RUST_DIRECT "Use Rust-based direct optimizer" 1)

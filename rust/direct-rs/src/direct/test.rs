@@ -1,54 +1,26 @@
+//! DIRECT driver-loop tests: seeding and budget accounting, structural
+//! invariants over a full run (volume partition, sampling lattice, no
+//! duplicates), a smoke run, and the SO(3) axis-angle mapping suite.
+
+use std::collections::BTreeSet;
+
+use nalgebra::{Rotation3, Vector3};
+use proptest::prelude::*;
+
+use crate::cost::Cost;
+use crate::direct::settings::RotationRepresentation;
+use crate::direct::tree::Hyperbox;
+use crate::direct::DirectOptimizer;
+use crate::fixtures::{coords, on_lattice, pose, show, splat, zero};
+use crate::pose::{self, Pose};
+use crate::problems::ShiftedSphere;
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::bench::ShiftedSphere;
-    use crate::cost::Cost;
-    use crate::test_support::{coords, on_lattice, show, splat, zero};
-    use proptest::prelude::*;
-    use std::collections::BTreeSet;
 
     fn iter_boxes(opt: &DirectOptimizer) -> impl Iterator<Item = &Hyperbox> {
         opt.boxes.values().flat_map(|row| row.values())
-    }
-
-    /// Jones potentially-optimal test on `(size, cost)` representatives.
-    /// `j` is POH iff `K_lo <= K_hi` and `K_hi > 0`, with same-size worse
-    /// points treated as dominated.
-    fn jones_poh(points: &[(f64, f64)]) -> Vec<(f64, f64)> {
-        let mut out = Vec::new();
-        for (j, &(dj, fj)) in points.iter().enumerate() {
-            let dominated = points
-                .iter()
-                .enumerate()
-                .any(|(i, &(di, fi))| i != j && (di - dj).abs() <= 1e-15 && fi < fj);
-            if dominated {
-                continue;
-            }
-            let mut k_lo = f64::NEG_INFINITY;
-            let mut k_hi = f64::INFINITY;
-            for (i, &(di, fi)) in points.iter().enumerate() {
-                if i == j {
-                    continue;
-                }
-                let dd = dj - di;
-                if dd > 1e-15 {
-                    k_lo = k_lo.max((fj - fi) / dd);
-                } else if dd < -1e-15 {
-                    k_hi = k_hi.min((fi - fj) / (di - dj));
-                }
-            }
-            if k_lo <= k_hi && k_hi > 0.0 {
-                out.push((dj, fj));
-            }
-        }
-        out
-    }
-
-    fn hull_pairs(pts: &[POHPoint]) -> Vec<(f64, f64)> {
-        DirectOptimizer::convex_hull(pts)
-            .into_iter()
-            .map(|p| (p.size, p.cost))
-            .collect()
     }
 
     fn volume_checksum(opt: &DirectOptimizer) -> Result<(u128, u128), &'static str> {
@@ -63,102 +35,6 @@ mod tests {
             lhs = lhs.checked_add(term).ok_or("add overflow")?;
         }
         Ok((lhs, rhs))
-    }
-
-    #[test]
-    fn jones_rejects_the_descending_left_hull() {
-        // Larger box is cheaper: the small expensive vertices are NOT POH.
-        let pts = [
-            POHPoint {
-                size: 1.0,
-                cost: 10.0,
-            },
-            POHPoint {
-                size: 2.0,
-                cost: 5.0,
-            },
-            POHPoint {
-                size: 3.0,
-                cost: 0.0,
-            },
-        ];
-        let hull = hull_pairs(&pts);
-        let jones = jones_poh(&[(1.0, 10.0), (2.0, 5.0), (3.0, 0.0)]);
-        assert_eq!(jones, vec![(3.0, 0.0)], "oracle sanity");
-        assert_eq!(
-            hull, jones,
-            "convex_hull returned {hull:?}, Jones POH is {jones:?} — \
-             drop vertices left of the global-min-cost hull vertex"
-        );
-    }
-
-    #[test]
-    fn jones_keeps_the_increasing_right_hull() {
-        let pts = [
-            POHPoint {
-                size: 1.0,
-                cost: 0.0,
-            },
-            POHPoint {
-                size: 2.0,
-                cost: 1.0,
-            },
-            POHPoint {
-                size: 3.0,
-                cost: 4.0,
-            },
-        ];
-        let mut hull = hull_pairs(&pts);
-        let mut jones = jones_poh(&[(1.0, 0.0), (2.0, 1.0), (3.0, 4.0)]);
-        hull.sort_by(|a, b| a.0.total_cmp(&b.0));
-        jones.sort_by(|a, b| a.0.total_cmp(&b.0));
-        assert_eq!(hull, jones);
-    }
-
-    #[test]
-    fn hull_of_one_and_two_points() {
-        let one = [POHPoint {
-            size: 1.5,
-            cost: 2.0,
-        }];
-        assert_eq!(hull_pairs(&one).len(), 1);
-        let two = [
-            POHPoint {
-                size: 1.0,
-                cost: 1.0,
-            },
-            POHPoint {
-                size: 2.0,
-                cost: 2.5,
-            },
-        ];
-        assert_eq!(hull_pairs(&two).len(), 2);
-    }
-
-    #[test]
-    fn collinear_lower_hull_keeps_interior_vertices() {
-        // Jones selects every collinear lower-hull point. `cross <= 0` pops them.
-        let pts = [
-            POHPoint {
-                size: 1.0,
-                cost: 1.0,
-            },
-            POHPoint {
-                size: 2.0,
-                cost: 2.0,
-            },
-            POHPoint {
-                size: 3.0,
-                cost: 3.0,
-            },
-        ];
-        let hull = hull_pairs(&pts);
-        assert_eq!(
-            hull.len(),
-            3,
-            "collinear interior vertex dropped ({hull:?}); \
-             Jones keeps all of them — change the comparison deliberately if this is DIRECT-l"
-        );
     }
 
     #[test]
@@ -254,26 +130,6 @@ mod tests {
         #![proptest_config(ProptestConfig { cases: 4096, ..ProptestConfig::default() })]
 
         #[test]
-        fn convex_hull_matches_jones_on_unique_sizes(
-            raw in proptest::collection::vec((0.1_f64..12.0, -8.0_f64..8.0), 1..12)
-        ) {
-            // Dedup sizes so the input matches what determine_potentially_optimal feeds.
-            let mut pts = raw;
-            pts.sort_by(|a, b| a.0.total_cmp(&b.0));
-            pts.dedup_by(|a, b| (a.0 - b.0).abs() < 1e-9);
-            prop_assume!(!pts.is_empty());
-            let poh: Vec<POHPoint> = pts
-                .iter()
-                .map(|&(size, cost)| POHPoint { size, cost })
-                .collect();
-            let mut hull = hull_pairs(&poh);
-            let mut jones = jones_poh(&pts);
-            hull.sort_by(|a, b| a.0.total_cmp(&b.0));
-            jones.sort_by(|a, b| a.0.total_cmp(&b.0));
-            prop_assert_eq!(hull, jones);
-        }
-
-        #[test]
         fn volume_partition_holds_for_random_runs(
             budget in 8_u32..60,
             shift in proptest::array::uniform6(-4.0_f64..4.0),
@@ -304,6 +160,35 @@ mod tests {
         let mut opt = DirectOptimizer::new(splat(5.0), zero(), 0);
         let _ = opt.run(&Sphere);
         assert_eq!(opt.calls, 1, "seed must still be evaluated at budget 0");
+    }
+
+    #[test]
+    fn sphere_run_decreases_cost() {
+        let start = Pose {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+            xa: 1.0,
+            ya: 1.0,
+            za: 1.0,
+        };
+        let range = Pose {
+            x: 5.0,
+            y: 5.0,
+            z: 5.0,
+            xa: 5.0,
+            ya: 5.0,
+            za: 5.0,
+        };
+        let mut opt = DirectOptimizer::new(range, start, 5_000);
+        let (_best, best_cost) = opt.run(&Sphere);
+        println!("cost={best_cost}");
+        // the global minimum is 0; DIRECT on a sphere should improve on the
+        // seed's sum-of-squares (start=(1,1,1,...) => seed cost 6).
+        assert!(
+            best_cost < 6.0,
+            "expected to improve on seed cost 6, got {best_cost}"
+        );
     }
 }
 
@@ -351,9 +236,6 @@ mod axis_angle_tests {
     //! deltas are bounded well below a principal-angle ambiguity.
 
     use super::*;
-    use crate::test_support::{pose, show, zero};
-    use nalgebra::Rotation3;
-    use proptest::prelude::*;
 
     /// Tolerance on orientation (geodesic) errors, in radians. Comfortably
     /// above f64 round-off through Exp/Euler round-trips (~1e-15), and far
@@ -374,7 +256,7 @@ mod axis_angle_tests {
     /// convention the rest of the project uses (C++ `SetPose`:
     /// Rz(za) * Rx(xa) * Ry(ya)).
     fn recon(p: &Pose) -> Rotation3<f64> {
-        DirectOptimizer::from_euler_ordered("ZXY", [p.za, p.xa, p.ya], false)
+        pose::from_euler_ordered("ZXY", [p.za, p.xa, p.ya], false)
     }
 
     /// Serialize a rotation to a Pose using production's own inverse path
@@ -383,7 +265,7 @@ mod axis_angle_tests {
     /// the extraction sat away from gimbal lock.
     fn serialize(r: &Rotation3<f64>) -> (Pose, bool) {
         let (angles, observable) =
-            r.euler_angles_ordered(DirectOptimizer::axes_from_str("ZXY"), false);
+            r.euler_angles_ordered(pose::axes_from_str("ZXY"), false);
         (
             Pose {
                 x: 0.0,
@@ -700,7 +582,7 @@ mod axis_angle_tests {
             vy in -RANGE_DEG..RANGE_DEG,
             vz in -RANGE_DEG..RANGE_DEG,
         ) {
-            let q = DirectOptimizer::from_euler_ordered("ZXY", [q1, q2, q3], false);
+            let q = pose::from_euler_ordered("ZXY", [q1, q2, q3], false);
             let start = pose([0.0, 0.0, 0.0, sxa, sya, sza]);
             let r_start = recon(&start);
             let v = [vx, vy, vz];
@@ -748,126 +630,6 @@ mod axis_angle_tests {
                 err < ANG_TOL_RAD,
                 "pure axis {axis_idx} at theta {theta} deg from start ({},{},{}): err {:.3e} deg",
                 sxa, sya, sza, deg(err)
-            );
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::test_support::{canonical_size, on_lattice, splat};
-    use proptest::prelude::*;
-
-    fn box_at(center: Pose, depths: [u32; 6]) -> Hyperbox {
-        Hyperbox {
-            cost_at_center: 0.0,
-            center,
-            depths,
-        }
-    }
-
-    #[test]
-    fn unit_box_size_is_sqrt_6() {
-        let hb = box_at(splat(0.5), [0; 6]);
-        let got = hb.size();
-        assert!(
-            (got - 6.0_f64.sqrt()).abs() < 1e-12,
-            "unit size {got} != sqrt(6)"
-        );
-    }
-
-    #[test]
-    fn size_is_bit_identical_under_depth_permutation() {
-        let a = [1u32, 2, 0, 3, 0, 4];
-        let mut b = a;
-        b.swap(0, 1);
-        b.swap(2, 5);
-        let sa = box_at(splat(0.5), a).size();
-        let sb = box_at(splat(0.5), b).size();
-        assert_eq!(
-            sa.to_bits(),
-            sb.to_bits(),
-            "size() depends on depth order: {sa} vs {sb} (a={a:?} b={b:?})"
-        );
-    }
-
-    #[test]
-    fn longest_axis_picks_the_min_depth_axis_and_trisect_shrinks() {
-        let parent = box_at(splat(0.5), [2, 0, 1, 3, 1, 4]);
-        let parent_size = parent.size();
-
-        let axis = parent.longest_axis();
-        assert_eq!(axis, 1);
-
-        let (center, [pos, neg]) = parent.trisect(axis);
-
-        let changed: Vec<usize> = center
-            .depths
-            .iter()
-            .zip([2u32, 0, 1, 3, 1, 4])
-            .enumerate()
-            .filter(|(_, (now, was))| *now != was)
-            .map(|(i, _)| i)
-            .collect();
-
-        assert_eq!(changed, vec![1]);
-        assert_eq!(center.depths[1], 1);
-        assert_eq!(pos.depths, center.depths);
-        assert_eq!(neg.depths, center.depths);
-        assert!(center.size() < parent_size);
-        assert!(canonical_size(pos.depths) < parent_size);
-        assert!(canonical_size(neg.depths) < parent_size);
-    }
-
-    #[test]
-    fn trisect_children_sit_on_the_center_lattice() {
-        let parent = box_at(splat(0.5), [0; 6]);
-        let axis = parent.longest_axis();
-        let (center, [pos, neg]) = parent.trisect(axis);
-        for (p, depths) in [
-            (center.center, center.depths),
-            (pos.center, pos.depths),
-            (neg.center, neg.depths),
-        ] {
-            for (c, d) in crate::test_support::coords(&p).iter().zip(depths) {
-                assert!(
-                    on_lattice(*c, d),
-                    "center coord {c} at depth {d} is off-lattice"
-                );
-            }
-        }
-    }
-
-    #[test]
-    fn repeated_min_depth_split_keeps_depths_within_one() {
-        let mut hb = box_at(splat(0.5), [0; 6]);
-        for _ in 0..18 {
-            let axis = hb.longest_axis();
-            let (next, _) = hb.trisect(axis);
-            hb = next;
-            let min = hb.depths.iter().copied().min().unwrap_or(0);
-            let max = hb.depths.iter().copied().max().unwrap_or(0);
-            assert!(
-                max - min <= 1,
-                "depths {:?} drifted more than 1 apart",
-                hb.depths
-            );
-        }
-    }
-
-    proptest! {
-        #![proptest_config(ProptestConfig { cases: 64, ..ProptestConfig::default() })]
-
-        #[test]
-        fn size_matches_canonical_sorted_sum(d0 in 0u32..8, d1 in 0u32..8, d2 in 0u32..8,
-                                             d3 in 0u32..8, d4 in 0u32..8, d5 in 0u32..8) {
-            let depths = [d0, d1, d2, d3, d4, d5];
-            let got = box_at(splat(0.5), depths).size();
-            let want = canonical_size(depths);
-            prop_assert!(
-                (got - want).abs() < 1e-12,
-                "size {got} != canonical {want} for {depths:?}"
             );
         }
     }

@@ -1,4 +1,5 @@
 use std::time::{self, Duration};
+use std::iter::zip;
 
 use nalgebra::{self as na, Rotation3, Unit, Vector3};
 use ordered_float::OrderedFloat;
@@ -6,25 +7,22 @@ use ordered_float::OrderedFloat;
 use crate::{
     cost::Cost,
     direct::{
-        geometry::{POHPoint, Pose, DIRECTIONS},
+        poh::POHPoint,
         settings::{
-            DirectSettings, POHSettings, RefinementOptions, RotationRepresentation,
+            DirectSettings, RefinementOptions, RotationRepresentation,
             TranslationRepresentation,
         },
         tree::{DirectTree, Hyperbox, UnscoredHyperbox},
     },
+    pose::{axes_from_str, from_euler_ordered, DIRECTIONS, Pose},
 };
 
-pub(crate) mod geometry;
 pub(crate) mod poh;
 pub mod settings;
 pub(crate) mod tree;
 
 #[cfg(test)]
-mod problems;
-
-#[cfg(test)]
-mod fixtures;
+mod test;
 
 pub struct DirectOptimizer {
     pub boxes: DirectTree,
@@ -33,7 +31,7 @@ pub struct DirectOptimizer {
     range: Pose,
     starting_point: Pose,
     call_offset: u32,
-    calls: u32,
+    pub(crate) calls: u32,
     next_box_id: u64,
     starting_rotation: Rotation3<f64>,
     translation_basis: na::Matrix3<f64>,
@@ -50,7 +48,7 @@ impl DirectOptimizer {
         budget: u32,
         settings: DirectSettings,
     ) -> Self {
-        let starting_rotation = geometry::from_euler_ordered(
+        let starting_rotation = from_euler_ordered(
             "ZXY",
             [starting_point.za, starting_point.xa, starting_point.ya],
             false,
@@ -132,7 +130,7 @@ impl DirectOptimizer {
 
             let candidates = self.get_potentially_optimal_candidates();
             let poh =
-                self.select_potentially_optimal(&candidates, &self.settings.poh_selection_strategy);
+                poh::select_potentially_optimal(&candidates, &self.settings.poh_selection_strategy);
 
             if poh.is_empty() {
                 break;
@@ -191,17 +189,6 @@ impl DirectOptimizer {
             return (physical, f64::INFINITY);
         }
     }
-
-    pub fn run_rust_opt(&mut self, cost: &CppCost) -> RunOutcome {
-        self.run(cost);
-        let (best_pose, best_cost) = self.best();
-        return RunOutcome {
-            num_iter: self.calls,
-            optimal_value: best_cost,
-            optimal_location: best_pose.to_array(),
-        };
-    }
-
     pub fn best(&self) -> (Pose, f64) {
         self.current_best
     }
@@ -277,7 +264,7 @@ impl DirectOptimizer {
 
                 let applied_rot = self.starting_rotation * applied_rot_t;
                 let (final_angles, _observable) =
-                    applied_rot.euler_angles_ordered(geometry::axes_from_str("ZXY"), false);
+                    applied_rot.euler_angles_ordered(axes_from_str("ZXY"), false);
                 let [za, xa, ya] = final_angles;
 
                 (xa.to_degrees(), ya.to_degrees(), za.to_degrees())
@@ -420,67 +407,5 @@ impl DirectOptimizer {
         }
 
         return candidates;
-    }
-
-    fn select_potentially_optimal(
-        &self,
-        candidates: &[POHPoint],
-        settings: &POHSettings,
-    ) -> Vec<POHPoint> {
-        let poh = match settings {
-            POHSettings::ConvexHull => DirectOptimizer::convex_hull(candidates),
-            POHSettings::Pareto => DirectOptimizer::pareto_front(candidates),
-        };
-        return poh;
-    }
-
-    fn pareto_front(candidates: &[POHPoint]) -> Vec<POHPoint> {
-        let mut pts: Vec<POHPoint> = candidates.to_vec();
-        // largest size first; cost ascending breaks ties so equal-size points
-        // (shouldn't occur post-dedup, but be defensive) prefer the cheaper one
-        pts.sort_by(|a, b| b.size.total_cmp(&a.size).then(a.cost.total_cmp(&b.cost)));
-
-        let mut front = Vec::with_capacity(pts.len());
-        let mut best_cost = f64::INFINITY;
-        for p in pts {
-            if p.cost.is_finite() && p.cost < best_cost {
-                front.push(p);
-                best_cost = p.cost;
-            }
-        }
-        front.reverse(); // back to ascending size, matching convex_hull's convention
-        return front;
-    }
-
-    pub(crate) fn convex_hull(candidates: &[POHPoint]) -> Vec<POHPoint> {
-        let mut hull: Vec<POHPoint> = Vec::new();
-
-        if candidates.len() < 2 {
-            hull.extend(candidates);
-            return hull;
-        }
-        for p in candidates.iter() {
-            while (hull.len() >= 2)
-                && (DirectOptimizer::cross(
-                    (hull[hull.len() - 2].size, hull[hull.len() - 2].cost),
-                    (hull[hull.len() - 1].size, hull[hull.len() - 1].cost),
-                    (p.size, p.cost),
-                ) < 0.0)
-            {
-                hull.pop();
-            }
-            hull.push(*p);
-        }
-        let cut = hull
-            .iter()
-            .enumerate()
-            .min_by(|(_, a), (_, b)| a.cost.total_cmp(&b.cost).then(b.size.total_cmp(&a.size)))
-            .map(|(i, _)| i)
-            .unwrap_or(0);
-        return hull.split_off(cut);
-    }
-
-    fn cross(o: (f64, f64), p1: (f64, f64), p2: (f64, f64)) -> f64 {
-        return (p1.0 - o.0) * (p2.1 - o.1) - (p1.1 - o.1) * (p2.0 - o.0);
     }
 }

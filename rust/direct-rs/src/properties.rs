@@ -12,13 +12,13 @@ use std::rc::Rc;
 
 use proptest::prelude::*;
 
-use crate::bench::ShiftedSphere;
 use crate::cost::Cost;
-use crate::direct_data_storage::Pose;
-use crate::direct_optimizer::DirectOptimizer;
-use crate::test_support::{
+use crate::direct::DirectOptimizer;
+use crate::fixtures::{
     coords, denorm, dist, invert, permute_pose, pose, show, splat, unpermute_pose, zero,
 };
+use crate::pose::Pose;
+use crate::problems::ShiftedSphere;
 
 const CASES: u32 = 32;
 
@@ -430,7 +430,7 @@ proptest! {
                 *slot = 0.0;
             }
         }
-        let range = crate::test_support::pose(r);
+        let range = crate::fixtures::pose(r);
         let start = pose(start);
         let shift = start;
         let (_b, _c, samples, _) = run_recorded(
