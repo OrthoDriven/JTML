@@ -13,7 +13,6 @@
 #include <thread>
 
 #include "compute/batch_outcome.h"
-#include "compute/cuda_launch_parameters.h"
 #include "compute/gpu_heatmaps.cuh"
 #include "compute/gpu_model.cuh"
 #include "compute/pose_matrix.h"

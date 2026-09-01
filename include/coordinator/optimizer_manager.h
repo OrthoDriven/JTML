@@ -61,7 +61,7 @@ struct GPUMetrics;
 /*Cost Function Library*/
 
 #include "compute/CostFunctionManager.h"
-#include "direct-rs_bridge/lib.h"
+#include "direct-rs_bridge/bridge.h"
 #include "rust/cxx.h"
 
 using namespace gpu_cost_function;
