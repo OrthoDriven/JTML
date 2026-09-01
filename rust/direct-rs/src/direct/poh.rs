@@ -3,32 +3,20 @@
 //!
 //! Candidates arrive size-ascending (BTreeMap iteration over
 //! [`crate::direct::tree::DirectTree`]), one per size column — the cheapest
-//! still-refinable box of that column. `select_potentially_optimal` then
+//! still-refinable box of that column. [`PohStrategy::select`] then
 //! applies the configured strategy: the Jones convex lower hull, or the
 //! Pareto (monotone cost) front.
 
-use crate::direct::settings::POHSettings;
 
 #[cfg(test)]
 mod test;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct POHPoint {
     pub size: f64,
     pub cost: f64,
 }
 
-/// Dispatch on the configured POH selection strategy.
-pub fn select_potentially_optimal(
-    candidates: &[POHPoint],
-    settings: &POHSettings,
-) -> Vec<POHPoint> {
-    let poh = match settings {
-        POHSettings::ConvexHull => convex_hull(candidates),
-        POHSettings::Pareto => pareto_front(candidates),
-    };
-    return poh;
-}
 
 pub fn pareto_front(candidates: &[POHPoint]) -> Vec<POHPoint> {
     let mut pts: Vec<POHPoint> = candidates.to_vec();

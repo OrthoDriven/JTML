@@ -3,21 +3,14 @@ mod bridge;
 pub mod cost;
 pub mod direct;
 mod pose;
+mod space;
 
-#[cfg(test)]
-mod fixtures;
+pub use cost::Cost;
+pub use direct::settings::DirectSettings;
+pub use direct::DirectOptimizer;
+pub use pose::{PhysicalPose, Pose, PoseRange, UnitPose};
+pub use space::{RotationRepresentation, TranslationRepresentation};
 
-#[cfg(test)]
-mod problems;
-
-#[cfg(test)]
-mod properties;
-
+// Names below are resolved by `bridge.rs`'s `use super::*;` inside the
+// cxx bridge expansion:
 use crate::bridge::ffi::CppCost;
-use crate::direct::settings::{DirectSettings, POHSettings};
-use crate::direct::DirectOptimizer;
-use crate::pose::Pose;
-
-use crate::direct::settings::{
-    RefinementOptions, RotationRepresentation, TranslationRepresentation,
-};
