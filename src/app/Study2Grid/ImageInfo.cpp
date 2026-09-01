@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*Image Info Structure for Model Training*/
 #include "ImageInfo.h"

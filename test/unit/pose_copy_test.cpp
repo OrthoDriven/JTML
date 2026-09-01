@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Deterministic Catch2 tests for the pure pose-copy seam (plan 004 U4,
 // R8/R13/R14). Pins the named boundary cases the seam must preserve

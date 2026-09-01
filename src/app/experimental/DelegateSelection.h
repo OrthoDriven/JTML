@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U4: the delegate-based selection contract state. No
 // QItemSelectionModel anywhere (the plan's deliberate non-reuse — the QML

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Hegel property-based tests for the pure stage-script surface (plan 008 U7,
 // Cut A). PBT complements the deterministic twin (test_stage_script.cpp) by

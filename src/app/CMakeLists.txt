@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U5: src/app is the composition root. It holds the thin GUI main() (which
 # instantiates MainScreen from the jtml_view lib) and the Study2Grid tool. It is

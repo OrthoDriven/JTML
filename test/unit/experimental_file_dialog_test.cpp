@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 007 review round (ce-code-review 2026-08-12, AC1): FileDialogBridge
 // directory-memory pins. Deterministic Catch2 headless tests, QtCore-only —

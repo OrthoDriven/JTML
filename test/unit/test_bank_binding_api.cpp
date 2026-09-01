@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 //
 // Plan 010 U12 Stage 2: compile-time compatibility seam pins.  This test does
 // not construct CUDA-owning objects and does not execute a new stream path; it

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunController implementation — see the header for
 // the contract. The drive sequence is the pinned widgets/QML sequence

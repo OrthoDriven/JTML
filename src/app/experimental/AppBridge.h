@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U2/U4: AppBridge — the QML-exposed hub (session / settings / pose
 // surfaces) that owns the thin per-seam adapters: StudyBridge (U4),

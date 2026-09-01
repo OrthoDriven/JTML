@@ -1,6 +1,6 @@
 /*
  * Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
 /*SessionController (plan 004 U6 / R6 + R10): headless owner of the load path

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U7: StudyLoadController tests (R11 + R13). Deterministic Catch2
 // headless tests that direct-compile the shared study-load controller + the

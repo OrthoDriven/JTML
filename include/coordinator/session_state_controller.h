@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U6: SessionStateController — the QObject notification shell over
 // jta::SessionState (R5/R6/R10, AE2). BOTH front-ends write through it:

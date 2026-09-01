@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U6 / 006 U5: OptimizerBridge — the QML-facing thin shell over the
 // shared OptimizerRunController (plan 006 U5: the run-state machine, thread

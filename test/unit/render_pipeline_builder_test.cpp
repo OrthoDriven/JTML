@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Render-pipeline builder pure-config tests (plan 006 U4, R9/AE4). The
 // shared widget-free VTK pipeline recipe (jta::render_pipeline, services

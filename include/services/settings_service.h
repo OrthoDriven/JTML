@@ -1,6 +1,6 @@
 /*
  * Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
 /*SettingsService (plan 004 U3 / R9): widget-free QSettings persistence for the

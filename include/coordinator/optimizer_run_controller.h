@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunController — the shared optimizer-run controller
 // (R7, R13, R15, R16; F1; AE1). Both front-ends drive it: MainScreen's

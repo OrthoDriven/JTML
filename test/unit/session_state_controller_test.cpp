@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U6 unit tests: SessionStateController sync/diff logic (R5/R6,
 // AE2). Catch2 over the same QObject shell (Qt6::Core only — direct

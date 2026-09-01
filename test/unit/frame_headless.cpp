@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*Headless Frame implementation for the EdgeProcessor tests (plan 004 U5). The
  * production Frame lives in src/compute/frame.cu -- a .cu source compiled with

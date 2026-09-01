@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunControllerCore pins (R7, R13, R15, R16; F1;
 // AE1) — the shared Qt/GPU-free run core (gate + state machine + epoch +

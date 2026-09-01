@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U3: QmlVtkRenderer — the render seam (R7/R11). The minimal VTK
 // pipeline under QQuickVTKItem's render-thread contract: models at pose over

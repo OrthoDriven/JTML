@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Tier-0 metric-semantics pins + CPU references (plan 008 U1 — the run's R13
 // characterization pass). Every CPU reference below encodes the CURRENT kernel

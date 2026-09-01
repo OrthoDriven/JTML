@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Deterministic Catch2 twin for the sym-trap transform helpers (complements
 // test_sym_trap_functions_properties.cpp). Pins the concrete cases: rotation_matrix

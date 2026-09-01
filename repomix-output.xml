@@ -66,7 +66,7 @@ This section contains the contents of the repository's files.
 <file path="include/coordinator/optimizer_manager.h">
 /*
  * Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
 /*Manages Optimization in a Seperate QT Thread*/
@@ -418,7 +418,7 @@ std::function<double(const Point6D&)> BuildGpuCostAdapter(
 
 <file path="include/coordinator/optimizer_run_controller_core.h">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunControllerCore — the Qt/GPU-free core of the
 // shared optimizer-run controller (R7, R13, R15, R16; F1; AE1). Both
@@ -649,7 +649,7 @@ private:
 
 <file path="include/coordinator/optimizer_run_controller.h">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunController — the shared optimizer-run controller
 // (R7, R13, R15, R16; F1; AE1). Both front-ends drive it: MainScreen's
@@ -940,7 +940,7 @@ private:
 
 <file path="include/coordinator/optimizer_run_driver.h">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunDriver — the narrow drive seam behind
 // OptimizerRunController (M12/Q8). OptimizerManager::Initialize is
@@ -1054,7 +1054,7 @@ std::shared_ptr<OptimizerRunDriver> CreateOptimizerManagerRunDriver();
 <file path="include/coordinator/optimizer_stage_script.h">
 /*
  * Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
 /*Plan 008 U7 (Cut A): the optimizer-container pure surface — the StageScript
@@ -1227,7 +1227,7 @@ const std::vector<std::string>& ReservedStubGraphNames();
 
 <file path="include/coordinator/session_state_controller.h">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U6: SessionStateController — the QObject notification shell over
 // jta::SessionState (R5/R6/R10, AE2). BOTH front-ends write through it:
@@ -1370,7 +1370,7 @@ private:
 
 <file path="src/coordinator/CMakeLists.txt">
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U3/U4: jtml_coordinator is the Qt orchestration layer (optimize_coordinator,
 # optimizer_manager). It consumes the single jtml_compute SHARED lib (via JTA_LIBS) --
@@ -1452,7 +1452,7 @@ target_include_directories(jtml_coordinator PUBLIC
 
 <file path="src/coordinator/optimizer_manager.cpp">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*Optimizer Manaer*/
 #include "coordinator/optimizer_manager.h"
@@ -3274,7 +3274,7 @@ std::function<double(const Point6D&)> jta::BuildGpuCostAdapter(
 
 <file path="src/coordinator/optimizer_run_controller_core.cpp">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunControllerCore implementation — see the header
 // for the contract. Qt/GPU-free: no QObject, no event loop, no CUDA/torch.
@@ -3398,7 +3398,7 @@ OptimizerRunControllerCore::takeSeedForRun(
 
 <file path="src/coordinator/optimizer_run_controller.cpp">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunController implementation — see the header for
 // the contract. The drive sequence is the pinned widgets/QML sequence
@@ -3886,7 +3886,7 @@ QString OptimizerRunController::DirectiveToString(Directive directive) {
 
 <file path="src/coordinator/optimizer_run_driver.cpp">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: the production OptimizerRunDriver adapter — wraps
 // OptimizerManager UNTOUCHED (M12/Q8): a fresh manager + thread per run,
@@ -4011,7 +4011,7 @@ std::shared_ptr<OptimizerRunDriver> CreateOptimizerManagerRunDriver() {
 <file path="src/coordinator/optimizer_stage_script.cpp">
 /*
  * Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
 /*Plan 008 U7 (Cut A) — the optimizer-container pure surface (see
@@ -4272,7 +4272,7 @@ const StageGraph& StageGraphByName(const std::string& name) {
 
 <file path="src/coordinator/session_state_controller.cpp">
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 #include "coordinator/session_state_controller.h"
 

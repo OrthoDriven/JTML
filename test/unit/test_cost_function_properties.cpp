@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Hegel PBT for the cost-function parameter registry (jta_cost_function::CostFunction,
 // merged into jtml_compute at 003 U4 - a pre-existing pure surface that had ZERO

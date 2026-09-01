@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // CUDA-free unit tests for the pure 6D data structures used by the DIRECT
 // optimizer. These compile WITHOUT any GPU/.cu source, which is only possible

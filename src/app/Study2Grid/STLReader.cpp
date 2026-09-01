@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*STLReader header*/
 #include "STLReader.h"  // local Study2Grid STLReader (ns stl_reader), NOT core services/STLReader (stl_reader_BIG)

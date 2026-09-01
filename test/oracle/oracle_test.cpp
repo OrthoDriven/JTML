@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Tier-2 GPU oracle (plan U6, APPEARANCE-based). NOT in the headless default
 // suite — must be run explicitly on a GPU machine under the `oracle` label:

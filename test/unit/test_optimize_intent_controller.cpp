@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Optimize-intent controller unit tests (plan U7, R8/R9, AE4). The controller
 // owns the widget-free "can I optimize / what do I need" decision that used

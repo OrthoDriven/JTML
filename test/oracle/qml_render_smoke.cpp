@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // QML render smoke (plan 005 U3 render seam / R15): loads renderer.qml
 // through QQmlApplicationEngine (the REAL QML path: qmlRegisterType

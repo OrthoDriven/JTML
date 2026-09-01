@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U3: ExperimentalScene — plain-data implementation (see the header for
 // the threading contract). No logic beyond store/copy: all behavior lives in

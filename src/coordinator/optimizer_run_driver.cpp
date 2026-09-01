@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: the production OptimizerRunDriver adapter — wraps
 // OptimizerManager UNTOUCHED (M12/Q8): a fresh manager + thread per run,

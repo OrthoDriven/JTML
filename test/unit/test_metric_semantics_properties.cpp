@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Hegel PBT twin for the Tier-0 metric-semantics CPU references (plan 008 U1 —
 // the R13 characterization pass). Complements the deterministic pins in

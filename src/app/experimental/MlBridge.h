@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U7 / 006 U8: MlBridge — the thin ML adapter (R8, R16). Per-implant .pt
 // pickers (segment femur / segment tibia / ONE estimate model — the plan's

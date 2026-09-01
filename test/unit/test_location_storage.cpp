@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Deterministic Catch2 twin for the LocationStorage pose-matrix service
 // (complements test_location_storage_properties.cpp). Pins the concrete

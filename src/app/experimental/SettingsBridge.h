@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U5: SettingsBridge — the thin settings adapter (R4, R5, R10, R17).
 // Pass-through orchestration only (thinness rule): the bridge holds the

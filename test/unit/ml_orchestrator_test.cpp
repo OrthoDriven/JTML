@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U8: MlOrchestrator pins (R12 part, R13, F3; AE4). Deterministic
 // Catch2 headless tests that direct-compile the orchestrator (plain

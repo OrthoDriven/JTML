@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Hegel PBT for the header-only biplane Calibration conversion (plan U7
 // exposure; calibration.h is header-only and CUDA/Qt-free once

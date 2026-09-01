@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // SessionController tests (plan 004 U6 / R6 + R10 / R13 / R14). Deterministic
 // Catch2 twin pinning the load-path extraction: calibration parsing (against

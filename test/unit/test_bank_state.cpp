@@ -1,6 +1,6 @@
 /*
  * Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 /* Plan 010 U12 Stage 1: allocation-free bank-state contract and footprint math.
  */

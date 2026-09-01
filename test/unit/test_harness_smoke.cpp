@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Test-harness smoke test: proves the Catch2 toolchain + CTest registration
 // work end-to-end. It intentionally exercises no JTML code.

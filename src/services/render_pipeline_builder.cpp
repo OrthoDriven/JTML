@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 006 U4: RenderPipelineBuilder implementation — the shared, widget-free VTK
 // pipeline recipe (see the header for the full contract). Stateless free

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 //
 // Plan 010 U11 (R12): the batch cost-query seam. Tier-0 REPLAY test — the
 // executable spec of the "replay in input order" contract. When the batch

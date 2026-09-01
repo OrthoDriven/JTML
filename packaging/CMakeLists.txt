@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 set(CPACK_PACKAGE_NAME JointTrackMachineLearning)
 set(CPACK_PACKAGE_VENDOR "Gary J Miller Orthopaedic Biomechanics Laboratory")

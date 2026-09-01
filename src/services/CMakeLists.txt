@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U3: jtml_services is the headless, non-pure service layer (model/stl_reader/
 # optimizer_settings/location_storage/calibration). It is NOT Qt-free on this cut

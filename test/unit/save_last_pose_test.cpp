@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Save-last-pose shared core tests (plan 006 U3, R10 part / R13, H4). The
 // parameterized jta::SaveLastPoseToStorage (services layer) is the ONE core

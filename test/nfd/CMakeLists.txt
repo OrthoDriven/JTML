@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # General Template for Tests
 add_executable(nfd_speed_test

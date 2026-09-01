@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Tier-1 analytic golden for the extracted generic DIRECT optimizer (plan U5).
 // These use analytic cost functions as independent ground truth (R2) -- no

@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U4: jtml_compute is the SINGLE merged GPU/compute SHARED lib, combining the
 # former jtml_gpu (src/gpu) + JTA_Cost_Functions (src/cost_functions) with the

@@ -1,5 +1,5 @@
 /* Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
- * SPDX-License-Identifier: AGPL-3.0
+ * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
 /* U5 oracle: the real monoplane DIRECT_DILATION graph recipe over the frozen

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U4 (R3): the app-owned dataset — frames / models / LocationStorage /
 // calibration plus the SessionState mirror (the widgets SyncSessionState()

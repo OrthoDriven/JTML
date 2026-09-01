@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*EdgeProcessor (plan 004 U5 / R7): the parameter-derived per-frame edge
  * pipeline relocated from the MainScreen edge slots. Arithmetic/control flow

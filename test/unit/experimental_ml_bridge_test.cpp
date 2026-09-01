@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 005 U7: MlBridge degradation + seed pins (R8, R16, AE4). Deterministic
 // Catch2 headless tests that direct-compile the bridge (MlBridge +

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 //
 // U7: Layered oracle gate (R9, R10) — bit-exact image/raw-int, tolerated
 // composition. Drives the graph-admitted DIRECT_DILATION path (via

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 006 U5: OptimizerRunDriver — the narrow drive seam behind
 // OptimizerRunController (M12/Q8). OptimizerManager::Initialize is

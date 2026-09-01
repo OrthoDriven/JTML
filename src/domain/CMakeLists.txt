@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U3: jtml_domain is the PURE (Qt/GPU-free) core layer -- the intended
 # future Rust/FFI surface. Grep-gate: this lib must contain no QObject/vtk/

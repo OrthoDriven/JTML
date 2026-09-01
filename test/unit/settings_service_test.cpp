@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Deterministic Catch2 twin for the SettingsService (complements
 // test_settings_service_properties.cpp; plan 004 U3 / R9 / R14). Pins the

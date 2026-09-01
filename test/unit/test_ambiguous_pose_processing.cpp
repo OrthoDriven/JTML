@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Deterministic Catch2 twin for the ambiguous-pose post-processing (complements
 // test_ambiguous_pose_processing_properties.cpp). Pins concrete cases: varus/valgus

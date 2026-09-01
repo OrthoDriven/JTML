@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Tier-2 parity gate (plan 005 U9, R13): the app's OWN optimizer run path
 // (OptimizerBridge — the real wiring the QML app drives: OptimizeIntent

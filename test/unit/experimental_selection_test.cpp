@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 005 U4: StudyBridge + delegate-selection contract pins (R3, R17).
 // Deterministic Catch2 headless tests that direct-compile the bridge

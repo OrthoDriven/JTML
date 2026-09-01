@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U8: PoseBridge — the thin pose-editing adapter (R9, R10). Pass-through
 // orchestration only (thinness rule): the pose table rows come from

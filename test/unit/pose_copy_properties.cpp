@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Hegel property-based tests for the pure pose-copy seam (plan 004 U4,
 // R13/R15). PBT complements the deterministic cases in pose_copy_test.cpp by

@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U5: jtml_view is the STATIC Qt Widgets view layer (the classes that used
 # to live in src/gui). It is kept as a separable static lib so the view is

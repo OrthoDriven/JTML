@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Plan 008 U7 (Cut A): deterministic pins for the pure stage-script surface
 // (include/coordinator/optimizer_stage_script.h). The builders ARE the spec —

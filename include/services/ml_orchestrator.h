@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*MlOrchestrator (plan 006 U8 / R12 part, R13, F3; AE4): ONE shared
  * segment/estimate orchestration over SegmentationController /

@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // 005 U4: StudyBridge — the thin study-load adapter (R3, R17). Pass-through
 // orchestration only: QML FileDialogs pick paths → the shared

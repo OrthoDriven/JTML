@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // Hegel PBT for the EdgeProcessor (plan 004 U5, R13/R15). PBT complements the
 // deterministic cases in edge_processor_test.cpp by locking the invariants the

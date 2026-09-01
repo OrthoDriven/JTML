@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // ModelListBuilder unit tests (plan U7, U10 / R10). Pure name/dedup + size
 // logic; no Qt, no GPU, headless.

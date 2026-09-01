@@ -1,5 +1,5 @@
 // Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 // App-state / session orchestration unit tests (plan U7, R8/R9):
 // selecting a model/frame updates session state with no widget, matching the

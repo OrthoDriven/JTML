@@ -1,5 +1,5 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
-# SPDX-License-Identifier: AGPL-3.0
+# SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 # 003 U3/U4: jtml_coordinator is the Qt orchestration layer (optimize_coordinator,
 # optimizer_manager). It consumes the single jtml_compute SHARED lib (via JTA_LIBS) --
