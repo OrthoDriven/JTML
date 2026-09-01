@@ -5,10 +5,10 @@ use super::*;
 use crate::fixtures::{canonical_size, coords, on_lattice, splat};
 use proptest::prelude::*;
 
-fn box_at(center: Pose, depths: [u32; 6]) -> Hyperbox {
+fn box_at(center: impl Into<UnitPose>, depths: [u32; 6]) -> Hyperbox {
     Hyperbox {
         cost_at_center: 0.0,
-        center,
+        center: center.into(),
         depths,
     }
 }
@@ -44,7 +44,7 @@ fn longest_axis_picks_the_min_depth_axis_and_trisect_shrinks() {
     let parent_size = parent.size();
 
     let axis = parent.longest_axis();
-    assert_eq!(axis, 1);
+    assert_eq!(axis, Direction::Y_DIR);
 
     let (center, [pos, neg]) = parent.trisect(axis);
 
@@ -129,14 +129,7 @@ fn hyperbox_size_matches_depth_formula() {
 
     let hb = Hyperbox {
         cost_at_center: 25.0,
-        center: Pose {
-            x: 0.0,
-            y: 0.0,
-            z: 0.0,
-            xa: 0.0,
-            ya: 0.0,
-            za: 0.0,
-        },
+        center: UnitPose::from([0.0; 6]),
         depths: [3, 3, 3, 3, 3, 9],
     };
     // size = sqrt(Σ 3^{-2 d_i}) = sqrt(5/729 + 1/387420489)

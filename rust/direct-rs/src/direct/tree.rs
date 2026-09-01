@@ -1,36 +1,44 @@
+//! The DIRECT hyperbox tree: a `(size, cost, id)`-keyed forest of scored and
+//! unscored boxes in unit space.
+//!
+//! Tree shape: the outer map is keyed by box size, the inner map by
+//! `(cost, id)`. The id tie-breaker is load-bearing — without it two boxes
+//! sharing both size and cost would collide and one would be silently
+//! dropped, breaking the volume-partition invariant that
+//! `direct/test.rs::boxes_tile_the_unit_cube_exactly` checks.
+
 use std::collections::BTreeMap;
 
 use ordered_float::OrderedFloat;
 
-use crate::pose::{Pose, DIRECTIONS};
-
-#[cfg(test)]
-mod test;
+use crate::pose::{DIRECTIONS, Direction, UnitPose};
 
 pub type SizeKey = OrderedFloat<f64>;
 pub type CostKey = (OrderedFloat<f64>, u64);
 pub type DirectTree = BTreeMap<SizeKey, BTreeMap<CostKey, Hyperbox>>;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Hyperbox {
     pub cost_at_center: f64,
-    pub center: Pose,
+    pub center: UnitPose,
     pub depths: [u32; 6],
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct UnscoredHyperbox {
-    pub center: Pose,
+    pub center: UnitPose,
     pub depths: [u32; 6],
 }
 
 impl Hyperbox {
-    pub fn longest_axis(&self) -> usize {
+    /// The least-subdivided axis: splitting it keeps depth spread ≤ 1 and
+    /// shrinks volume the least per split.
+    pub fn longest_axis(&self) -> Direction {
         self.depths
             .iter()
-            .enumerate()
-            .min_by_key(|(_, depth)| **depth)
-            .map(|(axis, _)| axis)
+            .zip(DIRECTIONS)
+            .min_by_key(|(depth, _)| **depth)
+            .map(|(_, dir)| *dir)
             .expect("array is fixed-size and non-empty")
     }
 
@@ -42,19 +50,20 @@ impl Hyperbox {
             .sum::<f64>()
             .sqrt();
     }
-    // TODO: how to force usize to be the right size at runtime?
-    pub fn trisect(mut self, axis: usize) -> (Hyperbox, [UnscoredHyperbox; 2]) {
-        if let Some(x) = self.depths.get_mut(axis) {
-            *x += 1;
-        }
 
-        let shift = 3f64.powi(-(self.depths[axis] as i32));
+    /// Split along `axis` into the re-scored parent (one deeper on `axis`)
+    /// and its two shifted, unscored children. `Direction` makes an
+    /// out-of-range axis inexpressible, so no bounds guard is needed.
+    pub fn trisect(mut self, axis: Direction) -> (Hyperbox, [UnscoredHyperbox; 2]) {
+        self.depths[axis.index()] += 1;
+
+        let shift = 3f64.powi(-(self.depths[axis.index()] as i32));
 
         let mut posc = self.center;
         let mut negc = self.center;
 
-        posc.shift(&DIRECTIONS[axis], shift);
-        negc.shift(&DIRECTIONS[axis], -shift);
+        posc.shift(axis, shift);
+        negc.shift(axis, -shift);
 
         let pos_shift = UnscoredHyperbox {
             center: posc,
