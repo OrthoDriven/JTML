@@ -12,12 +12,19 @@ mod properties;
 #[cfg(test)]
 mod test_support;
 
+mod basin_opt;
 pub mod cost;
 pub mod direct_data_storage;
 pub mod direct_optimizer;
 
 use crate::{
-    cost::Cost, direct_data_storage::Pose, direct_optimizer::DirectOptimizer, ffi::CppCost,
+    cost::Cost,
+    direct_data_storage::{MinBoxSize, Pose},
+    direct_optimizer::{
+        DirectOptimizer, DirectSettings, POHSettings, RefinementOptions, RotationRepresentation,
+        TranslationRepresentation,
+    },
+    ffi::CppCost,
 };
 
 #[cxx::bridge]
@@ -37,6 +44,7 @@ pub mod ffi {
             range: [f64; 6],
             starting_point: [f64; 6],
             budget: u32,
+            use_bobyqa: bool,
         ) -> Box<DirectOptimizer>;
 
         pub fn run_rust_opt(self: &mut DirectOptimizer, cost: &CppCost) -> RunOutcome;
@@ -77,8 +85,28 @@ pub fn new_rust_opt(
     range: [f64; 6],
     starting_point: [f64; 6],
     budget: u32,
+    use_bobyqa: bool,
 ) -> Box<DirectOptimizer> {
-    return Box::new(DirectOptimizer::new(
+    let settings = DirectSettings {
+        poh_selection_strategy: POHSettings::Pareto,
+        min_box_size: MinBoxSize {
+            values: [
+                Some(0.5),
+                Some(0.5),
+                Some(0.5),
+                Some(0.5),
+                Some(0.5),
+                Some(0.5),
+            ],
+        },
+        rotation_style: RotationRepresentation::AxisAngle,
+        translation_style: TranslationRepresentation::CameraCentered,
+        refinement: match use_bobyqa {
+            true => RefinementOptions::BOBYQA,
+            false => RefinementOptions::NoRefinement,
+        },
+    };
+    return Box::new(DirectOptimizer::from_settings(
         Pose {
             x: range[0],
             y: range[1],
@@ -96,5 +124,6 @@ pub fn new_rust_opt(
             za: starting_point[5],
         },
         budget,
+        settings,
     ));
 }

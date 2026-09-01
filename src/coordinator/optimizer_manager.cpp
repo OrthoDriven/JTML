@@ -1289,12 +1289,13 @@ void OptimizerManager::RunDirectStage(
 
 #if USE_RUST_DIRECT
     CppCost cost = CppCost(serial_cost);
-    std::cout << budget_ << "\n";
+    bool use_bobyqa = stage_manager.getStage() == Stage::Leaf;
 
     rust::Box<direct_rs::DirectOptimizer> rust_opt = direct_rs::new_rust_opt(
         range.to_array(),
         starting_point_.to_array(),
-        (budget_ - cost_function_calls_));
+        (budget_ - cost_function_calls_),
+        use_bobyqa);
 
     RunOutcome out = rust_opt->run_rust_opt(cost);
 

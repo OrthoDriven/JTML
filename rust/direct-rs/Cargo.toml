@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+basin = { version = "1.7.0", features = ["nalgebra", "serde", "parallel", "nalgebra-lapack"] }
 cxx.workspace = true
 nalgebra = "0.35.0"
 ordered-float = "5.5.0"
