@@ -1,20 +1,21 @@
-use std::time::{self, Duration};
-use std::iter::zip;
+//! The DIRECT driver: hyperbox-tree lifecycle, batch scoring, and the
+//! optional BOBYQA refinement stage. Search geometry itself lives in
+//! `crate::space`; this module is concerned with DIRECT, not camera
+//! coordinates.
 
-use nalgebra::{self as na, Rotation3, Unit, Vector3};
+use std::time::{self, Duration};
+
 use ordered_float::OrderedFloat;
 
 use crate::{
     cost::Cost,
     direct::{
         poh::POHPoint,
-        settings::{
-            DirectSettings, RefinementOptions, RotationRepresentation,
-            TranslationRepresentation,
-        },
+        settings::{DirectSettings, Refinement},
         tree::{DirectTree, Hyperbox, UnscoredHyperbox},
     },
-    pose::{axes_from_str, from_euler_ordered, DIRECTIONS, Pose},
+    pose::{DIRECTIONS, Direction, PhysicalPose, PoseRange, UnitPose},
+    space::SearchSpace,
 };
 
 pub(crate) mod poh;
@@ -24,57 +25,64 @@ pub(crate) mod tree;
 #[cfg(test)]
 mod test;
 
+/// Optimizer outcome: the best physical pose found and its cost.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Incumbent {
+    pub pose: PhysicalPose,
+    pub cost: f64,
+}
+
 pub struct DirectOptimizer {
-    pub boxes: DirectTree,
-    current_best: (Pose, f64),
+    pub(crate) boxes: DirectTree,
+    current_best: Incumbent,
     budget: u32,
-    range: Pose,
-    starting_point: Pose,
-    call_offset: u32,
     pub(crate) calls: u32,
     next_box_id: u64,
-    starting_rotation: Rotation3<f64>,
-    translation_basis: na::Matrix3<f64>,
+    space: SearchSpace,
     settings: DirectSettings,
 }
 
 impl DirectOptimizer {
-    pub fn new(range: Pose, starting_point: Pose, budget: u32) -> Self {
+    pub fn new(range: PoseRange, starting_point: PhysicalPose, budget: u32) -> Self {
         Self::from_settings(range, starting_point, budget, DirectSettings::default())
     }
     pub fn from_settings(
-        range: Pose,
-        starting_point: Pose,
+        range: PoseRange,
+        starting_point: PhysicalPose,
         budget: u32,
         settings: DirectSettings,
     ) -> Self {
-        let starting_rotation = from_euler_ordered(
-            "ZXY",
-            [starting_point.za, starting_point.xa, starting_point.ya],
-            false,
+        // The unit↔physical mapping (starting rotation, camera basis) is
+        // materialized once here. Because it is precomputed, editing
+        // `settings.rotation`/`settings.translation` after construction
+        // would silently diverge from the actual mapping — construct with
+        // the settings you want.
+        let space = SearchSpace::new(
+            starting_point,
+            range,
+            settings.rotation,
+            settings.translation,
         );
-        let ray_vec = Unit::new_normalize(Vector3::new(
-            starting_point.x,
-            starting_point.y,
-            starting_point.z,
-        ));
-
-        let translation_basis =
-            na::Matrix3::from_columns(&[Vector3::x(), Vector3::y(), ray_vec.into_inner()]);
 
         return Self {
             boxes: DirectTree::new(),
-            current_best: (starting_point, f64::INFINITY),
+            current_best: Incumbent {
+                pose: starting_point,
+                cost: f64::INFINITY,
+            },
             budget,
-            range,
-            starting_point,
-            call_offset: 0,
             calls: 0,
             next_box_id: 0,
-            starting_rotation,
-            translation_basis,
+            space,
             settings,
         };
+    }
+
+    /// Read of the search-space mapping without running DIRECT. Same-crate
+    /// tests (the SO(3) axis-angle suite) exercise the precomputed map
+    /// through this seam.
+    pub(crate) fn physical_pose(&self, unit: UnitPose) -> PhysicalPose {
+        self.space.physical_pose(unit)
     }
 
     fn next_id(&mut self) -> u64 {
@@ -91,22 +99,14 @@ impl DirectOptimizer {
         }
     }
 
-    pub fn run<T: Cost>(&mut self, cost: &T) -> (Pose, f64) {
+    pub fn run<T: Cost>(&mut self, cost: &T) -> Incumbent {
         // seed: box lives at the unit center; cost eval at its physical pose
         let start = time::Instant::now();
 
         let unit = Self::unit_center();
-        // println!("{:?}", self.starting_rotation);
-        let physical = self.physical_pose_for_eval(unit);
-        // println!(
-        //     "{:?}",
-        //     Self::from_euler_ordered("ZXY", [physical.za, physical.xa, physical.ya], false)
-        // );
+        let physical = self.space.physical_pose(unit);
 
-        let seed_cost = *cost
-            .eval(&[physical])
-            .first()
-            .expect("Cost must be returned");
+        let seed_cost = cost.eval_one(physical);
         self.calls += 1;
         let seed = Hyperbox {
             cost_at_center: seed_cost,
@@ -119,18 +119,20 @@ impl DirectOptimizer {
             .or_default()
             .insert((OrderedFloat(Self::sort_cost(seed_cost)), id), seed);
 
-        if seed_cost.is_finite() && seed_cost < self.current_best.1 {
-            self.current_best = (physical, seed_cost);
+        if seed_cost.is_finite() && seed_cost < self.current_best.cost {
+            self.current_best = Incumbent {
+                pose: physical,
+                cost: seed_cost,
+            };
         }
 
         loop {
-            if self.calls + self.call_offset >= self.budget {
+            if self.calls >= self.budget {
                 break;
             }
 
             let candidates = self.get_potentially_optimal_candidates();
-            let poh =
-                poh::select_potentially_optimal(&candidates, &self.settings.poh_selection_strategy);
+            let poh = self.settings.poh_strategy.select(&candidates);
 
             if poh.is_empty() {
                 break;
@@ -150,170 +152,94 @@ impl DirectOptimizer {
             it_per_sec, self.calls
         );
 
-        match self.settings.refinement {
-            RefinementOptions::NoRefinement => {}
-            RefinementOptions::BOBYQA => {
-                let best_unit = self
-                    .boxes
-                    .values()
-                    .flat_map(|row| row.values())
-                    .filter(|hb| hb.cost_at_center.is_finite())
-                    .min_by(|a, b| a.cost_at_center.total_cmp(&b.cost_at_center))
-                    .map(|hb| hb.center);
+        self.refine(cost);
 
-                if let Some(best_unit) = best_unit {
-                    let bobyqa_result =
-                        std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                            crate::basin_opt::run_bobyqa(self, cost, best_unit, 500)
-                        }));
-
-                    match bobyqa_result {
-                        Ok((pose, cost_value, evals)) => {
-                            self.calls += evals as u32;
-
-                            if cost_value.is_finite() && cost_value < self.current_best.1 {
-                                self.current_best = (pose, cost_value);
-                            }
-                        }
-                        Err(_) => {
-                            eprintln!("BOBYQA panicked; keeping DIRECT result");
-                        }
-                    }
-                }
-            }
-        }
-
-        if (self.current_best.1.is_finite()) && (!self.current_best.1.is_nan()) {
+        if self.current_best.cost.is_finite() {
             return self.best();
         } else {
-            return (physical, f64::INFINITY);
+            return Incumbent {
+                pose: physical,
+                cost: f64::INFINITY,
+            };
         }
     }
-    pub fn best(&self) -> (Pose, f64) {
+    pub fn best(&self) -> Incumbent {
         self.current_best
     }
 
-    fn physical_width(&self, hb: &Hyperbox, axis: usize) -> f64 {
-        let ranges = self.range.to_array();
+    /// Optional local refinement after the DIRECT loop, per
+    /// `settings.refinement`. Two failure channels with one degradation
+    /// policy (log, keep the DIRECT incumbent):
+    ///
+    /// - `run_bobyqa`'s `Result` closes *our* error-as-panic channel (the
+    ///   `Executor::run() -> Result` path).
+    /// - The `catch_unwind` firewall is retained around basin itself: it is
+    ///   third-party numerical code with verified internal panic sites no
+    ///   `Result` can catch (rho-ordering in `driver.rs`, model validity in
+    ///   `init.rs`, positive trust-region step in `trsbox.rs`). A side
+    ///   effect accepted knowingly: a `Cost::eval` batch-contract assert
+    ///   that fires during refinement is *contained* here (logged, DIRECT
+    ///   result kept) rather than crashing; the batch-path assert in
+    ///   `score_and_reinsert` still propagates.
+    fn refine<T: Cost>(&mut self, cost: &T) {
+        let Refinement::Bobyqa(bobyqa) = self.settings.refinement else {
+            return;
+        };
 
-        2.0 * ranges[axis].abs() * 3f64.powi(-(hb.depths[axis] as i32))
-    }
-    fn print_resolution_summary(&self) {
-        let names = ["X", "Y", "Z", "XA", "YA", "ZA"];
+        let best_unit = self
+            .boxes
+            .values()
+            .flat_map(|row| row.values())
+            .filter(|hb| hb.cost_at_center.is_finite())
+            .min_by(|a, b| a.cost_at_center.total_cmp(&b.cost_at_center))
+            .map(|hb| hb.center);
 
-        println!("--- DIRECT resolution summary ---");
+        let Some(best_unit) = best_unit else {
+            return;
+        };
 
-        for axis in 0..6 {
-            let Some(min_size) = self.settings.min_box_size.values[axis] else {
-                continue;
-            };
+        let contained = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            crate::basin_opt::run_bobyqa(&self.space, cost, best_unit, bobyqa)
+        }));
 
-            let smallest = self
-                .boxes
-                .values()
-                .flat_map(|row| row.values())
-                .map(|hb| self.physical_width(hb, axis))
-                .fold(f64::INFINITY, f64::min);
+        match contained {
+            Ok(Ok(refined)) => {
+                self.calls += refined.evals as u32;
 
-            println!(
-                "{:>2}: smallest={:.6}, target={:.6}, ratio={:.2}x",
-                names[axis],
-                smallest,
-                min_size,
-                smallest / min_size,
-            );
+                if refined.cost.is_finite() && refined.cost < self.current_best.cost {
+                    self.current_best = Incumbent {
+                        pose: refined.pose,
+                        cost: refined.cost,
+                    };
+                }
+            }
+            Ok(Err(err)) => eprintln!("BOBYQA failed; keeping DIRECT result: {err}"),
+            Err(_) => eprintln!("BOBYQA panicked; keeping DIRECT result"),
         }
     }
-    fn split_axis(&self, hb: &Hyperbox) -> Option<usize> {
-        hb.depths
+
+    fn unit_center() -> UnitPose {
+        UnitPose::from([0.5; 6])
+    }
+
+    /// The axis to split, if any: the least-subdivided axis still above its
+    /// minimum physical width. Returns `None` when every candidate axis has
+    /// reached the `min_box_size` floor.
+    fn split_axis(&self, hb: &Hyperbox) -> Option<Direction> {
+        DIRECTIONS
             .iter()
-            .enumerate()
-            .filter(|(axis, _)| {
-                self.settings.min_box_size.values[*axis]
-                    .is_none_or(|min_size| self.physical_width(hb, *axis) > min_size)
+            .copied()
+            .filter(|dir| {
+                self.settings.min_box_size.values[dir.index()]
+                    .is_none_or(|min_size| {
+                        self.space.width_at(*dir, hb.depths[dir.index()]) > min_size
+                    })
             })
-            .min_by_key(|(_, depth)| **depth)
-            .map(|(axis, _)| axis)
+            .min_by_key(|dir| hb.depths[dir.index()])
     }
 
-    /// Map a unit-space pose (each axis in [0,1]) to physical space.
-    /// physical[i] = start[i] + (unit[i] - 0.5) * 2 * range[i]
-    pub(crate) fn physical_pose_for_eval(&self, unit: Pose) -> Pose {
-        let (xa, ya, za) = match self.settings.rotation_style {
-            // Euler rotations are a basic denormalization
-            RotationRepresentation::Euler => (
-                self.starting_point.xa + (unit.xa - 0.5) * 2.0 * self.range.xa,
-                self.starting_point.ya + (unit.ya - 0.5) * 2.0 * self.range.ya,
-                self.starting_point.za + (unit.za - 0.5) * 2.0 * self.range.za,
-            ),
-
-            // In axis angle, we're taking hyperbox location as a further pose applied to
-            // the original point. Denormalization alone doesn't get you physical
-            // rotation, you must further apply rotations
-            RotationRepresentation::AxisAngle => {
-                // println!("{:?}", unit);
-                let denormed_xa = (unit.xa - 0.5) * 2.0 * self.range.xa;
-                let denormed_ya = (unit.ya - 0.5) * 2.0 * self.range.ya;
-                let denormed_za = (unit.za - 0.5) * 2.0 * self.range.za;
-
-                let applied_rot_t = na::Rotation3::from_scaled_axis(Vector3::new(
-                    denormed_xa.to_radians(),
-                    denormed_ya.to_radians(),
-                    denormed_za.to_radians(),
-                ));
-
-                let applied_rot = self.starting_rotation * applied_rot_t;
-                let (final_angles, _observable) =
-                    applied_rot.euler_angles_ordered(axes_from_str("ZXY"), false);
-                let [za, xa, ya] = final_angles;
-
-                (xa.to_degrees(), ya.to_degrees(), za.to_degrees())
-            }
-        };
-
-        let (x, y, z) = match self.settings.translation_style {
-            TranslationRepresentation::PureEuclidean => (
-                self.starting_point.x + (unit.x - 0.5) * 2.0 * self.range.x,
-                self.starting_point.y + (unit.y - 0.5) * 2.0 * self.range.y,
-                self.starting_point.z + (unit.z - 0.5) * 2.0 * self.range.z,
-            ),
-            TranslationRepresentation::CameraCentered => {
-                let local_translation = Vector3::new(
-                    (unit.x - 0.5) * 2.0 * self.range.x,
-                    (unit.y - 0.5) * 2.0 * self.range.y,
-                    (unit.z - 0.5) * 2.0 * self.range.z,
-                );
-                let world_translation = self.translation_basis * local_translation;
-                (
-                    self.starting_point.x + world_translation.x,
-                    self.starting_point.y + world_translation.y,
-                    self.starting_point.z + world_translation.z,
-                )
-            }
-        };
-
-        return Pose {
-            x,
-            y,
-            z,
-            xa,
-            ya,
-            za,
-        };
-    }
-
-    fn unit_center() -> Pose {
-        Pose {
-            x: 0.5,
-            y: 0.5,
-            z: 0.5,
-            xa: 0.5,
-            ya: 0.5,
-            za: 0.5,
-        }
-    }
     fn trisect_and_return_unscored(&mut self, boxes: &[POHPoint]) -> Vec<UnscoredHyperbox> {
-        let mut unscored: Vec<UnscoredHyperbox> = Vec::new();
+        let mut unscored: Vec<UnscoredHyperbox> = Vec::with_capacity(2 * boxes.len());
         for poh in boxes {
             let size_key = OrderedFloat(poh.size);
 
@@ -336,24 +262,7 @@ impl DirectOptimizer {
                 .split_axis(&parent)
                 .expect("selected parent must be refinable");
 
-            let (center, shifted) = {
-                let mut this = parent;
-                this.depths[axis] += 1;
-                let shift = 3f64.powi(-(this.depths[axis] as i32));
-                let mut posc = this.center;
-                let mut negc = this.center;
-                posc.shift(&DIRECTIONS[axis], shift);
-                negc.shift(&DIRECTIONS[axis], -shift);
-                let pos_shift = UnscoredHyperbox {
-                    center: posc,
-                    depths: this.depths,
-                };
-                let neg_shift = UnscoredHyperbox {
-                    center: negc,
-                    depths: this.depths,
-                };
-                (this, [pos_shift, neg_shift])
-            };
+            let (center, shifted) = parent.trisect(axis);
 
             let id = self.next_id();
             self.boxes
@@ -369,19 +278,31 @@ impl DirectOptimizer {
     }
 
     fn score_and_reinsert<T: Cost>(&mut self, cost: &T, unscored: &[UnscoredHyperbox]) {
-        let centers: Vec<Pose> = unscored
+        let centers: Vec<PhysicalPose> = unscored
             .iter()
-            .map(|p| self.physical_pose_for_eval(p.center))
+            .map(|p| self.space.physical_pose(p.center))
             .collect();
         let evaluated_costs: Vec<f64> = cost.eval(&centers);
+        assert_eq!(
+            evaluated_costs.len(),
+            centers.len(),
+            "Cost::eval must return one cost per pose"
+        );
         self.calls += evaluated_costs.len() as u32;
 
-        for scored_box in zip(unscored, evaluated_costs).map(|v| v.0.add_score(v.1)) {
+        for (unscored_box, cost_value) in unscored.iter().zip(evaluated_costs) {
+            // Id allocation is unconditional here, as before: the (cost, id)
+            // key sequence must stay identical whether or not the box scores
+            // finite.
             let id = self.next_id();
+            let scored_box = unscored_box.add_score(cost_value);
             if scored_box.cost_at_center.is_finite() {
-                let physical = self.physical_pose_for_eval(scored_box.center);
-                if scored_box.cost_at_center < self.current_best.1 {
-                    self.current_best = (physical, scored_box.cost_at_center);
+                let physical = self.space.physical_pose(scored_box.center);
+                if scored_box.cost_at_center < self.current_best.cost {
+                    self.current_best = Incumbent {
+                        pose: physical,
+                        cost: scored_box.cost_at_center,
+                    };
                 }
                 self.boxes
                     .entry(OrderedFloat(scored_box.size()))
@@ -395,17 +316,16 @@ impl DirectOptimizer {
     }
 
     fn get_potentially_optimal_candidates(&self) -> Vec<POHPoint> {
-        let mut candidates = Vec::new();
-
-        for (size_key, row) in &self.boxes {
-            if let Some((key, _box)) = row.iter().find(|(_, hb)| self.split_axis(hb).is_some()) {
-                candidates.push(POHPoint {
-                    size: size_key.into_inner(),
-                    cost: key.0.into_inner(),
-                });
-            }
-        }
-
-        return candidates;
+        self.boxes
+            .iter()
+            .filter_map(|(size_key, row)| {
+                row.iter()
+                    .find(|(_, hb)| self.split_axis(hb).is_some())
+                    .map(|(key, _)| POHPoint {
+                        size: size_key.into_inner(),
+                        cost: key.0.into_inner(),
+                    })
+            })
+            .collect()
     }
 }
