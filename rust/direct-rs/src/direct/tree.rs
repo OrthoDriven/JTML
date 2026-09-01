@@ -17,6 +17,9 @@ pub type SizeKey = OrderedFloat<f64>;
 pub type CostKey = (OrderedFloat<f64>, u64);
 pub type DirectTree = BTreeMap<SizeKey, BTreeMap<CostKey, Hyperbox>>;
 
+#[cfg(test)]
+mod test;
+
 #[derive(Clone, Copy, Debug)]
 pub struct Hyperbox {
     pub cost_at_center: f64,

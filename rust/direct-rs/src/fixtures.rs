@@ -162,6 +162,7 @@ pub(crate) mod viz {
         }
     }
 
+    #[expect(clippy::panic, reason = "viz helper — panicking is acceptable in test support code")]
     pub fn plot_boxes(opt: &DirectOptimizer, name: &str) {
         let path = std::path::PathBuf::from("plots").join(format!("{name}.svg"));
         draw_2d_graph(&opt.snapshot_boxes(), &path)
@@ -188,15 +189,15 @@ pub(crate) mod viz {
             chart
                 .draw_series(LineSeries::new(
                     (-50..=50).map(|x| x as f32 / 50.0).map(|x| (x, x * x)),
-                    &RED,
+                    RED,
                 ))?
                 .label("y = x^2")
-                .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
+                .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], RED));
 
             chart
                 .configure_series_labels()
-                .background_style(&WHITE.mix(0.8))
-                .border_style(&BLACK)
+                .background_style(WHITE.mix(0.8))
+                .border_style(BLACK)
                 .draw()?;
 
             root.present()?;

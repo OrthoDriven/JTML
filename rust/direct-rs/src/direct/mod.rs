@@ -78,6 +78,8 @@ impl DirectOptimizer {
         };
     }
 
+    #[cfg(test)] // only the SO(3) mapping tests consume this; the search
+                  // itself goes through `self.space` directly
     /// Read of the search-space mapping without running DIRECT. Same-crate
     /// tests (the SO(3) axis-angle suite) exercise the precomputed map
     /// through this seam.

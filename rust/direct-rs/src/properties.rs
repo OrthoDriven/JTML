@@ -13,23 +13,23 @@ use std::rc::Rc;
 use proptest::prelude::*;
 
 use crate::cost::Cost;
-use crate::direct::DirectOptimizer;
+use crate::direct::{DirectOptimizer, Incumbent};
 use crate::fixtures::{
     coords, denorm, dist, invert, permute_pose, pose, show, splat, unpermute_pose, zero,
 };
-use crate::pose::Pose;
+use crate::pose::{PhysicalPose, Pose};
 use crate::problems::ShiftedSphere;
 
 const CASES: u32 = 32;
 
 struct Recording<C> {
     inner: C,
-    log: Rc<RefCell<Vec<Pose>>>,
+    log: Rc<RefCell<Vec<PhysicalPose>>>,
     costs: Rc<RefCell<Vec<f64>>>,
 }
 
 impl<C: Cost> Cost for Recording<C> {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         let out = self.inner.eval(poses);
         self.log.borrow_mut().extend(poses.iter().copied());
         self.costs.borrow_mut().extend(out.iter().copied());
@@ -44,7 +44,7 @@ struct Affine<C> {
 }
 
 impl<C: Cost> Cost for Affine<C> {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         self.inner
             .eval(poses)
             .into_iter()
@@ -61,11 +61,11 @@ struct InUnit<C> {
 }
 
 impl<C: Cost> Cost for InUnit<C> {
-    fn eval(&self, units: &[Pose]) -> Vec<f64> {
-        let physical: Vec<Pose> = units
+    fn eval(&self, units: &[PhysicalPose]) -> Vec<f64> {
+        let physical: Vec<PhysicalPose> = units
             .iter()
             .copied()
-            .map(|u| denorm(self.start, self.range, u))
+            .map(|u| denorm(self.start, self.range, *u).into())
             .collect();
         self.inner.eval(&physical)
     }
@@ -78,11 +78,11 @@ struct Permuted<C> {
 }
 
 impl<C: Cost> Cost for Permuted<C> {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
-        let unpermuted: Vec<Pose> = poses
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
+        let unpermuted: Vec<PhysicalPose> = poses
             .iter()
             .copied()
-            .map(|p| unpermute_pose(p, self.perm))
+            .map(|p| unpermute_pose(*p, self.perm).into())
             .collect();
         self.inner.eval(&unpermuted)
     }
@@ -95,7 +95,7 @@ struct Hostile {
 }
 
 impl Cost for Hostile {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         poses
             .iter()
             .map(|p| {
@@ -120,7 +120,7 @@ fn run_recorded<C: Cost>(
     start: Pose,
     budget: u32,
     cost: C,
-) -> (Pose, f64, Vec<Pose>, Vec<f64>) {
+) -> (PhysicalPose, f64, Vec<PhysicalPose>, Vec<f64>) {
     let log = Rc::new(RefCell::new(Vec::new()));
     let costs = Rc::new(RefCell::new(Vec::new()));
     let rec = Recording {
@@ -128,8 +128,8 @@ fn run_recorded<C: Cost>(
         log: Rc::clone(&log),
         costs: Rc::clone(&costs),
     };
-    let mut opt = DirectOptimizer::new(range, start, budget);
-    let (best, best_cost) = opt.run(&rec);
+    let mut opt = DirectOptimizer::new(range.into(), start.into(), budget);
+    let Incumbent { pose: best, cost: best_cost, .. } = opt.run(&rec);
     (best, best_cost, log.take(), costs.take())
 }
 
@@ -283,10 +283,10 @@ proptest! {
         let start = zero();
         let shift = pose(shift);
         let base = ShiftedSphere { shift };
-        let mut raw = DirectOptimizer::new(range, start, budget);
-        let (p1, c1) = raw.run(&base);
-        let mut aff = DirectOptimizer::new(range, start, budget);
-        let (p2, c2) = aff.run(&Affine { inner: base, a, b });
+        let mut raw = DirectOptimizer::new(range.into(), start.into(), budget);
+        let Incumbent { pose: p1, cost: c1, .. } = raw.run(&base);
+        let mut aff = DirectOptimizer::new(range.into(), start.into(), budget);
+        let Incumbent { pose: p2, cost: c2, .. } = aff.run(&Affine { inner: base, a, b });
         prop_assert!(
             dist(&p1, &p2) < 1e-9,
             "pose drifted under affine: {} vs {}",
@@ -308,10 +308,10 @@ proptest! {
         let range = splat(5.0);
         let start = zero();
         let base = ShiftedSphere { shift };
-        let mut raw = DirectOptimizer::new(range, start, budget);
-        let (p1, _) = raw.run(&base);
-        let mut aff = DirectOptimizer::new(range, start, budget);
-        let (p2, _) = aff.run(&Affine { inner: base, a: -1.0, b: 0.0 });
+        let mut raw = DirectOptimizer::new(range.into(), start.into(), budget);
+        let Incumbent { pose: p1, .. } = raw.run(&base);
+        let mut aff = DirectOptimizer::new(range.into(), start.into(), budget);
+        let Incumbent { pose: p2, .. } = aff.run(&Affine { inner: base, a: -1.0, b: 0.0 });
         prop_assert!(
             dist(&p1, &p2) > 0.5,
             "negating the cost kept the same pose {}",
@@ -342,7 +342,7 @@ proptest! {
         let unit_from_phys: Vec<Pose> = phys
             .iter()
             .copied()
-            .map(|p| invert(start, range, p))
+            .map(|p| invert(start, range, *p))
             .collect();
 
         let g = InUnit { inner: f, start, range };
@@ -375,14 +375,14 @@ proptest! {
         let shift = Pose { x: 1.7, y: 0.4, z: -2.1, xa: 0.8, ya: -1.3, za: 2.6 };
         let f = ShiftedSphere { shift };
         let budget = 8_000;
-        let mut a = DirectOptimizer::new(range, start, budget);
-        let (_p1, c1) = a.run(&f);
+        let mut a = DirectOptimizer::new(range.into(), start.into(), budget);
+        let Incumbent { cost: c1, .. } = a.run(&f);
         let mut b = DirectOptimizer::new(
-            permute_pose(range, perm),
-            permute_pose(start, perm),
+            permute_pose(range, perm).into(),
+            permute_pose(start, perm).into(),
             budget,
         );
-        let (_p2, c2) = b.run(&Permuted { inner: f, perm });
+        let Incumbent { cost: c2, .. } = b.run(&Permuted { inner: f, perm });
         prop_assert!(
             (c1 - c2).abs() < 1e-6,
             "permuted run cost {c2} != original {c1}"
@@ -457,8 +457,8 @@ proptest! {
 
 #[test]
 fn nan_prefix_never_becomes_incumbent() {
-    let mut opt = DirectOptimizer::new(splat(5.0), zero(), 80);
-    let (best, best_cost) = opt.run(&Hostile {
+    let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 80);
+    let Incumbent { pose: best, cost: best_cost, .. } = opt.run(&Hostile {
         nan_prefix: 5,
         seen: RefCell::new(0),
     });
@@ -477,8 +477,8 @@ fn nan_prefix_never_becomes_incumbent() {
 
 #[test]
 fn all_nan_run_does_not_leave_nan_incumbent() {
-    let mut opt = DirectOptimizer::new(splat(5.0), zero(), 40);
-    let (_best, best_cost) = opt.run(&Hostile {
+    let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 40);
+    let Incumbent { cost: best_cost, .. } = opt.run(&Hostile {
         nan_prefix: usize::MAX,
         seen: RefCell::new(0),
     });

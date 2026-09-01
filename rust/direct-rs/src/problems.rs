@@ -12,7 +12,7 @@
 //! 3. **Both cost AND pose are asserted**, so a function that is plateau-flat
 //!    near the optimum can't hide a box that isn't refining.
 
-use crate::{cost::Cost, pose::Pose};
+use crate::{cost::Cost, pose::{PhysicalPose, Pose}};
 
 /// A plain sphere: `f(x) = Σ (xᵢ - sᵢ)²`. Unimodal; verifies convergence rate
 /// and that shifting the optimum off-center works. `f* = 0` at `x* = s`.
@@ -31,7 +31,7 @@ impl ShiftedSphere {
 }
 
 impl Cost for ShiftedSphere {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         poses
             .iter()
             .map(|p| {
@@ -65,7 +65,7 @@ impl AnisotropicSphere {
 }
 
 impl Cost for AnisotropicSphere {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         poses
             .iter()
             .map(|p| {
@@ -104,7 +104,7 @@ impl StyblinskiTang {
 }
 
 impl Cost for StyblinskiTang {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         poses
             .iter()
             .map(|p| {
@@ -134,7 +134,7 @@ impl ShiftedRastrigin {
 }
 
 impl Cost for ShiftedRastrigin {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         let base = 10.0 * self.n as f64;
         let two_pi = 2.0 * std::f64::consts::PI;
         let t = |d: f64| d * d - 10.0 * (two_pi * d).cos();
@@ -171,7 +171,7 @@ impl ShiftedAckley {
 }
 
 impl Cost for ShiftedAckley {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         let n = 6.0_f64;
         poses
             .iter()
@@ -203,8 +203,9 @@ impl Cost for ShiftedAckley {
 #[derive(Clone, Copy)]
 pub struct Rosenbrock;
 
+#[expect(clippy::indexing_slicing, reason = "loop bound 0..5 guarantees valid indices into [f64;6]")]
 impl Cost for Rosenbrock {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         poses
             .iter()
             .map(|p| {
@@ -259,8 +260,9 @@ impl Hartmann6 {
     }
 }
 
+#[expect(clippy::indexing_slicing, reason = "loop bounds 0..4 and 0..6 guarantee valid indices")]
 impl Cost for Hartmann6 {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
         poses
             .iter()
             .map(|p| {
@@ -282,6 +284,8 @@ impl Cost for Hartmann6 {
 mod tests {
 
     use crate::direct::DirectOptimizer;
+    use crate::direct::Incumbent;
+    use crate::pose::PhysicalPose;
     use crate::fixtures::viz::plot_boxes;
 
     use super::*;
@@ -345,8 +349,8 @@ mod tests {
         let cost_fn = ShiftedSphere {
             shift: evil_shift(),
         };
-        let mut opt = DirectOptimizer::new(all_ranges(5.0), zero(), 20_000);
-        let (best, cost) = opt.run(&cost_fn);
+        let mut opt = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 20_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&cost_fn);
         assert!(
             (cost - ShiftedSphere::fstar()).abs() < 1e-6,
             "cost {cost} vs f* {}",
@@ -382,8 +386,8 @@ mod tests {
             za: 0.06,
         };
         let cost_fn = ShiftedSphere { shift };
-        let mut opt = DirectOptimizer::new(range, zero(), 30_000);
-        let (best, cost) = opt.run(&cost_fn);
+        let mut opt = DirectOptimizer::new(range.into(), zero().into(), 30_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&cost_fn);
         assert!(
             (cost - ShiftedSphere::fstar()).abs() < 1e-1,
             "cost {cost} vs f* {}",
@@ -405,8 +409,8 @@ mod tests {
         let shift = evil_shift();
         let weights = [16.0_f64, 16.0, 16.0, 1.0, 1.0, 1.0];
         let cost_fn = AnisotropicSphere { shift, weights };
-        let mut opt = DirectOptimizer::new(all_ranges(5.0), zero(), 20_000);
-        let (best, cost) = opt.run(&cost_fn);
+        let mut opt = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 20_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&cost_fn);
         assert!(
             (cost - AnisotropicSphere::fstar()).abs() < 1e-4,
             "weighted cost {cost} vs f* {}",
@@ -424,8 +428,8 @@ mod tests {
     #[test]
     fn styblinski_reaches_distinctive_fstar() {
         // f* = -234.9959 — a non-round number that catches sign/dim errors.
-        let mut opt = DirectOptimizer::new(all_ranges(5.0), zero(), 40_000);
-        let (best, cost) = opt.run(&StyblinskiTang);
+        let mut opt = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 40_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&StyblinskiTang);
         assert!(
             (cost - StyblinskiTang::fstar()).abs() < 0.5,
             "cost {cost} vs f* {}",
@@ -444,8 +448,8 @@ mod tests {
     fn hartmann_reaches_global_min() {
         // Hartmann-6 is the canonical 6D DIRECT benchmark; the optimum is an
         // interior point, not the center. This is the strongest reach test.
-        let mut opt = DirectOptimizer::new(all_ranges(0.5), all_ranges(0.5), 60_000);
-        let (best, cost) = opt.run(&Hartmann6);
+        let mut opt = DirectOptimizer::new(all_ranges(0.5).into(), all_ranges(0.5).into(), 60_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&Hartmann6);
 
         plot_boxes(&opt, "hartman_global_min");
         assert!(
@@ -467,8 +471,8 @@ mod tests {
         // Dense local-min lattice. Stuck-in-a-basin fails this loudly.
         let shift = evil_shift();
         let cost_fn = ShiftedRastrigin { shift, n: 6 };
-        let mut opt = DirectOptimizer::new(all_ranges(5.12), zero(), 260_000);
-        let (best, cost) = opt.run(&cost_fn);
+        let mut opt = DirectOptimizer::new(all_ranges(5.12).into(), zero().into(), 260_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&cost_fn);
         assert!(
             cost - ShiftedRastrigin::fstar() < 5.0,
             "Rastrigin cost {cost} still in a local basin (f* = 0)"
@@ -486,8 +490,8 @@ mod tests {
         // Near-flat outer plateau. Without the ε-condition DIRECT can stall.
         let shift = evil_shift();
         let cost_fn = ShiftedAckley { shift };
-        let mut opt = DirectOptimizer::new(all_ranges(5.0), zero(), 60_000);
-        let (best, cost) = opt.run(&cost_fn);
+        let mut opt = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 60_000);
+        let Incumbent { pose: best, cost, .. } = opt.run(&cost_fn);
         assert!(
             (cost - ShiftedAckley::fstar()).abs() < 2.0,
             "Ackley cost {cost} did not enter the funnel (f* = 0)"
@@ -504,8 +508,8 @@ mod tests {
     fn rosenbrock_improves_on_the_seed() {
         // Tracking-only: DIRECT is genuinely bad at the banana. Just require
         // improvement on f(0) = 5*(100+1) = 505, not a reach of f*=0.
-        let mut opt = DirectOptimizer::new(all_ranges(2.0), zero(), 20_000);
-        let (_best, cost) = opt.run(&Rosenbrock);
+        let mut opt = DirectOptimizer::new(all_ranges(2.0).into(), zero().into(), 20_000);
+        let Incumbent { cost, .. } = opt.run(&Rosenbrock);
         assert!(
             cost < 505.0,
             "Rosenbrock did not improve on seed 505, got {cost}"
@@ -520,24 +524,24 @@ mod tests {
         // costs AND poses (DIRECT is deterministic; a HashMap/HashSet seeding
         // or float-order difference would break this).
         let a = {
-            let mut o = DirectOptimizer::new(all_ranges(5.0), zero(), 20_000);
+            let mut o = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 20_000);
             o.run(&ShiftedSphere {
                 shift: evil_shift(),
             })
         };
         let b = {
-            let mut o = DirectOptimizer::new(all_ranges(5.0), zero(), 20_000);
+            let mut o = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 20_000);
             o.run(&ShiftedSphere {
                 shift: evil_shift(),
             })
         };
-        assert_eq!(a.1.to_bits(), b.1.to_bits(), "costs differ between runs");
-        assert_eq!(a.0.x.to_bits(), b.0.x.to_bits(), "x differs");
-        assert_eq!(a.0.y.to_bits(), b.0.y.to_bits(), "y differs");
-        assert_eq!(a.0.z.to_bits(), b.0.z.to_bits(), "z differs");
-        assert_eq!(a.0.xa.to_bits(), b.0.xa.to_bits(), "xa differs");
-        assert_eq!(a.0.ya.to_bits(), b.0.ya.to_bits(), "ya differs");
-        assert_eq!(a.0.za.to_bits(), b.0.za.to_bits(), "za differs");
+        assert_eq!(a.cost.to_bits(), b.cost.to_bits(), "costs differ between runs");
+        assert_eq!(a.pose.x.to_bits(), b.pose.x.to_bits(), "x differs");
+        assert_eq!(a.pose.y.to_bits(), b.pose.y.to_bits(), "y differs");
+        assert_eq!(a.pose.z.to_bits(), b.pose.z.to_bits(), "z differs");
+        assert_eq!(a.pose.xa.to_bits(), b.pose.xa.to_bits(), "xa differs");
+        assert_eq!(a.pose.ya.to_bits(), b.pose.ya.to_bits(), "ya differs");
+        assert_eq!(a.pose.za.to_bits(), b.pose.za.to_bits(), "za differs");
     }
 
     #[test]
@@ -545,11 +549,11 @@ mod tests {
         // run with a small and a large budget on the same (deterministic)
         // problem: small must never beat large. No known optimum needed.
         let spend = |budget| {
-            let mut o = DirectOptimizer::new(all_ranges(5.0), zero(), budget);
+            let mut o = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), budget);
             o.run(&ShiftedSphere {
                 shift: evil_shift(),
             })
-            .1
+            .cost
         };
         let small = spend(2_000);
         let large = spend(60_000);
@@ -571,8 +575,8 @@ mod tests {
             ya: -9.0,
             za: 5.0,
         };
-        let (_, c1) = {
-            let mut o = DirectOptimizer::new(all_ranges(5.0), zero(), 20_000);
+        let Incumbent { cost: c1, .. } = {
+            let mut o = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 20_000);
             o.run(&ShiftedSphere {
                 shift: evil_shift(),
             })
@@ -586,8 +590,8 @@ mod tests {
             ya: delta.ya,
             za: delta.za,
         };
-        let (_, c2) = {
-            let mut o = DirectOptimizer::new(all_ranges(5.0), shifted, 20_000);
+        let Incumbent { cost: c2, .. } = {
+            let mut o = DirectOptimizer::new(all_ranges(5.0).into(), shifted.into(), 20_000);
             // equivalent: shift the optimum by the same delta
             o.run(&ShiftedSphere {
                 shift: Pose {
@@ -611,12 +615,12 @@ mod tests {
         // Repeated run on each cost must be bit-stable (not seeded/greedy).
         fn run_twice<C: Cost + Copy>(cost: C) -> (f64, f64) {
             let a = {
-                let mut o = DirectOptimizer::new(all_ranges(5.0), zero(), 30_000);
-                o.run(&cost).1
+                let mut o = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 30_000);
+                o.run(&cost).cost
             };
             let b = {
-                let mut o = DirectOptimizer::new(all_ranges(5.0), zero(), 30_000);
-                o.run(&cost).1
+                let mut o = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 30_000);
+                o.run(&cost).cost
             };
             (a, b)
         }
@@ -632,8 +636,8 @@ mod tests {
         assert_eq!(a.to_bits(), b.to_bits(), "Ackley nondeterministic");
         let (a, b) = {
             let run = || {
-                let mut o = DirectOptimizer::new(all_ranges(0.5), all_ranges(0.5), 30_000);
-                o.run(&Hartmann6).1
+                let mut o = DirectOptimizer::new(all_ranges(0.5).into(), all_ranges(0.5).into(), 30_000);
+                o.run(&Hartmann6).cost
             };
             (run(), run())
         };
@@ -643,10 +647,11 @@ mod tests {
     // ---------- cost-level integrity (no optimizer) ----------
 
     #[test]
+    #[expect(clippy::indexing_slicing, reason = "test asserts fixed-size batch indices")]
     fn batch_order_preserved() {
         // A strictly monotone separable cost: the i-th returned value must
         // belong to the i-th input pose, even if we shuffle the batch.
-        let mut poses = vec![
+        let mut poses: Vec<PhysicalPose> = vec![
             Pose {
                 x: 0.0,
                 y: 0.0,
@@ -654,7 +659,7 @@ mod tests {
                 xa: 0.0,
                 ya: 0.0,
                 za: 0.0,
-            },
+            }.into(),
             Pose {
                 x: 1.0,
                 y: 1.0,
@@ -662,7 +667,7 @@ mod tests {
                 xa: 1.0,
                 ya: 1.0,
                 za: 1.0,
-            },
+            }.into(),
             Pose {
                 x: 2.0,
                 y: 2.0,
@@ -670,7 +675,7 @@ mod tests {
                 xa: 2.0,
                 ya: 2.0,
                 za: 2.0,
-            },
+            }.into(),
         ];
         let c = ShiftedSphere { shift: zero() };
         let direct = c.eval(&poses);
@@ -684,10 +689,10 @@ mod tests {
 
     #[test]
     fn eval_is_pure_function_of_pose() {
-        // Same pose batch always returns the same costs (no hidden state).
-        let p = vec![evil_shift()];
-        let a = ShiftedSphere { shift: zero() }.eval(&p)[0];
-        let b = ShiftedSphere { shift: zero() }.eval(&p)[0];
+        // Same pose always returns the same cost (no hidden state).
+        let p = evil_shift().into();
+        let a = ShiftedSphere { shift: zero() }.eval_one(p);
+        let b = ShiftedSphere { shift: zero() }.eval_one(p);
         assert_eq!(a.to_bits(), b.to_bits());
     }
 
@@ -702,15 +707,15 @@ mod tests {
         let range = 5.0;
         use std::cell::RefCell;
         use std::rc::Rc;
-        struct Recorder(Rc<RefCell<Vec<Pose>>>);
+        struct Recorder(Rc<RefCell<Vec<PhysicalPose>>>);
         impl Cost for Recorder {
-            fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+            fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
                 self.0.borrow_mut().extend(poses.iter().copied());
                 poses.iter().map(|_| 0.0).collect()
             }
         }
         let log = Rc::new(RefCell::new(Vec::new()));
-        let mut opt = DirectOptimizer::new(all_ranges(range), zero(), 5_000);
+        let mut opt = DirectOptimizer::new(all_ranges(range).into(), zero().into(), 5_000);
         opt.run(&Recorder(log.clone()));
         for p in log.borrow().iter() {
             for v in [p.x, p.y, p.z, p.xa, p.ya, p.za] {
@@ -735,11 +740,11 @@ mod tests {
             uniq: HashSet<[u64; 6]>,
         }
         struct Rec(Rc<RefCell<Counter>>);
-        fn key(p: &Pose) -> [u64; 6] {
+        fn key(p: &PhysicalPose) -> [u64; 6] {
             [p.x, p.y, p.z, p.xa, p.ya, p.za].map(f64::to_bits)
         }
         impl Cost for Rec {
-            fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+            fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
                 let mut c = self.0.borrow_mut();
                 for p in poses {
                     c.total += 1;
@@ -752,7 +757,7 @@ mod tests {
             total: 0,
             uniq: HashSet::new(),
         }));
-        let mut opt = DirectOptimizer::new(all_ranges(5.0), zero(), 4_000);
+        let mut opt = DirectOptimizer::new(all_ranges(5.0).into(), zero().into(), 4_000);
         opt.run(&Rec(counter.clone()));
         let c = counter.borrow();
         assert!(c.total > 0, "no evals at all");

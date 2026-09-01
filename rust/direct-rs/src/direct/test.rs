@@ -8,11 +8,14 @@ use nalgebra::{Rotation3, Vector3};
 use proptest::prelude::*;
 
 use crate::cost::Cost;
-use crate::direct::settings::RotationRepresentation;
+use crate::direct::settings::{
+    BobyqaSettings, DirectSettings, MinBoxSize, PohStrategy, Refinement, RotationRepresentation,
+    TranslationRepresentation,
+};
 use crate::direct::tree::Hyperbox;
-use crate::direct::DirectOptimizer;
+use crate::direct::{DirectOptimizer, Incumbent};
 use crate::fixtures::{coords, on_lattice, pose, show, splat, zero};
-use crate::pose::{self, Pose};
+use crate::pose::{self, PhysicalPose, Pose};
 use crate::problems::ShiftedSphere;
 
 #[cfg(test)]
@@ -39,7 +42,7 @@ mod tests {
 
     #[test]
     fn boxes_tile_the_unit_cube_exactly() {
-        let mut opt = DirectOptimizer::new(splat(5.0), zero(), 80);
+        let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 80);
         opt.run(&ShiftedSphere {
             shift: Pose {
                 x: 1.7,
@@ -56,7 +59,7 @@ mod tests {
 
     #[test]
     fn every_box_center_is_on_the_trisection_lattice() {
-        let mut opt = DirectOptimizer::new(splat(5.0), zero(), 80);
+        let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 80);
         opt.run(&ShiftedSphere {
             shift: Pose {
                 x: 1.7,
@@ -80,7 +83,7 @@ mod tests {
 
     #[test]
     fn no_two_boxes_share_a_unit_center() {
-        let mut opt = DirectOptimizer::new(splat(5.0), zero(), 4_000);
+        let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 4_000);
         opt.run(&ShiftedSphere {
             shift: Pose {
                 x: 1.7,
@@ -104,7 +107,7 @@ mod tests {
 
     #[test]
     fn each_box_depths_differ_by_at_most_one() {
-        let mut opt = DirectOptimizer::new(splat(5.0), zero(), 120);
+        let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 120);
         opt.run(&ShiftedSphere {
             shift: Pose {
                 x: 1.7,
@@ -135,7 +138,7 @@ mod tests {
             shift in proptest::array::uniform6(-4.0_f64..4.0),
         ) {
             let [x, y, z, xa, ya, za] = shift;
-            let mut opt = DirectOptimizer::new(splat(5.0), zero(), budget);
+            let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), budget);
             opt.run(&ShiftedSphere { shift: Pose { x, y, z, xa, ya, za } });
             match volume_checksum(&opt) {
                 Ok((lhs, rhs)) => prop_assert_eq!(lhs, rhs),
@@ -147,7 +150,7 @@ mod tests {
 
     struct Sphere;
     impl Cost for Sphere {
-        fn eval(&self, poses: &[Pose]) -> Vec<f64> {
+        fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
             poses
                 .iter()
                 .map(|p| coords(p).iter().map(|v| v * v).sum())
@@ -157,7 +160,7 @@ mod tests {
 
     #[test]
     fn seed_evaluation_counts_as_one_call_when_budget_is_zero() {
-        let mut opt = DirectOptimizer::new(splat(5.0), zero(), 0);
+        let mut opt = DirectOptimizer::new(splat(5.0).into(), zero().into(), 0);
         let _ = opt.run(&Sphere);
         assert_eq!(opt.calls, 1, "seed must still be evaluated at budget 0");
     }
@@ -180,8 +183,8 @@ mod tests {
             ya: 5.0,
             za: 5.0,
         };
-        let mut opt = DirectOptimizer::new(range, start, 5_000);
-        let (_best, best_cost) = opt.run(&Sphere);
+        let mut opt = DirectOptimizer::new(range.into(), start.into(), 5_000);
+        let Incumbent { cost: best_cost, .. } = opt.run(&Sphere);
         println!("cost={best_cost}");
         // the global minimum is 0; DIRECT on a sphere should improve on the
         // seed's sum-of-squares (start=(1,1,1,...) => seed cost 6).
@@ -190,26 +193,50 @@ mod tests {
             "expected to improve on seed cost 6, got {best_cost}"
         );
     }
-}
 
-/// Test-only constructors that pin the rotation representation.
-///
-/// Production currently always runs `RotationRepresentation::default()`
-/// (`Euler`); these seams exist so the test suite can state *which* mode a
-/// metamorphic property assumes instead of inheriting it silently.
-#[cfg(test)]
-impl DirectOptimizer {
-    pub(crate) fn new_in_mode(
-        range: Pose,
-        starting_point: Pose,
-        budget: u32,
-        rotation: RotationRepresentation,
-    ) -> Self {
-        let mut opt = Self::new(range, starting_point, budget);
-        opt.settings.rotation_style = rotation;
-        opt
+    #[test]
+    fn production_settings_match_the_old_ffi_hardcodes() {
+        let s = DirectSettings::production(true);
+        assert_eq!(s.poh_strategy, PohStrategy::Pareto);
+        assert_eq!(s.min_box_size, MinBoxSize::uniform(0.5));
+        assert_eq!(s.rotation, RotationRepresentation::AxisAngle);
+        assert_eq!(s.translation, TranslationRepresentation::CameraCentered);
+        assert_eq!(
+            s.refinement,
+            Refinement::Bobyqa(BobyqaSettings {
+                max_evals: 500,
+                rho_beg: 0.5,
+                rho_end: 1e-3,
+                npt: 28,
+            })
+        );
+        // ...and the manual Default is a WORKING refinement, not zeros:
+        assert_eq!(BobyqaSettings::default().max_evals, 500);
+        assert_eq!(BobyqaSettings::default().rho_beg, 0.5);
+        assert_eq!(BobyqaSettings::default().rho_end, 1e-3);
+        assert_eq!(BobyqaSettings::default().npt, 28);
+        assert_eq!(DirectSettings::production(false).refinement, Refinement::None);
+    }
+
+    #[test]
+    fn poh_select_on_empty_candidates_is_empty_both_arms() {
+        assert!(PohStrategy::ConvexHull.select(&[]).is_empty());
+        assert!(PohStrategy::Pareto.select(&[]).is_empty());
+    }
+
+    #[test]
+    #[should_panic(expected = "Cost::eval must return one cost per pose")]
+    fn eval_one_panics_when_eval_returns_wrong_count() {
+        struct TooFew;
+        impl Cost for TooFew {
+            fn eval(&self, _poses: &[PhysicalPose]) -> Vec<f64> {
+                Vec::new()
+            }
+        }
+        let _ = TooFew.eval_one(PhysicalPose::from([0.0; 6]));
     }
 }
+
 
 #[cfg(test)]
 mod axis_angle_tests {
@@ -256,7 +283,7 @@ mod axis_angle_tests {
     /// convention the rest of the project uses (C++ `SetPose`:
     /// Rz(za) * Rx(xa) * Ry(ya)).
     fn recon(p: &Pose) -> Rotation3<f64> {
-        pose::from_euler_ordered("ZXY", [p.za, p.xa, p.ya], false)
+        pose::from_euler_ordered(pose::AxisSeq::ZXY, [p.za, p.xa, p.ya], false)
     }
 
     /// Serialize a rotation to a Pose using production's own inverse path
@@ -265,7 +292,7 @@ mod axis_angle_tests {
     /// the extraction sat away from gimbal lock.
     fn serialize(r: &Rotation3<f64>) -> (Pose, bool) {
         let (angles, observable) =
-            r.euler_angles_ordered(pose::axes_from_str("ZXY"), false);
+            r.euler_angles_ordered(pose::AxisSeq::ZXY.axes(), false);
         (
             Pose {
                 x: 0.0,
@@ -301,7 +328,15 @@ mod axis_angle_tests {
     /// Optimizer configured for AxisAngle over `range`, centered on `start`
     /// (budget is irrelevant: the mapping is tested directly).
     fn axis_angle_opt(start: Pose, range: Pose) -> DirectOptimizer {
-        DirectOptimizer::new_in_mode(range, start, 0, RotationRepresentation::AxisAngle)
+        DirectOptimizer::from_settings(
+            range.into(),
+            start.into(),
+            0,
+            DirectSettings {
+                rotation: RotationRepresentation::AxisAngle,
+                ..Default::default()
+            },
+        )
     }
 
     /// Unit-space pose whose rotational coordinates denote the scaled-axis
@@ -321,7 +356,7 @@ mod axis_angle_tests {
     /// scaled-axis delta `v_deg` (degrees), exercised without running DIRECT.
     fn apply(start: Pose, v_deg: [f64; 3]) -> Pose {
         let range = pose([0.0, 0.0, 0.0, RANGE_DEG, RANGE_DEG, RANGE_DEG]);
-        axis_angle_opt(start, range).physical_pose_for_eval(unit_for_delta(v_deg, &range))
+        *axis_angle_opt(start, range).physical_pose(unit_for_delta(v_deg, &range).into())
     }
 
     fn deg(v: f64) -> f64 {
@@ -337,12 +372,12 @@ mod axis_angle_tests {
         let (sy, cy) = ya_deg.to_radians().sin_cos();
         nalgebra::Matrix3::new(
             cz * cy - sz * sx * sy,
-            -1.0 * sz * cx,
+            -(sz * cx),
             cz * sy + sz * cy * sx,
             sz * cy + cz * sx * sy,
             cz * cx,
             sz * sy - cz * cy * sx,
-            -1.0 * cx * sy,
+            -(cx * sy),
             sx,
             cx * cy,
         )
@@ -385,18 +420,12 @@ mod axis_angle_tests {
     }
 
     #[test]
-    fn default_rotation_style_is_euler_and_tests_override_it() {
+    fn default_rotation_is_euler() {
         // Guards against Euler-branch code masquerading as AxisAngle tests.
-        let opt = DirectOptimizer::new(zero(), zero(), 0);
-        assert!(matches!(
-            opt.settings.rotation_style,
-            RotationRepresentation::Euler
-        ));
+        let opt = DirectOptimizer::new(zero().into(), zero().into(), 0);
+        assert_eq!(opt.settings.rotation, RotationRepresentation::Euler);
         let aa = axis_angle_opt(zero(), pose([0.0, 0.0, 0.0, 5.0, 5.0, 5.0]));
-        assert!(matches!(
-            aa.settings.rotation_style,
-            RotationRepresentation::AxisAngle
-        ));
+        assert_eq!(aa.settings.rotation, RotationRepresentation::AxisAngle);
     }
 
     #[test]
@@ -540,6 +569,7 @@ mod axis_angle_tests {
         /// Two increments about the SAME axis add: applying a*n then b*n
         /// sequentially equals applying (a+b)*n once.
         #[test]
+        #[expect(clippy::indexing_slicing, reason = "proptest constrains axis_idx to 0..3")]
         fn same_axis_increments_are_additive(
             axis_idx in 0usize..3,
             sxa in -START_LIMIT_MID..START_LIMIT_MID,
@@ -582,7 +612,7 @@ mod axis_angle_tests {
             vy in -RANGE_DEG..RANGE_DEG,
             vz in -RANGE_DEG..RANGE_DEG,
         ) {
-            let q = pose::from_euler_ordered("ZXY", [q1, q2, q3], false);
+            let q = pose::from_euler_ordered(pose::AxisSeq::ZXY, [q1, q2, q3], false);
             let start = pose([0.0, 0.0, 0.0, sxa, sya, sza]);
             let r_start = recon(&start);
             let v = [vx, vy, vz];
@@ -608,6 +638,7 @@ mod axis_angle_tests {
         /// with the primary contract but isolates component-order bugs with
         /// far more readable failure output.
         #[test]
+        #[expect(clippy::indexing_slicing, reason = "proptest constrains axis_idx to 0..3")]
         fn pure_axis_deltas_rotate_about_local_axis(
             axis_idx in 0usize..3,
             sxa in -START_LIMIT_MID..START_LIMIT_MID,

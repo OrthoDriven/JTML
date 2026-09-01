@@ -29,14 +29,15 @@ fn pose_range_width_at_mirrors_physical_width() {
         ya: 0.0,
         za: 5.0,
     });
-    for (dir, half) in [
+    let cases: [(Direction, f64); 6] = [
         (Direction::X_DIR, 2.0),
         (Direction::Y_DIR, -1.5),
         (Direction::Z_DIR, 0.25),
         (Direction::XA_DIR, 10.0),
         (Direction::YA_DIR, 0.0),
         (Direction::ZA_DIR, 5.0),
-    ] {
+    ];
+    for (dir, half) in cases {
         for depth in [0u32, 2, 5] {
             let want = 2.0 * half.abs() / 3f64.powi(depth as i32);
             let got = range.width_at(dir, depth);
@@ -49,6 +50,8 @@ fn pose_range_width_at_mirrors_physical_width() {
 }
 
 #[test]
+#[expect(clippy::float_cmp, reason = "bit-exact roundtrip verification")]
+#[expect(clippy::indexing_slicing, reason = "index matches DIRECTIONS loop — always 0..5")]
 fn shift_moves_exactly_one_coordinate_per_direction() {
     for dir in DIRECTIONS {
         let mut p = Pose {

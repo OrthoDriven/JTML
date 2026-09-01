@@ -219,6 +219,7 @@ pub const DIRECTIONS: [Direction; 6] = [
 /// no per-evaluation allocation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum AxisSeq {
+    #[expect(clippy::upper_case_acronyms, reason = "axis sequence name mirrors the C++ ZXY convention")]
     ZXY,
 }
 

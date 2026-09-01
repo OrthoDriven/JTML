@@ -1,6 +1,6 @@
 use super::*;
 use crate::fixtures::{denorm, pose, splat};
-use crate::pose::{Direction, Pose, UnitPose, DIRECTIONS};
+use crate::pose::{Pose, UnitPose, DIRECTIONS};
 
 #[test]
 fn camera_centered_zero_start_is_defined_plus_z_not_nan() {
@@ -59,7 +59,7 @@ fn euler_euclidean_matches_fixture_denorm() {
 
     for unit in unit_poses {
         let space_result = space.physical_pose(unit);
-        let fixture_result: PhysicalPose = denorm(start, range, unit).into();
+        let fixture_result: PhysicalPose = denorm(start, range, *unit).into();
         // Bit-identical arithmetic; abs diff < 1e-12 to be safe.
         let space_arr = space_result.to_array();
         let fixture_arr = fixture_result.to_array();
@@ -90,11 +90,10 @@ fn width_at_delegates_to_pose_range() {
         RotationRepresentation::Euler,
         TranslationRepresentation::PureEuclidean,
     );
-    let range_ref: &Pose = &range;
     for dir in DIRECTIONS {
         for depth in [0, 2, 5] {
             let space_w = space.width_at(dir, depth);
-            let range_w = range_ref.width_at(dir, depth);
+            let range_w = range.width_at(dir, depth);
             assert_eq!(
                 space_w.to_bits(),
                 range_w.to_bits(),
@@ -105,6 +104,7 @@ fn width_at_delegates_to_pose_range() {
 }
 
 #[test]
+#[expect(clippy::panic, reason = "else branch panic is the assertion under test")]
 fn maps_are_materialized_per_mode() {
     // Default: Euler + PureEuclidean
     let space = SearchSpace::new(

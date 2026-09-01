@@ -152,7 +152,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ## Implementation Units
 
-- [ ] U1. **Newtypes, axis enum, and direction type in `pose.rs`**
+- [x] U1. **Newtypes, axis enum, and direction type in `pose.rs`**
 
 **Goal:** Introduce `PhysicalPose`/`UnitPose`/`PoseRange` and `AxisSeq`; give `Direction` its total `index()`; retire `axes_from_str` and the dead `Range`; add `From` conversions both ways.
 
@@ -184,7 +184,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U2. **`space.rs`: SearchSpace with mode-dependent maps, ignorant of DIRECT**
+- [x] U2. **`space.rs`: SearchSpace with mode-dependent maps, ignorant of DIRECT**
 
 **Goal:** Own the unit↔physical mapping and its precomputed state outside any optimizer, with a strictly one-way dependency.
 
@@ -212,7 +212,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U3. **`settings.rs` renames, ceremony, payload refinement, strategy dispatch; `cost.rs` contract**
+- [x] U3. **`settings.rs` renames, ceremony, payload refinement, strategy dispatch; `cost.rs` contract**
 
 **Goal:** One settings vocabulary where disabled stages cannot carry tuning; `PohStrategy::select`; `production()` absorbs the FFI hardcodes; `Cost` gains its contract doc + `eval_one`.
 
@@ -241,7 +241,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U4. **`tree.rs`: UnitPose centers, consolidated trisect on `Direction`**
+- [x] U4. **`tree.rs`: UnitPose centers, consolidated trisect on `Direction`**
 
 **Goal:** Tree speaks `UnitPose` and `Direction`; production and tests share one trisection.
 
@@ -268,7 +268,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U5. **`direct/mod.rs`: Incumbent, SearchSpace field, refine() with Result+firewall, deletions, idioms**
+- [x] U5. **`direct/mod.rs`: Incumbent, SearchSpace field, refine() with Result+firewall, deletions, idioms**
 
 **Goal:** The driver becomes DIRECT-only; the R2/R4/R7/R10/R11 items land here.
 
@@ -300,7 +300,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U6. **`basin_opt`: SearchSpace coupling, Result, eval_one**
+- [x] U6. **`basin_opt`: SearchSpace coupling, Result, eval_one**
 
 **Goal:** The refinement adapter depends on `&SearchSpace`, not `&DirectOptimizer`; success is a typed struct; the error channel is `Result`; single-pose evaluation goes through the trait's assert.
 
@@ -324,7 +324,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U7. **`bridge.rs`: production settings and `From` marshalling**
+- [x] U7. **`bridge.rs`: production settings and `From` marshalling**
 
 **Goal:** The boundary module shrinks to marshalling + constructor wiring.
 
@@ -346,7 +346,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U8. **Test-suite and fixture migration (`fixtures.rs`, `direct/test.rs`, `problems.rs`, `properties.rs`, viz)**
+- [x] U8. **Test-suite and fixture migration (`fixtures.rs`, `direct/test.rs`, `problems.rs`, `properties.rs`, viz)**
 
 **Goal:** All consumers compiled against the new types; destructuring renames keep every assertion intact; **mode selection moves to construction time** (external-review item 5).
 
@@ -379,7 +379,7 @@ match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
 
 ---
 
-- [ ] U9. **Verification and doc currency**
+- [x] U9. **Verification and doc currency**
 
 **Goal:** Prove semantic preservation end-to-end and leave the crate's own docs honest.
 

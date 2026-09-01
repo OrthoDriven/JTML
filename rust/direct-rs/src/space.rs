@@ -45,6 +45,7 @@ pub enum TranslationRepresentation {
 }
 
 /// The rotation half of the mapping, materialized at construction.
+#[derive(Debug)]
 enum RotationMap {
     /// Euler angles denormalize directly: physical angle = start + delta.
     Euler,
@@ -54,6 +55,7 @@ enum RotationMap {
 }
 
 /// The translation half of the mapping, materialized at construction.
+#[derive(Debug)]
 enum TranslationMap {
     /// Axis-aligned affine denormalization.
     Euclidean,
