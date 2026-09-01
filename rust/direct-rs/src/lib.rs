@@ -8,12 +8,13 @@ mod utils;
 
 #[cfg(test)]
 mod properties;
+
 #[cfg(test)]
 mod test_support;
 
-mod cost;
-mod direct_data_storage;
-mod direct_optimizer;
+pub mod cost;
+pub mod direct_data_storage;
+pub mod direct_optimizer;
 
 use crate::{
     cost::Cost, direct_data_storage::Pose, direct_optimizer::DirectOptimizer, ffi::CppCost,

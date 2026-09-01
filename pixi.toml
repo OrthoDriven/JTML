@@ -177,15 +177,28 @@ env = { QT_QPA_PLATFORM = "xcb" }
 [feature.profile.tasks.nsys-prof]
 cmd = [
     "nsys", "profile",
-    "--trace=cuda,nvtx,osrt",
-    "--opengl-gpu-workload=false",
-    "--sample=process-tree",
-    "--backtrace=fp",
-    "--resolve-symbols=true",
-    "--stats=true",
-    "--wait=primary",
-    "-o", "profiler/jtml-%n",
-    ".build-prof/bin/joint-track-machine-learning",
+  "--trace=cuda,nvtx,osrt",
+  "--gpu-metrics-devices=cuda-visible",
+  "--gpu-metrics-frequency=10000",
+  "--opengl-gpu-workload=false",
+  "--sample=process-tree",
+  "--backtrace=fp",
+  "--resolve-symbols=true",
+  "--stats=true",
+  "--wait=primary",
+  "-o", "profiler/jtml-%n",
+  ".build-prof/bin/joint-track-machine-learning",
+]
+depends-on = ["build-profile"]
+env = { QT_QPA_PLATFORM = "xcb" }
+
+[feature.profile.tasks.ncu-prof]
+cmd = [
+  "ncu",
+  "--set", "detailed",
+  "--target-processes", "all",
+  "-o", "profiler/jtml-ncu",
+  ".build-prof/bin/joint-track-machine-learning",
 ]
 depends-on = ["build-profile"]
 env = { QT_QPA_PLATFORM = "xcb" }
@@ -204,6 +217,7 @@ cmd = [
     "--wait=primary",
     "-o", "profiler/jtml-%n",
     ".build-prof/bin/joint-track-machine-learning",
+
 ]
 depends-on = ["build-profile"]
 env = { QT_QPA_PLATFORM = "xcb" }

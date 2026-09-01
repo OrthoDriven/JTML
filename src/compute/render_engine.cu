@@ -1450,222 +1450,152 @@ __global__ void RasterizeTrianglesWarpKernel(
     int triangle_count,
     int width,
     int height) {
-    /*
-     * One warp owns one triangle.
-     *
-     * With a 256-thread block:
-     *
-     * warp 0 -> triangle N + 0
-     * warp 1 -> triangle N + 1
-     * ...
-     * warp 7 -> triangle N + 7
-     */
-    const int warp_in_block = threadIdx.x / warpSize;
+    constexpr int WARPS_PER_BLOCK = 8;
+    constexpr unsigned FULL_MASK = 0xffffffffu;
 
+    const int warp_in_block = threadIdx.x / warpSize;
     const int lane = threadIdx.x % warpSize;
 
-    const int warps_per_block = blockDim.x / warpSize;
-
-    const int triangle_index = blockIdx.x * warps_per_block + warp_in_block;
-
     /*
-     * Uniform across the entire warp, so returning here is safe.
+     * One warp owns one triangle at a time.
+     *
+     * The grid-stride loop also lets us later launch a smaller,
+     * occupancy-sized persistent grid without changing the kernel.
      */
-    if (triangle_index >= triangle_count) {
-        return;
-    }
-
-    constexpr unsigned full_mask = 0xffffffffu;
-
-    /*
-     * Lane zero calculates triangle-level state once.
-     */
-    int left_x = 0;
-    int bottom_y = 0;
-    int right_x = 0;
-    int top_y = 0;
-
-    float x1 = 0.0f;
-    float y1 = 0.0f;
-    float x2 = 0.0f;
-    float y2 = 0.0f;
-    float x3 = 0.0f;
-    float y3 = 0.0f;
-
-    int backface = 0;
-
-    if (lane == 0) {
-        const int snapped_index = 6 * triangle_index;
+    for (int tri = blockIdx.x * WARPS_PER_BLOCK + warp_in_block;
+         tri < triangle_count;
+         tri += gridDim.x * WARPS_PER_BLOCK) {
+        const int triangle_index6 = 6 * tri;
 
         /*
-         * Load snapped coordinates for bounding box.
-         */
-        const int sx1 = dev_projected_triangles_snapped[snapped_index];
-
-        const int sy1 = dev_projected_triangles_snapped[snapped_index + 1];
-
-        const int sx2 = dev_projected_triangles_snapped[snapped_index + 2];
-
-        const int sy2 = dev_projected_triangles_snapped[snapped_index + 3];
-
-        const int sx3 = dev_projected_triangles_snapped[snapped_index + 4];
-
-        const int sy3 = dev_projected_triangles_snapped[snapped_index + 5];
-
-        /*
-         * EXACT same bbox clamping rules as
-         * BoundingBoxForTrianglesKernel.
-         */
-        left_x = max(min(min(min(sx1, sx2), sx3), width - 1), 0);
-
-        bottom_y = max(min(min(min(sy1, sy2), sy3), height - 1), 0);
-
-        right_x = min(max(max(max(sx1, sx2), sx3), 0), width - 1);
-
-        top_y = min(max(max(max(sy1, sy2), sy3), 0), height - 1);
-
-        /*
-         * Preserve existing overall model bounding-box semantics.
+         * Six lanes cooperatively load the triangle.
          *
-         * BoundingBoxSizesKernel currently updates the global bbox
-         * for every triangle, including backfaces.
+         * This gives us six adjacent accesses rather than making lane 0
+         * serially issue all twelve loads.
          */
-        atomicMin(&dev_bounding_box[0], left_x);
+        int snapped_component = 0;
+        float projected_component = 0.0f;
 
-        atomicMin(&dev_bounding_box[1], bottom_y);
+        if (lane < 6) {
+            snapped_component =
+                dev_projected_triangles_snapped[triangle_index6 + lane];
 
-        atomicMax(&dev_bounding_box[2], right_x);
+            projected_component =
+                dev_projected_triangles[triangle_index6 + lane];
+        }
 
-        atomicMax(&dev_bounding_box[3], top_y);
+        const int sx1 = __shfl_sync(FULL_MASK, snapped_component, 0);
+        const int sy1 = __shfl_sync(FULL_MASK, snapped_component, 1);
+        const int sx2 = __shfl_sync(FULL_MASK, snapped_component, 2);
+        const int sy2 = __shfl_sync(FULL_MASK, snapped_component, 3);
+        const int sx3 = __shfl_sync(FULL_MASK, snapped_component, 4);
+        const int sy3 = __shfl_sync(FULL_MASK, snapped_component, 5);
+
+        const float x1 = __shfl_sync(FULL_MASK, projected_component, 0);
+        const float y1 = __shfl_sync(FULL_MASK, projected_component, 1);
+        const float x2 = __shfl_sync(FULL_MASK, projected_component, 2);
+        const float y2 = __shfl_sync(FULL_MASK, projected_component, 3);
+        const float x3 = __shfl_sync(FULL_MASK, projected_component, 4);
+        const float y3 = __shfl_sync(FULL_MASK, projected_component, 5);
 
         /*
-         * Load unsnapped triangle coordinates used for the actual
-         * point-in-triangle test.
+         * Same bbox clamping rules as BoundingBoxForTrianglesKernel.
          */
-        const int projected_index = 6 * triangle_index;
+        const int left_x = max(min(min(min(sx1, sx2), sx3), width - 1), 0);
 
-        x1 = dev_projected_triangles[projected_index];
+        const int bottom_y = max(min(min(min(sy1, sy2), sy3), height - 1), 0);
 
-        y1 = dev_projected_triangles[projected_index + 1];
+        const int right_x = min(max(max(max(sx1, sx2), sx3), 0), width - 1);
 
-        x2 = dev_projected_triangles[projected_index + 2];
-
-        y2 = dev_projected_triangles[projected_index + 3];
-
-        x3 = dev_projected_triangles[projected_index + 4];
-
-        y3 = dev_projected_triangles[projected_index + 5];
-
-        backface = dev_backface[triangle_index] ? 1 : 0;
-    }
-
-    /*
-     * Broadcast triangle state from lane zero to the whole warp.
-     */
-    left_x = __shfl_sync(full_mask, left_x, 0);
-
-    bottom_y = __shfl_sync(full_mask, bottom_y, 0);
-
-    right_x = __shfl_sync(full_mask, right_x, 0);
-
-    top_y = __shfl_sync(full_mask, top_y, 0);
-
-    x1 = __shfl_sync(full_mask, x1, 0);
-
-    y1 = __shfl_sync(full_mask, y1, 0);
-
-    x2 = __shfl_sync(full_mask, x2, 0);
-
-    y2 = __shfl_sync(full_mask, y2, 0);
-
-    x3 = __shfl_sync(full_mask, x3, 0);
-
-    y3 = __shfl_sync(full_mask, y3, 0);
-
-    backface = __shfl_sync(full_mask, backface, 0);
-
-    const int bbox_width = right_x - left_x + 1;
-
-    const int bbox_height = top_y - bottom_y + 1;
-
-    if (bbox_width <= 0 || bbox_height <= 0) {
-        return;
-    }
-
-    /*
-     * IMPORTANT:
-     *
-     * Preserve the CURRENT renderer's backface behavior.
-     *
-     * BoundingBoxSizesKernel gives a backface triangle size=1.
-     * FillTriangle_new therefore considers exactly one bbox fragment
-     * for a backface, rather than the whole bbox.
-     *
-     * Keeping that here makes the comparison much closer to bit-identical.
-     */
-    const int fragment_count = backface ? 1 : bbox_width * bbox_height;
-
-    /*
-     * Precompute the denominator once per lane.
-     *
-     * These values are invariant for every pixel in the triangle.
-     */
-    const float denominator = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3);
-
-    /*
-     * Lane 0 processes fragment 0,
-     * lane 1 processes fragment 1,
-     * ...
-     * lane 31 processes fragment 31,
-     *
-     * then each lane advances by 32.
-     */
-    for (int inside_index = lane; inside_index < fragment_count;
-         inside_index += warpSize) {
-        const int px_pixel = left_x + inside_index % bbox_width;
-
-        const int py_pixel = bottom_y + inside_index / bbox_width;
+        const int top_y = min(max(max(max(sy1, sy2), sy3), 0), height - 1);
 
         /*
-         * Bbox is already clamped, but keep this guard while
-         * validating the new rasterizer.
+         * Preserve existing renderer bbox semantics:
+         * every triangle contributes, including backfaces.
          */
-        if (px_pixel < 0 || px_pixel >= width || py_pixel < 0 ||
-            py_pixel >= height) {
+        if (lane == 0) {
+            atomicMin(&dev_bounding_box[0], left_x);
+            atomicMin(&dev_bounding_box[1], bottom_y);
+            atomicMax(&dev_bounding_box[2], right_x);
+            atomicMax(&dev_bounding_box[3], top_y);
+        }
+
+        const int bbox_width = right_x - left_x + 1;
+        const int bbox_height = top_y - bottom_y + 1;
+
+        /*
+         * With the current clamping rules these should normally be positive,
+         * but keep the guard.
+         */
+        if (bbox_width <= 0 || bbox_height <= 0) {
             continue;
         }
 
-        const float px = static_cast<float>(px_pixel) + 0.5f;
+        /*
+         * Preserve the old BoundingBoxSizesKernel behavior exactly:
+         *
+         *     normal triangle -> full bbox
+         *     backface        -> one fragment
+         *
+         * This makes comparison against the old renderer much cleaner.
+         */
+        int backface = 0;
 
-        const float py = static_cast<float>(py_pixel) + 0.5f;
+        if (lane == 0) {
+            backface = dev_backface[tri] ? 1 : 0;
+        }
+
+        backface = __shfl_sync(FULL_MASK, backface, 0);
+
+        const int fragment_count = backface ? 1 : bbox_width * bbox_height;
 
         /*
-         * EXACT same barycentric test used by FillTriangleKernel_new.
+         * Triangle invariant.
+         *
+         * Every lane computes this, but the branch on its sign is therefore
+         * warp-uniform.
          */
-        const float a = (y2 - y3) * (px - x3) + (x3 - x2) * (py - y3);
+        const float denominator = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3);
 
-        if (denominator > 0.0f) {
-            if (0.0f <= a && a <= denominator) {
-                const float b = (y3 - y1) * (px - x3) + (x1 - x3) * (py - y3);
+        /*
+         * Spread this triangle's bbox across the 32 lanes.
+         */
+        for (int p = lane; p < fragment_count; p += warpSize) {
+            const int px_pixel = left_x + p % bbox_width;
+            const int py_pixel = bottom_y + p / bbox_width;
 
-                if (0.0f <= b && b <= denominator) {
-                    const float c = denominator - a - b;
+            const float px = static_cast<float>(px_pixel) + 0.5f;
+            const float py = static_cast<float>(py_pixel) + 0.5f;
 
-                    if (0.0f <= c && c <= denominator) {
-                        dev_image[py_pixel * width + px_pixel] = 255;
+            /*
+             * Same barycentric test as FillTriangleKernel_new.
+             */
+            const float a = (y2 - y3) * (px - x3) + (x3 - x2) * (py - y3);
+
+            if (denominator > 0.0f) {
+                if (0.0f <= a && a <= denominator) {
+                    const float b =
+                        (y3 - y1) * (px - x3) + (x1 - x3) * (py - y3);
+
+                    if (0.0f <= b && b <= denominator) {
+                        const float c = denominator - a - b;
+
+                        if (0.0f <= c && c <= denominator) {
+                            dev_image[py_pixel * width + px_pixel] = 255;
+                        }
                     }
                 }
-            }
+            } else {
+                if (0.0f >= a && a >= denominator) {
+                    const float b =
+                        (y3 - y1) * (px - x3) + (x1 - x3) * (py - y3);
 
-        } else {
-            if (0.0f >= a && a >= denominator) {
-                const float b = (y3 - y1) * (px - x3) + (x1 - x3) * (py - y3);
+                    if (0.0f >= b && b >= denominator) {
+                        const float c = denominator - a - b;
 
-                if (0.0f >= b && b >= denominator) {
-                    const float c = denominator - a - b;
-
-                    if (0.0f >= c && c >= denominator) {
-                        dev_image[py_pixel * width + px_pixel] = 255;
+                        if (0.0f >= c && c >= denominator) {
+                            dev_image[py_pixel * width + px_pixel] = 255;
+                        }
                     }
                 }
             }
