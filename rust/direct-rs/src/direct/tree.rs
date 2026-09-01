@@ -38,7 +38,7 @@ impl Hyperbox {
             .iter()
             .zip(DIRECTIONS)
             .min_by_key(|(depth, _)| **depth)
-            .map(|(_, dir)| *dir)
+            .map(|(_, dir)| dir)
             .expect("array is fixed-size and non-empty")
     }
 

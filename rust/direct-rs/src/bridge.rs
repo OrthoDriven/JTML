@@ -1,6 +1,12 @@
+//! cxx boundary: marshalling between the C++ host's `[f64; 6]` world and
+//! this crate's typed surface. Shapes crossing the FFI stay raw; the role
+//! newtypes gate everything on the Rust side.
+
 use super::*;
-use crate::{cost::Cost, direct::settings::MinBoxSize};
 use crate::bridge::ffi::RunOutcome;
+use crate::cost::Cost;
+use crate::direct::settings::DirectSettings;
+use crate::direct::Incumbent;
 
 #[cxx::bridge]
 pub mod ffi {
@@ -42,16 +48,11 @@ pub mod ffi {
 }
 
 impl Cost for CppCost {
-    fn eval(&self, poses: &[Pose]) -> Vec<f64> {
-        let mut flat_poses: Vec<f64> = Vec::with_capacity(poses.len() * 6);
-        for pose in poses {
-            flat_poses.push(pose.x);
-            flat_poses.push(pose.y);
-            flat_poses.push(pose.z);
-            flat_poses.push(pose.xa);
-            flat_poses.push(pose.ya);
-            flat_poses.push(pose.za);
-        }
+    fn eval(&self, poses: &[PhysicalPose]) -> Vec<f64> {
+        let flat_poses: Vec<f64> = poses
+            .iter()
+            .flat_map(|p| <[f64; 6]>::from(*p))
+            .collect();
         return self.evaluate_batch(flat_poses);
     }
 }
@@ -62,44 +63,11 @@ pub fn new_rust_opt(
     budget: u32,
     use_bobyqa: bool,
 ) -> Box<DirectOptimizer> {
-    let settings = DirectSettings {
-        poh_selection_strategy: POHSettings::Pareto,
-        min_box_size: MinBoxSize {
-            values: [
-                Some(0.5),
-                Some(0.5),
-                Some(0.5),
-                Some(0.5),
-                Some(0.5),
-                Some(0.5),
-            ],
-        },
-        rotation_style: RotationRepresentation::AxisAngle,
-        translation_style: TranslationRepresentation::CameraCentered,
-        refinement: match use_bobyqa {
-            true => RefinementOptions::BOBYQA,
-            false => RefinementOptions::NoRefinement,
-        },
-    };
     return Box::new(DirectOptimizer::from_settings(
-        Pose {
-            x: range[0],
-            y: range[1],
-            z: range[2],
-            xa: range[3],
-            ya: range[4],
-            za: range[5],
-        },
-        Pose {
-            x: starting_point[0],
-            y: starting_point[1],
-            z: starting_point[2],
-            xa: starting_point[3],
-            ya: starting_point[4],
-            za: starting_point[5],
-        },
+        range.into(),
+        starting_point.into(),
         budget,
-        settings,
+        DirectSettings::production(use_bobyqa),
     ));
 }
 /// FFI entry point: run DIRECT against a C++ cost, marshaling the result
@@ -107,7 +75,10 @@ pub fn new_rust_opt(
 impl DirectOptimizer {
     pub fn run_rust_opt(&mut self, cost: &CppCost) -> RunOutcome {
         self.run(cost);
-        let (best_pose, best_cost) = self.best();
+        let Incumbent {
+            pose: best_pose,
+            cost: best_cost,
+        } = self.best();
         return RunOutcome {
             num_iter: self.calls,
             optimal_value: best_cost,
