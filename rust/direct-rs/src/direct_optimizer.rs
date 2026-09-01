@@ -2,10 +2,18 @@ use crate::cost::Cost;
 use crate::direct_data_storage::{DirectTree, Hyperbox, MinBoxSize, UnscoredHyperbox};
 use crate::direct_data_storage::{Pose, DIRECTIONS};
 use crate::ffi::{CppCost, RunOutcome};
+use nalgebra::{self as na, Rotation3, Unit, Vector3};
 use ordered_float::OrderedFloat;
 use std::collections::BTreeMap;
 use std::iter::zip;
 use std::time::{self, Duration};
+
+#[derive(Default)]
+pub enum RotationRepresentation {
+    AxisAngle = 0,
+    #[default]
+    Euler = 1,
+}
 
 pub struct DirectOptimizer {
     pub boxes: DirectTree,
@@ -18,6 +26,8 @@ pub struct DirectOptimizer {
     next_box_id: u64,
     poh_selection_strategy: POHSettings,
     min_box_size: MinBoxSize,
+    rotation_style: RotationRepresentation,
+    starting_rotation: Rotation3<f64>,
 }
 
 #[derive(Default)]
@@ -43,6 +53,11 @@ impl DirectOptimizer {
         budget: u32,
         poh_strat: POHSettings,
     ) -> Self {
+        let starting_rotation = Self::from_euler_ordered(
+            "ZXY",
+            [starting_point.za, starting_point.xa, starting_point.ya],
+            false,
+        );
         Self {
             boxes: BTreeMap::new(),
             current_best: (starting_point, f64::INFINITY),
@@ -54,6 +69,8 @@ impl DirectOptimizer {
             next_box_id: 0,
             poh_selection_strategy: poh_strat,
             min_box_size: MinBoxSize::default(),
+            rotation_style: RotationRepresentation::default(),
+            starting_rotation: starting_rotation,
         }
     }
 
@@ -70,13 +87,47 @@ impl DirectOptimizer {
             f64::INFINITY
         }
     }
+    pub fn axes_from_str(seq: &str) -> [Unit<Vector3<f64>>; 3] {
+        seq.chars()
+            .map(|c| match c {
+                'X' | 'x' => Vector3::x_axis(),
+                'Y' | 'y' => Vector3::y_axis(),
+                'Z' | 'z' => Vector3::z_axis(),
+                _ => panic!("invalid axis char: {c}"),
+            })
+            .collect::<Vec<_>>()
+            .try_into()
+            .expect("seq must be exactly 3 characters")
+    }
+    pub fn from_euler_ordered(seq: &str, angles: [f64; 3], extrinsic: bool) -> Rotation3<f64> {
+        let seq_vec = Self::axes_from_str(seq);
+        let r0 = Rotation3::from_axis_angle(&seq_vec[0], angles[0].to_radians());
+        let r1 = Rotation3::from_axis_angle(&seq_vec[1], angles[1].to_radians());
+        let r2 = Rotation3::from_axis_angle(&seq_vec[2], angles[2].to_radians());
+
+        if extrinsic {
+            // fixed-frame axes: later rotations apply about world axes,
+            // so compose right-to-left in application order
+            r0 * r1 * r2
+        } else {
+            // intrinsic (body-frame) axes: each rotation is about the
+            // already-rotated frame, so compose left-to-right
+            r2 * r1 * r0
+        }
+    }
 
     pub fn run<T: Cost>(&mut self, cost: &T) -> (Pose, f64) {
         // seed: box lives at the unit center; cost eval at its physical pose
         let start = time::Instant::now();
 
         let unit = Self::unit_center();
-        let physical = self.denormalize(unit);
+        // println!("{:?}", self.starting_rotation);
+        let physical = self.physical_pose_for_eval(unit);
+        // println!(
+        //     "{:?}",
+        //     Self::from_euler_ordered("ZXY", [physical.za, physical.xa, physical.ya], false)
+        // );
+
         let seed_cost = *cost
             .eval(&[physical])
             .first()
@@ -190,14 +241,51 @@ impl DirectOptimizer {
 
     /// Map a unit-space pose (each axis in [0,1]) to physical space.
     /// physical[i] = start[i] + (unit[i] - 0.5) * 2 * range[i]
-    fn denormalize(&self, unit: Pose) -> Pose {
-        Pose {
-            x: self.starting_point.x + (unit.x - 0.5) * 2.0 * self.range.x,
-            y: self.starting_point.y + (unit.y - 0.5) * 2.0 * self.range.y,
-            z: self.starting_point.z + (unit.z - 0.5) * 2.0 * self.range.z,
-            xa: self.starting_point.xa + (unit.xa - 0.5) * 2.0 * self.range.xa,
-            ya: self.starting_point.ya + (unit.ya - 0.5) * 2.0 * self.range.ya,
-            za: self.starting_point.za + (unit.za - 0.5) * 2.0 * self.range.za,
+    fn physical_pose_for_eval(&self, unit: Pose) -> Pose {
+        match self.rotation_style {
+            // Euler rotations are a basic denormalization
+            RotationRepresentation::Euler => Pose {
+                x: self.starting_point.x + (unit.x - 0.5) * 2.0 * self.range.x,
+                y: self.starting_point.y + (unit.y - 0.5) * 2.0 * self.range.y,
+                z: self.starting_point.z + (unit.z - 0.5) * 2.0 * self.range.z,
+                xa: self.starting_point.xa + (unit.xa - 0.5) * 2.0 * self.range.xa,
+                ya: self.starting_point.ya + (unit.ya - 0.5) * 2.0 * self.range.ya,
+                za: self.starting_point.za + (unit.za - 0.5) * 2.0 * self.range.za,
+            },
+            // In axis angle, we're taking hyperbox location as a further pose applied to
+            // the original point. Denormalization alone doesn't get you physical
+            // rotation, you must further apply rotations
+            RotationRepresentation::AxisAngle => {
+                // println!("{:?}", unit);
+                let xa = ((unit.xa - 0.5) * 2.0 * self.range.xa);
+                let ya = ((unit.ya - 0.5) * 2.0 * self.range.ya);
+                let za = ((unit.za - 0.5) * 2.0 * self.range.za);
+                // println!("AXIS_ANGLE_VALS: x: {:?}, y: {:?}, z: {:?}", xa, ya, za);
+
+                let applied_rot_t = na::Rotation3::from_scaled_axis(Vector3::new(
+                    xa.to_radians(),
+                    ya.to_radians(),
+                    za.to_radians(),
+                ));
+                // println!(
+                //     "Applied Rotation: Axis: {:?}, Angle: {:?}",
+                //     applied_rot_t.scaled_axis(),
+                //     applied_rot_t.angle().to_degrees()
+                // );
+
+                let applied_rot = self.starting_rotation * applied_rot_t;
+                let (final_angles, _observable) =
+                    applied_rot.euler_angles_ordered(Self::axes_from_str("ZXY"), false);
+
+                Pose {
+                    x: self.starting_point.x + (unit.x - 0.5) * 2.0 * self.range.x,
+                    y: self.starting_point.y + (unit.y - 0.5) * 2.0 * self.range.y,
+                    z: self.starting_point.z + (unit.z - 0.5) * 2.0 * self.range.z,
+                    xa: final_angles[1].to_degrees(),
+                    ya: final_angles[2].to_degrees(),
+                    za: final_angles[0].to_degrees(),
+                }
+            }
         }
     }
 
@@ -270,7 +358,7 @@ impl DirectOptimizer {
     fn score_and_reinsert<T: Cost>(&mut self, cost: &T, unscored: &[UnscoredHyperbox]) {
         let centers: Vec<Pose> = unscored
             .iter()
-            .map(|p| self.denormalize(p.center))
+            .map(|p| self.physical_pose_for_eval(p.center))
             .collect();
         let evaluated_costs: Vec<f64> = cost.eval(&centers);
         self.calls += evaluated_costs.len() as u32;
@@ -278,7 +366,7 @@ impl DirectOptimizer {
         for scored_box in zip(unscored, evaluated_costs).map(|v| v.0.add_score(v.1)) {
             let id = self.next_id();
             if scored_box.cost_at_center.is_finite() {
-                let physical = self.denormalize(scored_box.center);
+                let physical = self.physical_pose_for_eval(scored_box.center);
                 if scored_box.cost_at_center < self.current_best.1 {
                     self.current_best = (physical, scored_box.cost_at_center);
                 }

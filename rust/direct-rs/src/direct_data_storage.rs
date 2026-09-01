@@ -22,7 +22,7 @@ pub const DIRECTIONS: [Direction; 6] = [
     Direction::ZA_DIR,
 ];
 
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, Default, Debug)]
 pub struct Pose {
     pub x: f64,
     pub y: f64,
