@@ -4,8 +4,11 @@
 /*sym_trap_function Source*/
 #include <numbers>
 
+#include "DD_NEW_POLE_CONSTRAINTCustomVariables.h"
+#include "DIRECT_DILATIONCustomVariables.h"
 #include "compute/CostFunctionManager.h"
 #include "sym_trap_functionCustomVariables.h"
+
 namespace jta_cost_function {
 bool CostFunctionManager::initializesym_trap_function(
     std::string& error_message) {

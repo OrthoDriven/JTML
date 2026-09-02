@@ -21,5 +21,5 @@
 #include "domain/preprocessor-defs.h"
 
 /****************Begin Custom Variables*************/
-double x_loc_non;
-double z_loc_non;
+double x_loc_non = 0.0;
+double z_loc_non = 0.0;

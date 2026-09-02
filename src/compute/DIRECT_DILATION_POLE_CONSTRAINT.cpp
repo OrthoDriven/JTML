@@ -3,6 +3,8 @@
 
 /*DIRECT_DILATION_POLE_CONSTRAINT Source*/
 #include "CostFunctionManager.h"
+#include "DIRECT_DILATIONCustomVariables.h"
+#include "DIRECT_DILATION_POLE_CONSTRAINTCustomVariables.h"
 
 namespace jta_cost_function {
 bool CostFunctionManager::initializeDIRECT_DILATION_POLE_CONSTRAINT(
@@ -15,12 +17,13 @@ bool CostFunctionManager::initializeDIRECT_DILATION_POLE_CONSTRAINT(
     if (gpu_non_principal_models_->size() == 1) {
         gpu_cost_function::Pose temp_pose;
         pose_storage_->GetModelPose("tibia", 0, &temp_pose);
-        x_loc_non = temp_pose.x_location_;
+        auto x_loc_non = temp_pose.x_location_;
         /*Initialize DIRECT DILATION*/
         /*CUDA Error status container*/
         cudaError cudaStatus;
 
         /*Compute the sum of the white pixels in the comparison dilated frame*/
+
         DIRECT_DILATION_current_white_pix_sum_dilated_comparison_image_A_ =
             gpu_metrics_->ComputeSumWhitePixels(
                 (*gpu_dilated_frames_A_)[current_frame_index_]->GetGPUImage(),

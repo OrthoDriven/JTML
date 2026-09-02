@@ -22,6 +22,6 @@
 
 /****************Begin Custom Variables*************/
 /*Sum of the white pixels in the current dilation comparison image*/
-int DIRECT_DILATION_current_white_pix_sum_dilated_comparison_image_A_;
-int DIRECT_DILATION_current_white_pix_sum_dilated_comparison_image_B_;
-int DIRECT_DILATION_current_dilation_parameter;
+int DIRECT_DILATION_current_white_pix_sum_dilated_comparison_image_A_ = 0;
+int DIRECT_DILATION_current_white_pix_sum_dilated_comparison_image_B_ = 0;
+int DIRECT_DILATION_current_dilation_parameter = 0;

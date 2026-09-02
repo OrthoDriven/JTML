@@ -3,6 +3,7 @@
 
 /*DIRECT_DILATION_T1 Source*/
 #include "CostFunctionManager.h"
+#include "DIRECT_DILATION_T1CustomVariables.h"
 
 namespace jta_cost_function {
 bool CostFunctionManager::initializeDIRECT_DILATION_T1(

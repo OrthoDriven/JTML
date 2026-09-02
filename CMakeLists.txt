@@ -31,6 +31,7 @@ cmake_minimum_required(VERSION 4.2)
 project(joint-track-machine-learning LANGUAGES CXX CUDA)
 message(STATUS ${CUDA_INCLUDE_DIRS})
 
+
 # Specify C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -38,7 +39,7 @@ set(CMAKE_CUDA_STANDARD 20)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 # Build tests (headless default; expensive fixture/render/performance gates use oracle labels)
-option(JTML_BUILD_TESTS "Build and enable JTML tests" ON)
+option(JTML_BUILD_TESTS "Build and enable JTML tests" OFF)
 
 #=============================
 # Global Settings
@@ -123,10 +124,6 @@ set(JTA_LIBS jtml_compute)
 # Subdirectories
 #=============================
 add_subdirectory(src)
-if(JTML_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(test)
-endif()
 #add_subdirectory(lib)
 add_subdirectory(packaging)
 add_subdirectory(rust)

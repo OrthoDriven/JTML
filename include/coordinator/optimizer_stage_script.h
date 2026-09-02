@@ -31,8 +31,10 @@
 #include <string>
 #include <vector>
 
+#include "CostFunction.h"
 #include "compute/Parameter.h"
 #include "domain/data_structures_6D.h"
+#include "domain/settings_constants.h"
 #include "services/optimizer_settings.h"
 
 namespace jta {
@@ -109,7 +111,7 @@ struct StageCostParams {
  * pass the getActiveCostFunctionClass()->getIntParameters()/getBoolParameters()
  * vectors verbatim.*/
 StageCostParams DeriveStageCostParams(
-    const std::string& cost_function_name,
+    const jta_cost_function::CostFunctionType cost_function_type,
     std::vector<jta_cost_function::Parameter<int>> int_params,
     std::vector<jta_cost_function::Parameter<bool>> bool_params);
 

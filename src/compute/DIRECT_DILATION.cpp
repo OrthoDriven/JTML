@@ -8,6 +8,7 @@
 #include <string>
 
 #include "CostFunctionManager.h"
+#include "DIRECT_DILATIONCustomVariables.h"
 
 namespace jta_cost_function {
 bool CostFunctionManager::initializeDIRECT_DILATION(

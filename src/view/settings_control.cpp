@@ -7,11 +7,25 @@
 /*Message Box*/
 #include <qmessagebox.h>
 
+#include <string>
+
 /*Settings Constant*/
 #include "domain/settings_constants.h"
 
 /*Spacing Constants*/
 #include "view/settings_window_size_constants.h"
+
+using jta_cost_function::cost_function_type_from_string;
+using jta_cost_function::CostFunctionType;
+using jta_cost_function::to_string;
+
+namespace {
+
+QString costFunctionTypeToQString(CostFunctionType type) {
+    return QString::fromStdString(std::string(to_string(type)));
+}
+
+}  // namespace
 
 SettingsControl::SettingsControl(QWidget* parent, Qt::WindowFlags flags) :
     QDialog(parent, flags) {
@@ -34,13 +48,13 @@ SettingsControl::SettingsControl(QWidget* parent, Qt::WindowFlags flags) :
     ui.trunk_radioButton->setChecked(true);
     ui.stage_enabled_checkBox->setChecked(true);
 
-    /*Load Cost Function Names in Constructor as thie cannot change during a
-     * session*/
-    std::vector<jta_cost_function::CostFunction> available_cost_functions =
+    /*Load Cost Function Names in Constructor as these cannot change during a
+     * session. The manager registry is keyed by CostFunctionType.*/
+    auto available_cost_functions =
         jta_cost_function::CostFunctionManager().getAvailableCostFunctions();
-    for (int i = 0; i < available_cost_functions.size(); i++) {
-        ui.cost_function_listWidget->addItem(QString::fromStdString(
-            available_cost_functions[i].getCostFunctionName()));
+    for (auto& cost_function_entry : available_cost_functions) {
+        ui.cost_function_listWidget->addItem(
+            costFunctionTypeToQString(cost_function_entry.first));
     }
 
     /*Set Up Stage Select Group Box Size */
@@ -459,44 +473,36 @@ void SettingsControl::LoadSettings(
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
 
-    /*Populate Available List Widget and Select the Current One*/
-    std::vector<jta_cost_function::CostFunction> available_cost_functions =
-        sc_trunk_manager_.getAvailableCostFunctions();
     ui.trunk_radioButton->setChecked(true);  // Always load to trunk
-    if (ui.trunk_radioButton->isChecked()) {
-        /*Load Optimizer Settings (non-cost function)*/
-        ui.stage_enabled_checkBox->setChecked(true);  // ALWAYS TRUE FOR TRUNK
-        ui.budget_spinBox->setValue(opt_settings_.trunk_budget);
-        ui.x_translation_spinBox->setValue(opt_settings_.trunk_range.x);
-        ui.y_translation_spinBox->setValue(opt_settings_.trunk_range.y);
-        ui.z_translation_spinBox->setValue(opt_settings_.trunk_range.z);
-        ui.x_rotation_spinBox->setValue(opt_settings_.trunk_range.xa);
-        ui.y_rotation_spinBox->setValue(opt_settings_.trunk_range.ya);
-        ui.z_rotation_spinBox->setValue(opt_settings_.trunk_range.za);
-        /*Disable Branch options*/
 
-        ui.branch_total_count_label->setVisible(false);
-        ui.branch_count_spinBox->setVisible(false);
-        ui.branch_count_spinBox->setEnabled(false);
-        ui.branch_count_spinBox->setValue(opt_settings_.number_branches);
+    /*Load Optimizer Settings (non-cost function)*/
+    ui.stage_enabled_checkBox->setChecked(true);  // ALWAYS TRUE FOR TRUNK
+    ui.budget_spinBox->setValue(opt_settings_.trunk_budget);
+    ui.x_translation_spinBox->setValue(opt_settings_.trunk_range.x);
+    ui.y_translation_spinBox->setValue(opt_settings_.trunk_range.y);
+    ui.z_translation_spinBox->setValue(opt_settings_.trunk_range.z);
+    ui.x_rotation_spinBox->setValue(opt_settings_.trunk_range.xa);
+    ui.y_rotation_spinBox->setValue(opt_settings_.trunk_range.ya);
+    ui.z_rotation_spinBox->setValue(opt_settings_.trunk_range.za);
 
-        /*Select Active Cost Function*/
-        for (int i = 0; i < ui.cost_function_listWidget->count(); i++) {
-            if (ui.cost_function_listWidget->item(i)->text() ==
-                QString::fromStdString(
-                    sc_trunk_manager_.getActiveCostFunction())) {
-                ui.cost_function_listWidget->setCurrentRow(i);
-                break;
-            }
-            if (i == (ui.cost_function_listWidget->count() - 1)) {
-                QMessageBox::critical(
-                    this,
-                    "Error!",
-                    "Active cost function not found!",
-                    QMessageBox::Ok);
-            }
-        }
+    /*Disable Branch options*/
+    ui.branch_total_count_label->setVisible(false);
+    ui.branch_count_spinBox->setVisible(false);
+    ui.branch_count_spinBox->setEnabled(false);
+    ui.branch_count_spinBox->setValue(opt_settings_.number_branches);
+
+    /*Select Active Cost Function*/
+    const QString active =
+        costFunctionTypeToQString(sc_trunk_manager_.getActiveCostFunction());
+    const auto matching_items =
+        ui.cost_function_listWidget->findItems(active, Qt::MatchExactly);
+    if (matching_items.empty()) {
+        QMessageBox::critical(
+            this, "Error!", "Active cost function not found!", QMessageBox::Ok);
+    } else {
+        ui.cost_function_listWidget->setCurrentItem(matching_items.front());
     }
+
     /*Select the first Parameter if There are any Parameters*/
     if (ui.cost_function_parameters_listWidget->count() > 0) {
         ui.cost_function_parameters_listWidget->setCurrentRow(0);
@@ -509,6 +515,7 @@ void SettingsControl::on_cost_function_listWidget_itemSelectionChanged() {
     /*Clear Parameter List*/
     ui.cost_function_parameters_listWidget->clear();
     ui.cost_function_parameters_listWidget->clearSelection();
+
     /*Get Rid of Parameters Index and Hide the Value View*/
     ui.double_parameter_spinBox->setEnabled(false);
     ui.double_parameter_spinBox->setVisible(false);
@@ -519,93 +526,51 @@ void SettingsControl::on_cost_function_listWidget_itemSelectionChanged() {
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
 
-    /*Save Selection as Active Cost Function and update aparameter list*/
-    if (ui.trunk_radioButton->isChecked()) {
-        sc_trunk_manager_.setActiveCostFunction(
-            ui.cost_function_listWidget->currentItem()->text().toStdString());
-        std::vector<jta_cost_function::Parameter<double>>
-            temp_double_params_vec =
-                sc_trunk_manager_.getActiveCostFunctionClass()
-                    ->getDoubleParameters();
-        for (int i = 0; i < temp_double_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_double_params_vec[i].getParameterName()));
-        }
-        std::vector<jta_cost_function::Parameter<int>> temp_int_params_vec =
-            sc_trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < temp_int_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_int_params_vec[i].getParameterName()));
-        }
-        std::vector<jta_cost_function::Parameter<bool>> temp_bool_params_vec =
-            sc_trunk_manager_.getActiveCostFunctionClass()->getBoolParameters();
-        for (int i = 0; i < temp_bool_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_bool_params_vec[i].getParameterName()));
-        }
-    } else if (ui.branch_radioButton->isChecked()) {
-        sc_branch_manager_.setActiveCostFunction(
-            ui.cost_function_listWidget->currentItem()->text().toStdString());
-        std::vector<jta_cost_function::Parameter<double>>
-            temp_double_params_vec =
-                sc_branch_manager_.getActiveCostFunctionClass()
-                    ->getDoubleParameters();
-        for (int i = 0; i < temp_double_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_double_params_vec[i].getParameterName()));
-        }
-        std::vector<jta_cost_function::Parameter<int>> temp_int_params_vec =
-            sc_branch_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < temp_int_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_int_params_vec[i].getParameterName()));
-        }
-        std::vector<jta_cost_function::Parameter<bool>> temp_bool_params_vec =
-            sc_branch_manager_.getActiveCostFunctionClass()
-                ->getBoolParameters();
-        for (int i = 0; i < temp_bool_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_bool_params_vec[i].getParameterName()));
-        }
-    } else {
-        sc_leaf_manager_.setActiveCostFunction(
-            ui.cost_function_listWidget->currentItem()->text().toStdString());
-        std::vector<jta_cost_function::Parameter<double>>
-            temp_double_params_vec =
-                sc_leaf_manager_.getActiveCostFunctionClass()
-                    ->getDoubleParameters();
-        for (int i = 0; i < temp_double_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_double_params_vec[i].getParameterName()));
-        }
-        std::vector<jta_cost_function::Parameter<int>> temp_int_params_vec =
-            sc_leaf_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < temp_int_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_int_params_vec[i].getParameterName()));
-        }
-        std::vector<jta_cost_function::Parameter<bool>> temp_bool_params_vec =
-            sc_leaf_manager_.getActiveCostFunctionClass()->getBoolParameters();
-        for (int i = 0; i < temp_bool_params_vec.size(); i++) {
-            ui.cost_function_parameters_listWidget->addItem(
-                QString::fromStdString(
-                    temp_bool_params_vec[i].getParameterName()));
-        }
+    auto* selected_item = ui.cost_function_listWidget->currentItem();
+    if (!selected_item) {
+        return;
     }
+
+    jta_cost_function::CostFunctionManager* manager = nullptr;
+    if (ui.trunk_radioButton->isChecked()) {
+        manager = &sc_trunk_manager_;
+    } else if (ui.branch_radioButton->isChecked()) {
+        manager = &sc_branch_manager_;
+    } else {
+        manager = &sc_leaf_manager_;
+    }
+
+    const auto type =
+        cost_function_type_from_string(selected_item->text().toStdString());
+    if (!type) {
+        QMessageBox::critical(
+            this, "Error!", "Unknown cost function!", QMessageBox::Ok);
+        return;
+    }
+
+    manager->setActiveCostFunction(*type);
+    auto* cost_function = manager->getActiveCostFunctionClass();
+
+    const auto append_parameters = [this](auto& parameters) {
+        for (auto& parameter : parameters) {
+            ui.cost_function_parameters_listWidget->addItem(
+                QString::fromStdString(parameter.getParameterName()));
+        }
+    };
+
+    auto double_parameters = cost_function->getDoubleParameters();
+    auto int_parameters = cost_function->getIntParameters();
+    auto bool_parameters = cost_function->getBoolParameters();
+
+    append_parameters(double_parameters);
+    append_parameters(int_parameters);
+    append_parameters(bool_parameters);
 
     /*Select the first Parameter if There are any Parameters*/
     if (ui.cost_function_parameters_listWidget->count() > 0) {
         ui.cost_function_parameters_listWidget->setCurrentRow(0);
     }
-};
+}
 
 void SettingsControl::
     on_cost_function_parameters_listWidget_itemSelectionChanged() {
@@ -619,151 +584,62 @@ void SettingsControl::
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
 
-    QString param_name_widg =
-        ui.cost_function_parameters_listWidget->currentItem()->text();
-    /*Get Parameter Value and Type*/
-    if (ui.trunk_radioButton->isChecked()) {
-        std::vector<jta_cost_function::Parameter<double>>
-            temp_double_params_vec =
-                sc_trunk_manager_.getActiveCostFunctionClass()
-                    ->getDoubleParameters();
-        for (int i = 0; i < temp_double_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_double_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.double_parameter_spinBox->setVisible(true);
-                ui.double_parameter_spinBox->setEnabled(true);
-                ui.double_parameter_spinBox->setValue(
-                    temp_double_params_vec[i].getParameterValue());
-                return;
-            }
-        }
-        std::vector<jta_cost_function::Parameter<int>> temp_int_params_vec =
-            sc_trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < temp_int_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_int_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.int_parameter_spinBox->setVisible(true);
-                ui.int_parameter_spinBox->setEnabled(true);
-                ui.int_parameter_spinBox->setValue(
-                    temp_int_params_vec[i].getParameterValue());
-                return;
-            }
-        }
-        std::vector<jta_cost_function::Parameter<bool>> temp_bool_params_vec =
-            sc_trunk_manager_.getActiveCostFunctionClass()->getBoolParameters();
-        for (int i = 0; i < temp_bool_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_bool_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.bool_parameter_true_radioButton->setEnabled(true);
-                ui.bool_parameter_true_radioButton->setVisible(true);
-                ui.bool_parameter_false_radioButton->setEnabled(true);
-                ui.bool_parameter_false_radioButton->setVisible(true);
-                ui.bool_parameter_true_radioButton->setChecked(
-                    temp_bool_params_vec[i].getParameterValue());
-                ui.bool_parameter_false_radioButton->setChecked(
-                    !temp_bool_params_vec[i].getParameterValue());
-                return;
-            }
-        }
+    auto* selected_item = ui.cost_function_parameters_listWidget->currentItem();
+    if (!selected_item) {
+        return;
+    }
 
+    jta_cost_function::CostFunctionManager* manager = nullptr;
+    if (ui.trunk_radioButton->isChecked()) {
+        manager = &sc_trunk_manager_;
     } else if (ui.branch_radioButton->isChecked()) {
-        std::vector<jta_cost_function::Parameter<double>>
-            temp_double_params_vec =
-                sc_branch_manager_.getActiveCostFunctionClass()
-                    ->getDoubleParameters();
-        for (int i = 0; i < temp_double_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_double_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.double_parameter_spinBox->setVisible(true);
-                ui.double_parameter_spinBox->setEnabled(true);
-                ui.double_parameter_spinBox->setValue(
-                    temp_double_params_vec[i].getParameterValue());
-                return;
-            }
-        }
-        std::vector<jta_cost_function::Parameter<int>> temp_int_params_vec =
-            sc_branch_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < temp_int_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_int_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.int_parameter_spinBox->setVisible(true);
-                ui.int_parameter_spinBox->setEnabled(true);
-                ui.int_parameter_spinBox->setValue(
-                    temp_int_params_vec[i].getParameterValue());
-                return;
-            }
-        }
-        std::vector<jta_cost_function::Parameter<bool>> temp_bool_params_vec =
-            sc_branch_manager_.getActiveCostFunctionClass()
-                ->getBoolParameters();
-        for (int i = 0; i < temp_bool_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_bool_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.bool_parameter_true_radioButton->setEnabled(true);
-                ui.bool_parameter_true_radioButton->setVisible(true);
-                ui.bool_parameter_false_radioButton->setEnabled(true);
-                ui.bool_parameter_false_radioButton->setVisible(true);
-                ui.bool_parameter_true_radioButton->setChecked(
-                    temp_bool_params_vec[i].getParameterValue());
-                ui.bool_parameter_false_radioButton->setChecked(
-                    !temp_bool_params_vec[i].getParameterValue());
-                return;
-            }
-        }
+        manager = &sc_branch_manager_;
     } else {
-        std::vector<jta_cost_function::Parameter<double>>
-            temp_double_params_vec =
-                sc_leaf_manager_.getActiveCostFunctionClass()
-                    ->getDoubleParameters();
-        for (int i = 0; i < temp_double_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_double_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.double_parameter_spinBox->setVisible(true);
-                ui.double_parameter_spinBox->setEnabled(true);
-                ui.double_parameter_spinBox->setValue(
-                    temp_double_params_vec[i].getParameterValue());
-                return;
-            }
-        }
-        std::vector<jta_cost_function::Parameter<int>> temp_int_params_vec =
-            sc_leaf_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < temp_int_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_int_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.int_parameter_spinBox->setVisible(true);
-                ui.int_parameter_spinBox->setEnabled(true);
-                ui.int_parameter_spinBox->setValue(
-                    temp_int_params_vec[i].getParameterValue());
-                return;
-            }
-        }
-        std::vector<jta_cost_function::Parameter<bool>> temp_bool_params_vec =
-            sc_leaf_manager_.getActiveCostFunctionClass()->getBoolParameters();
-        for (int i = 0; i < temp_bool_params_vec.size(); i++) {
-            if (QString::fromStdString(
-                    temp_bool_params_vec[i].getParameterName()) ==
-                param_name_widg) {
-                ui.bool_parameter_true_radioButton->setEnabled(true);
-                ui.bool_parameter_true_radioButton->setVisible(true);
-                ui.bool_parameter_false_radioButton->setEnabled(true);
-                ui.bool_parameter_false_radioButton->setVisible(true);
-                ui.bool_parameter_true_radioButton->setChecked(
-                    temp_bool_params_vec[i].getParameterValue());
-                ui.bool_parameter_false_radioButton->setChecked(
-                    !temp_bool_params_vec[i].getParameterValue());
-                return;
-            }
+        manager = &sc_leaf_manager_;
+    }
+
+    const QString parameter_name = selected_item->text();
+    auto* cost_function = manager->getActiveCostFunctionClass();
+
+    auto double_parameters = cost_function->getDoubleParameters();
+    for (auto& parameter : double_parameters) {
+        if (QString::fromStdString(parameter.getParameterName()) ==
+            parameter_name) {
+            ui.double_parameter_spinBox->setVisible(true);
+            ui.double_parameter_spinBox->setEnabled(true);
+            ui.double_parameter_spinBox->setValue(
+                parameter.getParameterValue());
+            return;
         }
     }
-};
+
+    auto int_parameters = cost_function->getIntParameters();
+    for (auto& parameter : int_parameters) {
+        if (QString::fromStdString(parameter.getParameterName()) ==
+            parameter_name) {
+            ui.int_parameter_spinBox->setVisible(true);
+            ui.int_parameter_spinBox->setEnabled(true);
+            ui.int_parameter_spinBox->setValue(parameter.getParameterValue());
+            return;
+        }
+    }
+
+    auto bool_parameters = cost_function->getBoolParameters();
+    for (auto& parameter : bool_parameters) {
+        if (QString::fromStdString(parameter.getParameterName()) ==
+            parameter_name) {
+            ui.bool_parameter_true_radioButton->setEnabled(true);
+            ui.bool_parameter_true_radioButton->setVisible(true);
+            ui.bool_parameter_false_radioButton->setEnabled(true);
+            ui.bool_parameter_false_radioButton->setVisible(true);
+            ui.bool_parameter_true_radioButton->setChecked(
+                parameter.getParameterValue());
+            ui.bool_parameter_false_radioButton->setChecked(
+                !parameter.getParameterValue());
+            return;
+        }
+    }
+}
 
 /*Radio buttons for stage*/
 void SettingsControl::on_trunk_radioButton_clicked() {
@@ -778,10 +654,6 @@ void SettingsControl::on_trunk_radioButton_clicked() {
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
 
-    /*Populate Available List Widget and Select the Current One*/
-    std::vector<jta_cost_function::CostFunction> available_cost_functions =
-        sc_trunk_manager_.getAvailableCostFunctions();
-
     /*Load Optimizer Settings (non-cost function)*/
     ui.stage_enabled_checkBox->setChecked(true);  // ALWAYS TRUE FOR TRUNK
     ui.budget_spinBox->setValue(opt_settings_.trunk_budget);
@@ -791,32 +663,28 @@ void SettingsControl::on_trunk_radioButton_clicked() {
     ui.x_rotation_spinBox->setValue(opt_settings_.trunk_range.xa);
     ui.y_rotation_spinBox->setValue(opt_settings_.trunk_range.ya);
     ui.z_rotation_spinBox->setValue(opt_settings_.trunk_range.za);
+
     /*Disable Branch options*/
     ui.branch_total_count_label->setVisible(false);
     ui.branch_count_spinBox->setVisible(false);
     ui.branch_count_spinBox->setEnabled(false);
 
     /*Select Active Cost Function*/
-    for (int i = 0; i < ui.cost_function_listWidget->count(); i++) {
-        if (ui.cost_function_listWidget->item(i)->text() ==
-            QString::fromStdString(sc_trunk_manager_.getActiveCostFunction())) {
-            ui.cost_function_listWidget->setCurrentRow(i);
-            break;
-        }
-        if (i == (ui.cost_function_listWidget->count() - 1)) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Active cost function not found!",
-                QMessageBox::Ok);
-        }
+    const QString active =
+        costFunctionTypeToQString(sc_trunk_manager_.getActiveCostFunction());
+    const auto matching_items =
+        ui.cost_function_listWidget->findItems(active, Qt::MatchExactly);
+    if (matching_items.empty()) {
+        QMessageBox::critical(
+            this, "Error!", "Active cost function not found!", QMessageBox::Ok);
+    } else {
+        ui.cost_function_listWidget->setCurrentItem(matching_items.front());
     }
 
-    /*Select the first Parameter if There are any Parameters*/
     if (ui.cost_function_parameters_listWidget->count() > 0) {
         ui.cost_function_parameters_listWidget->setCurrentRow(0);
     }
-};
+}
 
 void SettingsControl::on_branch_radioButton_clicked() {
     /*Get Rid of Parameters Index and Hide the Value View*/
@@ -830,10 +698,6 @@ void SettingsControl::on_branch_radioButton_clicked() {
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
 
-    /*Populate Available List Widget and Select the Current One*/
-    std::vector<jta_cost_function::CostFunction> available_cost_functions =
-        sc_branch_manager_.getAvailableCostFunctions();
-
     /*Load Optimizer Settings (non-cost function)*/
     ui.stage_enabled_checkBox->setChecked(opt_settings_.enable_branch_);
     ui.budget_spinBox->setValue(opt_settings_.branch_budget);
@@ -843,33 +707,28 @@ void SettingsControl::on_branch_radioButton_clicked() {
     ui.x_rotation_spinBox->setValue(opt_settings_.branch_range.xa);
     ui.y_rotation_spinBox->setValue(opt_settings_.branch_range.ya);
     ui.z_rotation_spinBox->setValue(opt_settings_.branch_range.za);
+
     /*Enable Branch options*/
     ui.branch_total_count_label->setVisible(true);
     ui.branch_count_spinBox->setVisible(true);
     ui.branch_count_spinBox->setEnabled(true);
 
     /*Select Active Cost Function*/
-    for (int i = 0; i < ui.cost_function_listWidget->count(); i++) {
-        if (ui.cost_function_listWidget->item(i)->text() ==
-            QString::fromStdString(
-                sc_branch_manager_.getActiveCostFunction())) {
-            ui.cost_function_listWidget->setCurrentRow(i);
-            break;
-        }
-        if (i == (ui.cost_function_listWidget->count() - 1)) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Active cost function not found!",
-                QMessageBox::Ok);
-        }
+    const QString active =
+        costFunctionTypeToQString(sc_branch_manager_.getActiveCostFunction());
+    const auto matching_items =
+        ui.cost_function_listWidget->findItems(active, Qt::MatchExactly);
+    if (matching_items.empty()) {
+        QMessageBox::critical(
+            this, "Error!", "Active cost function not found!", QMessageBox::Ok);
+    } else {
+        ui.cost_function_listWidget->setCurrentItem(matching_items.front());
     }
 
-    /*Select the first Parameter if There are any Parameters*/
     if (ui.cost_function_parameters_listWidget->count() > 0) {
         ui.cost_function_parameters_listWidget->setCurrentRow(0);
     }
-};
+}
 
 void SettingsControl::on_leaf_radioButton_clicked() {
     /*Get Rid of Parameters Index and Hide the Value View*/
@@ -883,10 +742,6 @@ void SettingsControl::on_leaf_radioButton_clicked() {
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
 
-    /*Populate Available List Widget and Select the Current One*/
-    std::vector<jta_cost_function::CostFunction> available_cost_functions =
-        sc_leaf_manager_.getAvailableCostFunctions();
-
     /*Load Optimizer Settings (non-cost function)*/
     ui.stage_enabled_checkBox->setChecked(opt_settings_.enable_leaf_);
     ui.budget_spinBox->setValue(opt_settings_.leaf_budget);
@@ -896,32 +751,28 @@ void SettingsControl::on_leaf_radioButton_clicked() {
     ui.x_rotation_spinBox->setValue(opt_settings_.leaf_range.xa);
     ui.y_rotation_spinBox->setValue(opt_settings_.leaf_range.ya);
     ui.z_rotation_spinBox->setValue(opt_settings_.leaf_range.za);
+
     /*Disable Branch options*/
     ui.branch_total_count_label->setVisible(false);
     ui.branch_count_spinBox->setVisible(false);
     ui.branch_count_spinBox->setEnabled(false);
 
     /*Select Active Cost Function*/
-    for (int i = 0; i < ui.cost_function_listWidget->count(); i++) {
-        if (ui.cost_function_listWidget->item(i)->text() ==
-            QString::fromStdString(sc_leaf_manager_.getActiveCostFunction())) {
-            ui.cost_function_listWidget->setCurrentRow(i);
-            break;
-        }
-        if (i == (ui.cost_function_listWidget->count() - 1)) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Active cost function not found!",
-                QMessageBox::Ok);
-        }
+    const QString active =
+        costFunctionTypeToQString(sc_leaf_manager_.getActiveCostFunction());
+    const auto matching_items =
+        ui.cost_function_listWidget->findItems(active, Qt::MatchExactly);
+    if (matching_items.empty()) {
+        QMessageBox::critical(
+            this, "Error!", "Active cost function not found!", QMessageBox::Ok);
+    } else {
+        ui.cost_function_listWidget->setCurrentItem(matching_items.front());
     }
 
-    /*Select the first Parameter if There are any Parameters*/
     if (ui.cost_function_parameters_listWidget->count() > 0) {
         ui.cost_function_parameters_listWidget->setCurrentRow(0);
     }
-};
+}
 
 /*Optimizer Settings Buttons Toggled*/
 void SettingsControl::on_stage_enabled_checkBox_clicked() {
@@ -1018,176 +869,108 @@ void SettingsControl::on_branch_count_spinBox_valueChanged() {
 };
 
 void SettingsControl::on_double_parameter_spinBox_valueChanged() {
-    if (ui.trunk_radioButton->isChecked()) {
-        if (!sc_trunk_manager_.getActiveCostFunctionClass()
-                 ->setDoubleParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.double_parameter_spinBox->value())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else if (ui.branch_radioButton->isChecked()) {
-        if (!sc_branch_manager_.getActiveCostFunctionClass()
-                 ->setDoubleParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.double_parameter_spinBox->value())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else {
-        if (!sc_leaf_manager_.getActiveCostFunctionClass()
-                 ->setDoubleParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.double_parameter_spinBox->value())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
+    auto* selected_item = ui.cost_function_parameters_listWidget->currentItem();
+    if (!selected_item) {
+        return;
     }
-};
+
+    jta_cost_function::CostFunctionManager* manager = nullptr;
+    if (ui.trunk_radioButton->isChecked()) {
+        manager = &sc_trunk_manager_;
+    } else if (ui.branch_radioButton->isChecked()) {
+        manager = &sc_branch_manager_;
+    } else {
+        manager = &sc_leaf_manager_;
+    }
+
+    if (!manager->getActiveCostFunctionClass()->setDoubleParameterValue(
+            selected_item->text().toStdString(),
+            ui.double_parameter_spinBox->value())) {
+        QMessageBox::critical(
+            this,
+            "Error!",
+            "Could not update parameter value!",
+            QMessageBox::Ok);
+    }
+}
 
 void SettingsControl::on_int_parameter_spinBox_valueChanged() {
-    if (ui.trunk_radioButton->isChecked()) {
-        if (!sc_trunk_manager_.getActiveCostFunctionClass()
-                 ->setIntParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.int_parameter_spinBox->value())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else if (ui.branch_radioButton->isChecked()) {
-        if (!sc_branch_manager_.getActiveCostFunctionClass()
-                 ->setIntParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.int_parameter_spinBox->value())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else {
-        if (!sc_leaf_manager_.getActiveCostFunctionClass()
-                 ->setIntParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.int_parameter_spinBox->value())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
+    auto* selected_item = ui.cost_function_parameters_listWidget->currentItem();
+    if (!selected_item) {
+        return;
     }
-};
+
+    jta_cost_function::CostFunctionManager* manager = nullptr;
+    if (ui.trunk_radioButton->isChecked()) {
+        manager = &sc_trunk_manager_;
+    } else if (ui.branch_radioButton->isChecked()) {
+        manager = &sc_branch_manager_;
+    } else {
+        manager = &sc_leaf_manager_;
+    }
+
+    if (!manager->getActiveCostFunctionClass()->setIntParameterValue(
+            selected_item->text().toStdString(),
+            ui.int_parameter_spinBox->value())) {
+        QMessageBox::critical(
+            this,
+            "Error!",
+            "Could not update parameter value!",
+            QMessageBox::Ok);
+    }
+}
 
 void SettingsControl::on_bool_parameter_true_radioButton_clicked() {
-    if (ui.trunk_radioButton->isChecked()) {
-        if (!sc_trunk_manager_.getActiveCostFunctionClass()
-                 ->setBoolParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.bool_parameter_true_radioButton->isChecked())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else if (ui.branch_radioButton->isChecked()) {
-        if (!sc_branch_manager_.getActiveCostFunctionClass()
-                 ->setBoolParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.bool_parameter_true_radioButton->isChecked())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else {
-        if (!sc_leaf_manager_.getActiveCostFunctionClass()
-                 ->setBoolParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.bool_parameter_true_radioButton->isChecked())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
+    auto* selected_item = ui.cost_function_parameters_listWidget->currentItem();
+    if (!selected_item) {
+        return;
     }
-};
+
+    jta_cost_function::CostFunctionManager* manager = nullptr;
+    if (ui.trunk_radioButton->isChecked()) {
+        manager = &sc_trunk_manager_;
+    } else if (ui.branch_radioButton->isChecked()) {
+        manager = &sc_branch_manager_;
+    } else {
+        manager = &sc_leaf_manager_;
+    }
+
+    if (!manager->getActiveCostFunctionClass()->setBoolParameterValue(
+            selected_item->text().toStdString(),
+            ui.bool_parameter_true_radioButton->isChecked())) {
+        QMessageBox::critical(
+            this,
+            "Error!",
+            "Could not update parameter value!",
+            QMessageBox::Ok);
+    }
+}
 
 void SettingsControl::on_bool_parameter_false_radioButton_clicked() {
-    if (ui.trunk_radioButton->isChecked()) {
-        if (!sc_trunk_manager_.getActiveCostFunctionClass()
-                 ->setBoolParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.bool_parameter_true_radioButton->isChecked())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else if (ui.branch_radioButton->isChecked()) {
-        if (!sc_branch_manager_.getActiveCostFunctionClass()
-                 ->setBoolParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.bool_parameter_true_radioButton->isChecked())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
-    } else {
-        if (!sc_leaf_manager_.getActiveCostFunctionClass()
-                 ->setBoolParameterValue(
-                     ui.cost_function_parameters_listWidget->currentItem()
-                         ->text()
-                         .toStdString(),
-                     ui.bool_parameter_true_radioButton->isChecked())) {
-            QMessageBox::critical(
-                this,
-                "Error!",
-                "Could not update parameter value!",
-                QMessageBox::Ok);
-        }
+    auto* selected_item = ui.cost_function_parameters_listWidget->currentItem();
+    if (!selected_item) {
+        return;
     }
-};
+
+    jta_cost_function::CostFunctionManager* manager = nullptr;
+    if (ui.trunk_radioButton->isChecked()) {
+        manager = &sc_trunk_manager_;
+    } else if (ui.branch_radioButton->isChecked()) {
+        manager = &sc_branch_manager_;
+    } else {
+        manager = &sc_leaf_manager_;
+    }
+
+    if (!manager->getActiveCostFunctionClass()->setBoolParameterValue(
+            selected_item->text().toStdString(),
+            ui.bool_parameter_true_radioButton->isChecked())) {
+        QMessageBox::critical(
+            this,
+            "Error!",
+            "Could not update parameter value!",
+            QMessageBox::Ok);
+    }
+}
 
 /*Save Button*/
 void SettingsControl::on_save_button_clicked() {
@@ -1209,13 +992,13 @@ void SettingsControl::on_reset_button_clicked() {
 
     /*Change the Default Settings of Dilation for branch and leaf to 4 and 1
      * respectively*/
-    sc_branch_manager_.getCostFunctionClass("DIRECT_DILATION")
+    sc_branch_manager_.getCostFunctionClass(CostFunctionType::DirectDilation)
         ->setIntParameterValue("Dilation", 4);
-    sc_leaf_manager_.getCostFunctionClass("DIRECT_DILATION")
+    sc_leaf_manager_.getCostFunctionClass(CostFunctionType::DirectDilation)
         ->setIntParameterValue("Dilation", 1);
 
     /*Refresh Settings GUI*/
-    /*Get Rid of Parameters Index and Hide the Value View*/
+    ui.cost_function_parameters_listWidget->clear();
     ui.cost_function_parameters_listWidget->clearSelection();
     ui.double_parameter_spinBox->setEnabled(false);
     ui.double_parameter_spinBox->setVisible(false);
@@ -1225,39 +1008,34 @@ void SettingsControl::on_reset_button_clicked() {
     ui.bool_parameter_true_radioButton->setVisible(false);
     ui.bool_parameter_false_radioButton->setEnabled(false);
     ui.bool_parameter_false_radioButton->setVisible(false);
-    ui.cost_function_parameters_listWidget->clearSelection();
 
-    /*Populate Available List Widget and Select the Current One*/
-    std::vector<jta_cost_function::CostFunction> available_cost_functions =
-        sc_trunk_manager_.getAvailableCostFunctions();
     ui.trunk_radioButton->setChecked(true);  // Always load to trunk
-    if (ui.trunk_radioButton->isChecked()) {
-        /*Load Optimizer Settings (non-cost function)*/
-        ui.stage_enabled_checkBox->setChecked(true);  // ALWAYS TRUE FOR TRUNK
-        ui.budget_spinBox->setValue(opt_settings_.trunk_budget);
-        ui.x_translation_spinBox->setValue(opt_settings_.trunk_range.x);
-        ui.y_translation_spinBox->setValue(opt_settings_.trunk_range.y);
-        ui.z_translation_spinBox->setValue(opt_settings_.trunk_range.z);
-        ui.x_rotation_spinBox->setValue(opt_settings_.trunk_range.xa);
-        ui.y_rotation_spinBox->setValue(opt_settings_.trunk_range.ya);
-        ui.z_rotation_spinBox->setValue(opt_settings_.trunk_range.za);
-        /*Disable Branch options*/
 
-        ui.branch_total_count_label->setVisible(false);
-        ui.branch_count_spinBox->setVisible(false);
-        ui.branch_count_spinBox->setEnabled(false);
-        ui.branch_count_spinBox->setValue(opt_settings_.number_branches);
+    /*Load Optimizer Settings (non-cost function)*/
+    ui.stage_enabled_checkBox->setChecked(true);  // ALWAYS TRUE FOR TRUNK
+    ui.budget_spinBox->setValue(opt_settings_.trunk_budget);
+    ui.x_translation_spinBox->setValue(opt_settings_.trunk_range.x);
+    ui.y_translation_spinBox->setValue(opt_settings_.trunk_range.y);
+    ui.z_translation_spinBox->setValue(opt_settings_.trunk_range.z);
+    ui.x_rotation_spinBox->setValue(opt_settings_.trunk_range.xa);
+    ui.y_rotation_spinBox->setValue(opt_settings_.trunk_range.ya);
+    ui.z_rotation_spinBox->setValue(opt_settings_.trunk_range.za);
 
-        /*Select Active Cost Function*/
-        for (int i = 0; i < ui.cost_function_listWidget->count(); i++) {
-            if (ui.cost_function_listWidget->item(i)->text() ==
-                QString::fromStdString(
-                    sc_trunk_manager_.getActiveCostFunction())) {
-                ui.cost_function_listWidget->setCurrentRow(i);
-            }
-        }
+    /*Disable Branch options*/
+    ui.branch_total_count_label->setVisible(false);
+    ui.branch_count_spinBox->setVisible(false);
+    ui.branch_count_spinBox->setEnabled(false);
+    ui.branch_count_spinBox->setValue(opt_settings_.number_branches);
+
+    /*Select Active Cost Function*/
+    const QString active =
+        costFunctionTypeToQString(sc_trunk_manager_.getActiveCostFunction());
+    const auto matching_items =
+        ui.cost_function_listWidget->findItems(active, Qt::MatchExactly);
+    if (!matching_items.empty()) {
+        ui.cost_function_listWidget->setCurrentItem(matching_items.front());
     }
-    /*Select the first Parameter if There are any Parameters*/
+
     if (ui.cost_function_parameters_listWidget->count() > 0) {
         ui.cost_function_parameters_listWidget->setCurrentRow(0);
     }

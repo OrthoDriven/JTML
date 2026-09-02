@@ -20,8 +20,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "domain/settings_constants.h"
-
 namespace jta {
 
 namespace {
@@ -112,12 +110,13 @@ StageScript BuildStageScript(
          * enable_leaf_ = true).*/
         StageScript script;
         if (settings.enable_leaf_) {
-            script.push_back(StageSpec{
-                StageKind::Leaf,
-                settings.leaf_range,
-                static_cast<unsigned int>(settings.leaf_budget),
-                /*repeat=*/0u,
-                /*cfm_index=*/2u});
+            script.push_back(
+                StageSpec{
+                    StageKind::Leaf,
+                    settings.leaf_range,
+                    static_cast<unsigned int>(settings.leaf_budget),
+                    /*repeat=*/0u,
+                    /*cfm_index=*/2u});
         }
         return script;
     }
@@ -137,27 +136,30 @@ StageScript BuildStageScript(
      * frame selection (img_indices_), never in stage shape — one script for
      * all of them.*/
     StageScript script;
-    script.push_back(StageSpec{
-        StageKind::Trunk,
-        settings.trunk_range,
-        static_cast<unsigned int>(settings.trunk_budget),
-        /*repeat=*/1u,
-        /*cfm_index=*/0u});
+    script.push_back(
+        StageSpec{
+            StageKind::Trunk,
+            settings.trunk_range,
+            static_cast<unsigned int>(settings.trunk_budget),
+            /*repeat=*/1u,
+            /*cfm_index=*/0u});
     if (settings.enable_branch_ && settings.number_branches > 0) {
-        script.push_back(StageSpec{
-            StageKind::Branch,
-            settings.branch_range,
-            static_cast<unsigned int>(settings.branch_budget),
-            static_cast<unsigned int>(settings.number_branches),
-            /*cfm_index=*/1u});
+        script.push_back(
+            StageSpec{
+                StageKind::Branch,
+                settings.branch_range,
+                static_cast<unsigned int>(settings.branch_budget),
+                static_cast<unsigned int>(settings.number_branches),
+                /*cfm_index=*/1u});
     }
     if (settings.enable_leaf_) {
-        script.push_back(StageSpec{
-            StageKind::Leaf,
-            settings.leaf_range,
-            static_cast<unsigned int>(settings.leaf_budget),
-            /*repeat=*/1u,
-            /*cfm_index=*/2u});
+        script.push_back(
+            StageSpec{
+                StageKind::Leaf,
+                settings.leaf_range,
+                static_cast<unsigned int>(settings.leaf_budget),
+                /*repeat=*/1u,
+                /*cfm_index=*/2u});
     }
     return script;
 }
@@ -180,7 +182,7 @@ std::vector<unsigned int> CumulativeStageCaps(const StageScript& script) {
 }
 
 StageCostParams DeriveStageCostParams(
-    const std::string& cost_function_name,
+    const jta_cost_function::CostFunctionType cost_function_type,
     std::vector<jta_cost_function::Parameter<int>> int_params,
     std::vector<jta_cost_function::Parameter<bool>> bool_params) {
     /*Verbatim relocation of the manager's per-manager parameter scan: the
@@ -205,7 +207,8 @@ StageCostParams DeriveStageCostParams(
     if (out.dilation <= 0) {
         out.dilation = 0;
     }
-    if (cost_function_name == "DIRECT_MAHFOUZ") {
+    if (cost_function_type ==
+        jta_cost_function::CostFunctionType::DirectDilationMahfouzVariant) {
         out.dilation = 3;
     }
 

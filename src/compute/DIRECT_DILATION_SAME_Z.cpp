@@ -3,6 +3,7 @@
 
 /*DIRECT_DILATION_SAME_Z Source*/
 #include "CostFunctionManager.h"
+#include "DIRECT_DILATION_SAME_ZCustomVariables.h"
 
 namespace jta_cost_function {
 bool CostFunctionManager::initializeDIRECT_DILATION_SAME_Z(

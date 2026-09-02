@@ -21,6 +21,7 @@
 #include "domain/preprocessor-defs.h"
 
 /****************Begin Custom Variables*************/
+
 void invert_transformation(float result[4][4], float tran[4][4]) {
     int i, j;
     /* Upper left 3x3 of result is transpose of upper left 3x3 of tran. */

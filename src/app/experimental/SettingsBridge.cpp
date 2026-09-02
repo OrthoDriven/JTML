@@ -10,6 +10,8 @@
 #include "domain/settings_constants.h"
 #include "services/cost_function_registry.h"
 
+using jta_cost_function::cost_function_type_from_string;
+
 namespace {
 
 /*Per-stage fallback dilation defaults (used only when the ACTIVE cost
@@ -36,9 +38,13 @@ SettingsBridge::SettingsBridge(
         std::make_unique<jta_cost_function::CostFunctionManager>(Stage::Branch);
     leaf_manager_ =
         std::make_unique<jta_cost_function::CostFunctionManager>(Stage::Leaf);
-    branch_manager_->getCostFunctionClass("DIRECT_DILATION")
+    branch_manager_
+        ->getCostFunctionClass(
+            jta_cost_function::CostFunctionType::DirectDilation)
         ->setIntParameterValue("Dilation", 4);
-    leaf_manager_->getCostFunctionClass("DIRECT_DILATION")
+    leaf_manager_
+        ->getCostFunctionClass(
+            jta_cost_function::CostFunctionType::DirectDilation)
         ->setIntParameterValue("Dilation", 1);
 }
 
@@ -103,9 +109,13 @@ void SettingsBridge::reset() {
         std::make_unique<jta_cost_function::CostFunctionManager>(Stage::Branch);
     leaf_manager_ =
         std::make_unique<jta_cost_function::CostFunctionManager>(Stage::Leaf);
-    branch_manager_->getCostFunctionClass("DIRECT_DILATION")
+    branch_manager_
+        ->getCostFunctionClass(
+            jta_cost_function::CostFunctionType::DirectDilation)
         ->setIntParameterValue("Dilation", 4);
-    leaf_manager_->getCostFunctionClass("DIRECT_DILATION")
+    leaf_manager_
+        ->getCostFunctionClass(
+            jta_cost_function::CostFunctionType::DirectDilation)
         ->setIntParameterValue("Dilation", 1);
 
     markDirty();
@@ -487,41 +497,66 @@ void SettingsBridge::markDirty() {
 
 void SettingsBridge::applyCostFunctionEntries(
     const std::vector<jta::RegistryEntry>& entries) {
-    /*Widgets LoadSettingsBetweenSessions cost-function loop (mainscreen.cpp:
-     * 4633), minus the modal error dialogs (malformed keys are skipped).*/
-    for (const jta::RegistryEntry& entry : entries) {
-        QStringList key_codes = entry.key.split(QStringLiteral("@"));
+    for (const auto& entry : entries) {
+        const QStringList key_codes = entry.key.split(QStringLiteral("@"));
+
         if (key_codes.size() == 2 &&
             key_codes[1] == QStringLiteral("ACTIVE_CF")) {
-            jta_cost_function::CostFunctionManager* manager =
-                managerForStage(key_codes[0]);
-            if (manager) {
-                manager->setActiveCostFunction(
-                    entry.value.toString().toStdString());
-            }
-        } else if (key_codes.size() == 4) {
-            jta_cost_function::CostFunctionManager* manager =
-                managerForStage(key_codes[0]);
+            auto* manager = managerForStage(key_codes[0]);
             if (!manager) {
                 continue;
             }
-            jta_cost_function::CostFunction* cost_function =
-                manager->getCostFunctionClass(key_codes[1].toStdString());
-            const QString param_name = key_codes[2];
-            const QString param_type = key_codes[3];
-            if (param_type == QStringLiteral("DOUBLE")) {
-                cost_function->setDoubleParameterValue(
-                    param_name.toStdString(), entry.value.toDouble());
-            } else if (param_type == QStringLiteral("INT")) {
-                cost_function->setIntParameterValue(
-                    param_name.toStdString(), entry.value.toInt());
-            } else if (param_type == QStringLiteral("BOOL")) {
-                cost_function->setBoolParameterValue(
-                    param_name.toStdString(), entry.value.toBool());
+
+            const auto cost_function_type = cost_function_type_from_string(
+                entry.value.toString().toStdString());
+
+            if (cost_function_type) {
+                manager->setActiveCostFunction(*cost_function_type);
             }
-            /*Unknown type suffix: skipped (widgets error code D/E/F).*/
+
+            continue;
         }
-        /*Wrong code count: skipped (widgets error code C).*/
+
+        if (key_codes.size() != 4) {
+            continue;
+        }
+
+        auto* manager = managerForStage(key_codes[0]);
+        if (!manager) {
+            continue;
+        }
+
+        const auto cost_function_type =
+            cost_function_type_from_string(key_codes[1].toStdString());
+
+        if (!cost_function_type) {
+            continue;
+        }
+
+        auto available_cost_functions = manager->getAvailableCostFunctions();
+
+        const auto cost_function_it =
+            available_cost_functions.find(*cost_function_type);
+
+        if (cost_function_it == available_cost_functions.end()) {
+            continue;
+        }
+
+        auto& cost_function = cost_function_it->second;
+
+        const std::string param_name = key_codes[2].toStdString();
+
+        const QString& param_type = key_codes[3];
+
+        if (param_type == QStringLiteral("DOUBLE")) {
+            cost_function.setDoubleParameterValue(
+                param_name, entry.value.toDouble());
+        } else if (param_type == QStringLiteral("INT")) {
+            cost_function.setIntParameterValue(param_name, entry.value.toInt());
+        } else if (param_type == QStringLiteral("BOOL")) {
+            cost_function.setBoolParameterValue(
+                param_name, entry.value.toBool());
+        }
     }
 }
 
@@ -543,8 +578,8 @@ jta_cost_function::CostFunctionManager* SettingsBridge::managerForStage(
 int SettingsBridge::costFunctionIndex(
     jta_cost_function::CostFunctionManager* manager) const {
     const QStringList names = costFunctionNames(manager);
-    const QString active =
-        QString::fromStdString(manager->getActiveCostFunction());
+    const QString active = QString::fromStdString(
+        std::string(to_string(manager->getActiveCostFunction())));
     return names.indexOf(active);
 }
 
@@ -555,11 +590,13 @@ void SettingsBridge::setCostFunctionIndex(
     if (index < 0 || index >= names.size()) {
         return;
     }
-    if (QString::fromStdString(manager->getActiveCostFunction()) ==
+    if (QString::fromStdString(
+            std::string(to_string(manager->getActiveCostFunction()))) ==
         names[index]) {
         return;
     }
-    manager->setActiveCostFunction(names[index].toStdString());
+    manager->setActiveCostFunction(
+        cost_function_type_from_string(names[index].toStdString()).value());
     markDirty();
 }
 
@@ -606,11 +643,13 @@ bool SettingsBridge::hasDilation(
 QStringList SettingsBridge::costFunctionNames(
     jta_cost_function::CostFunctionManager* manager) const {
     QStringList names;
-    std::vector<jta_cost_function::CostFunction> available =
-        manager->getAvailableCostFunctions();
+    std::map<
+        jta_cost_function::CostFunctionType,
+        jta_cost_function::CostFunction>
+        available = manager->getAvailableCostFunctions();
     for (auto& cost_function : available) {
         names.append(
-            QString::fromStdString(cost_function.getCostFunctionName()));
+            QString::fromStdString(cost_function.second.getCostFunctionName()));
     }
     return names;
 }

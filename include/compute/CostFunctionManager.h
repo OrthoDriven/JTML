@@ -10,12 +10,10 @@
 #include <cstdint>
 
 #include "CostFunction.h"
-namespace gpu_cost_function {
-struct GraphRecipeCaptureInputs;
-}
 #include "domain/preprocessor-defs.h"
 
 /*Cost Function Tools Library*/
+
 #include "compute/gpu_dilated_frame.cuh"
 #include "compute/gpu_edge_frame.cuh"
 #include "compute/gpu_frame.cuh"
@@ -26,27 +24,18 @@ struct GraphRecipeCaptureInputs;
 #include "compute/gpu_model.cuh"
 #include "compute/render_engine.cuh"
 
-// U6 forward declare — CUDA-free, avoids pulling cuda_runtime into this header
-namespace gpu_cost_function {
-struct EvaluationContext;
-}
 /*Stage Enum*/
 #include "Stage.h"
-#include "compute/gpu_heatmaps.cuh"
 
 /*Standard Library*/
 
+#include <map>
 #include <vector>
 
 namespace jta_cost_function {
+
 class CostFunctionManager {
 public:
-    /******************************************************************************/
-    /**************************PUBLIC DLL FUNCTIONS BEGIN
-     * *************************/
-    /******************************(DO NOT EDIT)
-     * *********************************/
-    /******************************************************************************/
     /*Constructor
     Called once when the client initially loads and populates the list of
     available cost functions. There will be three instances, one for each stage
@@ -59,19 +48,19 @@ public:
     JTML_DLL ~CostFunctionManager();
 
     /*Set Active Cost Function*/
-    JTML_DLL void setActiveCostFunction(std::string cost_function_name);
+    JTML_DLL void setActiveCostFunction(CostFunctionType cf_type);
 
     /*Update Cost Function Values from Saved Session*/
     JTML_DLL bool updateCostFunctionParameterValues(
-        std::string cost_function_name,
+        CostFunctionType cost_function_type,
         std::string parameter_name,
         double value);
     JTML_DLL bool updateCostFunctionParameterValues(
-        std::string cost_function_name,
+        CostFunctionType cost_function_type,
         std::string parameter_name,
         int value);
     JTML_DLL bool updateCostFunctionParameterValues(
-        std::string cost_function_name,
+        CostFunctionType cost_function_type,
         std::string parameter_name,
         bool value);
 
@@ -85,24 +74,24 @@ public:
     JTML_DLL double callActiveCostFunction();
 
     /*Get Active Cost Function*/
-    JTML_DLL std::string getActiveCostFunction();
+    JTML_DLL CostFunctionType getActiveCostFunction();
 
     /*Get Active Cost Function Class*/
     JTML_DLL CostFunction* getActiveCostFunctionClass();
 
     /*Get Cost Function Class*/
-    JTML_DLL CostFunction* getCostFunctionClass(std::string cost_function_name);
+    JTML_DLL CostFunction* getCostFunctionClass(
+        CostFunctionType cost_function_type);
 
     /*Get Vector of Cost Functions*/
-    JTML_DLL std::vector<CostFunction> getAvailableCostFunctions();
+    JTML_DLL std::map<CostFunctionType, CostFunction>
+    getAvailableCostFunctions();
 
     /*Set Current Frame Index*/
     JTML_DLL void setCurrentFrameIndex(unsigned int current_frame_index);
     JTML_DLL unsigned int getCurrentFrameIndex() const;
     JTML_DLL void BumpUploadEpoch();
     JTML_DLL std::uint64_t getUploadEpoch() const;
-    JTML_DLL bool GetGraphRecipeCaptureInputs(
-        gpu_cost_function::GraphRecipeCaptureInputs& out) const;
 
     /*Stage accessor — plan 008 U2 second documented wizard-region exception:
     minimal getStage() makes the stage-guard pin observable (stage_ is dead
@@ -151,22 +140,18 @@ private:
     void listCostFunctions();
 
     /*Vector of Cost Functions*/
-    std::vector<CostFunction> available_cost_functions_;
+    std::map<CostFunctionType, CostFunction> available_cost_functions_;
 
     /*Active Cost Function*/
-    std::string active_cost_function_;
+    CostFunctionType active_cost_function_;
 
-    /******************************************************************************/
-    /*********************ESSENTIAL CLASS VARIABLES END
-     * ***************************/
-    /******************************************************************************/
-
-    /******************************************************************************/
-    /*********************COST FUNCTION VARIABLES BEGIN
-     * ***************************/
-    /******************************(DO NOT EDIT)
-     * *********************************/
-    /******************************************************************************/
+#include "DD_NEW_POLE_CONSTRAINTCustomVariables.h"
+#include "DIRECT_DILATIONCustomVariables.h"
+#include "DIRECT_DILATION_POLE_CONSTRAINTCustomVariables.h"
+#include "DIRECT_DILATION_SAME_ZCustomVariables.h"
+#include "DIRECT_DILATION_T1CustomVariables.h"
+#include "DIRECT_MAHFOUZCustomVariables.h"
+#include "sym_trap_functionCustomVariables.h"
 
     /*Stage Enum*/
     Stage stage_;
@@ -205,35 +190,6 @@ private:
     /*Biplane Mode?*/
     bool biplane_mode_;
 
-/******************************************************************************/
-/************************COST FUNCTION VARIABLES END***************************/
-/******************************************************************************/
-
-/******************************************************************************/
-/*********************CUSTOM COST FUNCTION VARIABLES BEGIN ********************/
-/******************************(DO NOT EDIT)  *********************************/
-/******************************************************************************/
-/*HEADERS THAT INTERACT WITH WIZARD*/
-/*Custom Variable Headers for Cost Functions*/
-#include "DD_NEW_POLE_CONSTRAINTCustomVariables.h"
-#include "DIRECT_DILATIONCustomVariables.h"
-#include "DIRECT_DILATION_POLE_CONSTRAINTCustomVariables.h"
-#include "DIRECT_DILATION_SAME_ZCustomVariables.h"
-#include "DIRECT_DILATION_T1CustomVariables.h"
-#include "DIRECT_MAHFOUZCustomVariables.h"
-#include "sym_trap_functionCustomVariables.h"
-    /*END HEADERS THAT INTERACT WITH WIZARD*/
-    /******************************************************************************/
-    /************************CUSTOM COST FUNCTION VARIABLES
-     * END********************/
-    /******************************************************************************/
-
-    /******************************** WARNING
-     * *************************************/
-    /******************************************************************************/
-    /*************************DO NOT EDIT FUNCTIONS BELOW
-     * *************************/
-    /******************************************************************************/
     /*FUNCTIONS THAT INTERACT WITH WIZARD*/
     /*Cost Function Implementations*/
     double costFunctionsym_trap_function();

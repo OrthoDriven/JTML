@@ -5,6 +5,7 @@
 #include "CostFunction.h"
 
 namespace jta_cost_function {
+
 /*Constructor/Destructor*/
 CostFunction::CostFunction() {
     cost_function_name_ = "Nameless_Cost_Function";

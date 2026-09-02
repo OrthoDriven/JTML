@@ -20,7 +20,7 @@ CostFunctionManager::CostFunctionManager(Stage stage) {
     listCostFunctions();
 
     /*Set Active Cost Function as the Default (DIRECT_DILATION)*/
-    setActiveCostFunction("DIRECT_DILATION");
+    setActiveCostFunction(CostFunctionType::DirectDilation);
 
     /*Storage for Data (images, poses ,etc.) set to null*/
     /*Pointer to Vector of GPU Frame Pointers*/
@@ -65,7 +65,7 @@ CostFunctionManager::CostFunctionManager() {
     listCostFunctions();
 
     /*Set Active Cost Function as the Default (DIRECT_DILATION)*/
-    setActiveCostFunction("DIRECT_DILATION");
+    setActiveCostFunction(CostFunctionType::DirectDilation);
 
     /*Storage for Data (images, poses ,etc.) set to null*/
     /*Pointer to Vector of GPU Frame Pointers*/
@@ -147,94 +147,50 @@ void CostFunctionManager::UploadDistanceMap(
 
 /*Set Active Cost Function*/
 void CostFunctionManager::setActiveCostFunction(
-    std::string cost_function_name) {
-    /*Check Active Cost Function Name Exists*/
-    for (auto& available_cost_function : available_cost_functions_) {
-        if (available_cost_function.getCostFunctionName() ==
-            cost_function_name) {
-            active_cost_function_ = cost_function_name;
-            return;
-        }
-    }
-
-    /*Otherwise set DIRECT_DILATION as default*/
-    active_cost_function_ = "DIRECT_DILATION";
+    jta_cost_function::CostFunctionType cf_type) {
+    active_cost_function_ = cf_type;
 };
 
 /*Update Cost Function Values from Saved Session*/
 bool CostFunctionManager::updateCostFunctionParameterValues(
-    std::string cost_function_name,
+    CostFunctionType cost_function_type,
     std::string parameter_name,
     double value) {
-    /*Check Active Cost Function Name Exists*/
-    for (int i = 0; i < available_cost_functions_.size(); i++) {
-        if (available_cost_functions_[i].getCostFunctionName() ==
-            cost_function_name) {
-            /*Check Parameter Name Exsits*/
-            for (int j = 0;
-                 j < available_cost_functions_[i].getDoubleParameters().size();
-                 j++) {
-                if (available_cost_functions_[i]
-                        .getDoubleParameters()[j]
-                        .getParameterName() == parameter_name) {
-                    available_cost_functions_[i]
-                        .getDoubleParameters()[j]
-                        .setParameterValue(value);
-                    return true;
-                }
-            }
+    for (auto i :
+         available_cost_functions_[cost_function_type].getDoubleParameters()) {
+        if (i.getParameterName() == parameter_name) {
+            i.setParameterValue(value);
+            return true;
         }
     }
     /*Unsuccessful*/
     return false;
 };
 bool CostFunctionManager::updateCostFunctionParameterValues(
-    std::string cost_function_name,
+    CostFunctionType cost_function_type,
     std::string parameter_name,
     int value) {
     /*Check Active Cost Function Name Exists*/
-    for (int i = 0; i < available_cost_functions_.size(); i++) {
-        if (available_cost_functions_[i].getCostFunctionName() ==
-            cost_function_name) {
-            /*Check Parameter Name Exsits*/
-            for (int j = 0;
-                 j < available_cost_functions_[i].getIntParameters().size();
-                 j++) {
-                if (available_cost_functions_[i]
-                        .getIntParameters()[j]
-                        .getParameterName() == parameter_name) {
-                    available_cost_functions_[i]
-                        .getIntParameters()[j]
-                        .setParameterValue(value);
-                    return true;
-                }
-            }
+    for (auto i :
+         available_cost_functions_[cost_function_type].getIntParameters()) {
+        if (i.getParameterName() == parameter_name) {
+            i.setParameterValue(value);
+            return true;
         }
     }
     /*Unsuccessful*/
     return false;
 };
 bool CostFunctionManager::updateCostFunctionParameterValues(
-    std::string cost_function_name,
+    CostFunctionType cost_function_type,
     std::string parameter_name,
     bool value) {
     /*Check Active Cost Function Name Exists*/
-    for (int i = 0; i < available_cost_functions_.size(); i++) {
-        if (available_cost_functions_[i].getCostFunctionName() ==
-            cost_function_name) {
-            /*Check Parameter Name Exsits*/
-            for (int j = 0;
-                 j < available_cost_functions_[i].getBoolParameters().size();
-                 j++) {
-                if (available_cost_functions_[i]
-                        .getBoolParameters()[j]
-                        .getParameterName() == parameter_name) {
-                    available_cost_functions_[i]
-                        .getBoolParameters()[j]
-                        .setParameterValue(value);
-                    return true;
-                }
-            }
+    for (auto i :
+         available_cost_functions_[cost_function_type].getBoolParameters()) {
+        if (i.getParameterName() == parameter_name) {
+            i.setParameterValue(value);
+            return true;
         }
     }
     /*Unsuccessful*/
@@ -242,40 +198,25 @@ bool CostFunctionManager::updateCostFunctionParameterValues(
 };
 
 /*Return Available Cost Functions*/
-std::vector<CostFunction> CostFunctionManager::getAvailableCostFunctions() {
+std::map<CostFunctionType, CostFunction>
+CostFunctionManager::getAvailableCostFunctions() {
     return available_cost_functions_;
 };
 
 /*Return Active Cost Function*/
-std::string CostFunctionManager::getActiveCostFunction() {
+CostFunctionType CostFunctionManager::getActiveCostFunction() {
     return active_cost_function_;
 }
 
 /*Return Active Cost Function Class*/
 CostFunction* CostFunctionManager::getActiveCostFunctionClass() {
-    for (auto& available_cost_function : available_cost_functions_) {
-        if (available_cost_function.getCostFunctionName() ==
-            active_cost_function_) {
-            return &available_cost_function;
-        }
-    }
-
-    /*If all fails return blank class*/
-    return new CostFunction();
+    return &available_cost_functions_[active_cost_function_];
 };
 
 /*Return Cost Function Class*/
 CostFunction* CostFunctionManager::getCostFunctionClass(
-    std::string cost_function_name) {
-    for (int i = 0; i < available_cost_functions_.size(); i++) {
-        if (available_cost_functions_[i].getCostFunctionName() ==
-            cost_function_name) {
-            return &(available_cost_functions_[i]);
-        }
-    }
-
-    /*If all fails return blank class*/
-    return new CostFunction();
+    CostFunctionType cost_function_type) {
+    return &available_cost_functions_[cost_function_type];
 };
 
 /*Set Current Frame Index*/
@@ -296,76 +237,63 @@ std::uint64_t CostFunctionManager::getUploadEpoch() const {
     return upload_epoch_;
 }
 
-/******************************** WARNING *************************************/
-/******************************************************************************/
-/*************************DO NOT EDIT FUNCTIONS BELOW *************************/
-/******************************************************************************/
-/*FUNCTIONS THAT INTERACT WITH WIZARD*/
-
 /*Call Active Cost Function*/
 double CostFunctionManager::callActiveCostFunction() {
-    if (active_cost_function_ == "DIRECT_DILATION") {
+    switch (active_cost_function_) {
+    case CostFunctionType::DirectDilation:
         return costFunctionDIRECT_DILATION();
-    } else if (active_cost_function_ == "DIRECT_MAHFOUZ") {
-        return costFunctionDIRECT_MAHFOUZ();
-    } else if (active_cost_function_ == "sym_trap_function") {
+    case CostFunctionType::SymmetryTrap:
         return costFunctionsym_trap_function();
-    } else if (active_cost_function_ == "DD_NEW_POLE_CONSTRAINT") {
+    case CostFunctionType::DirectDilationNewPoleConstraint:
         return costFunctionDD_NEW_POLE_CONSTRAINT();
-    } else if (active_cost_function_ == "DIRECT_DILATION_POLE_CONSTRAINT") {
+    case CostFunctionType::DirectDilationOldPoleConstraint:
         return costFunctionDIRECT_DILATION_POLE_CONSTRAINT();
-    } else if (active_cost_function_ == "DIRECT_DILATION_SAME_Z") {
+    case CostFunctionType::DirectDilationConstrainZ:
         return costFunctionDIRECT_DILATION_SAME_Z();
-    } else if (active_cost_function_ == "DIRECT_DILATION_T1") {
+    case CostFunctionType::DirectDilationOldT1:
         return costFunctionDIRECT_DILATION_T1();
-    } else {
-        return costFunctionDIRECT_DILATION();
+    case CostFunctionType::DirectDilationMahfouzVariant:
+        return costFunctionDIRECT_MAHFOUZ();
     }
 };
 /*Call Stage Initializer for Active Cost Function*/
 bool CostFunctionManager::InitializeActiveCostFunction(
     std::string& error_message) {
-    if (active_cost_function_ == "DIRECT_DILATION") {
+    switch (active_cost_function_) {
+    case CostFunctionType::DirectDilation:
         return initializeDIRECT_DILATION(error_message);
-    } else if (active_cost_function_ == "DIRECT_MAHFOUZ") {
-        return initializeDIRECT_MAHFOUZ(error_message);
-    } else if (active_cost_function_ == "sym_trap_function") {
+    case CostFunctionType::SymmetryTrap:
         return initializesym_trap_function(error_message);
-    } else if (active_cost_function_ == "DD_NEW_POLE_CONSTRAINT") {
+    case CostFunctionType::DirectDilationNewPoleConstraint:
         return initializeDD_NEW_POLE_CONSTRAINT(error_message);
-    } else if (active_cost_function_ == "DIRECT_DILATION_POLE_CONSTRAINT") {
+    case CostFunctionType::DirectDilationOldPoleConstraint:
         return initializeDIRECT_DILATION_POLE_CONSTRAINT(error_message);
-    } else if (active_cost_function_ == "DIRECT_DILATION_SAME_Z") {
+    case CostFunctionType::DirectDilationConstrainZ:
         return initializeDIRECT_DILATION_SAME_Z(error_message);
-    } else if (active_cost_function_ == "DIRECT_DILATION_T1") {
+    case CostFunctionType::DirectDilationOldT1:
         return initializeDIRECT_DILATION_T1(error_message);
-    } else {
-        error_message =
-            "Could not find active cost function: " + active_cost_function_;
-        return false;
+    case CostFunctionType::DirectDilationMahfouzVariant:
+        return initializeDIRECT_MAHFOUZ(error_message);
     }
 };
 /*Call Stage Destructor for Active Cost Function*/
 bool CostFunctionManager::DestructActiveCostFunction(
     std::string& error_message) {
-    if (active_cost_function_ == "DIRECT_DILATION") {
+    switch (active_cost_function_) {
+    case CostFunctionType::DirectDilation:
         return destructDIRECT_DILATION(error_message);
-    } else if (active_cost_function_ == "DIRECT_MAHFOUZ") {
-        return destructDIRECT_MAHFOUZ(error_message);
-    } else if (active_cost_function_ == "sym_trap_function") {
+    case CostFunctionType::SymmetryTrap:
         return destructsym_trap_function(error_message);
-    } else if (active_cost_function_ == "DD_NEW_POLE_CONSTRAINT") {
+    case CostFunctionType::DirectDilationNewPoleConstraint:
         return destructDD_NEW_POLE_CONSTRAINT(error_message);
-    } else if (active_cost_function_ == "DIRECT_DILATION_POLE_CONSTRAINT") {
+    case CostFunctionType::DirectDilationOldPoleConstraint:
         return destructDIRECT_DILATION_POLE_CONSTRAINT(error_message);
-    } else if (active_cost_function_ == "DIRECT_DILATION_SAME_Z") {
+    case CostFunctionType::DirectDilationConstrainZ:
         return destructDIRECT_DILATION_SAME_Z(error_message);
-    } else if (active_cost_function_ == "DIRECT_DILATION_T1") {
+    case CostFunctionType::DirectDilationOldT1:
         return destructDIRECT_DILATION_T1(error_message);
-    } else {
-        error_message =
-            "Could not find active cost function: " + active_cost_function_;
-        return false;
+    case CostFunctionType::DirectDilationMahfouzVariant:
+        return destructDIRECT_MAHFOUZ(error_message);
     }
 };
 
@@ -380,7 +308,9 @@ void CostFunctionManager::listCostFunctions() {
     instance_sym_trap_function.addParameter(
         Parameter<double>("PoleWeight", 75));
     instance_sym_trap_function.addParameter(Parameter<double>("VVWeight", 500));
-    available_cost_functions_.push_back(instance_sym_trap_function);
+
+    available_cost_functions_[CostFunctionType::SymmetryTrap] =
+        instance_sym_trap_function;
     /*End Cost Function Listing*/
 
     /*Begin Cost Function Listing*/
@@ -397,7 +327,9 @@ void CostFunctionManager::listCostFunctions() {
         Parameter<bool>("Y_TRANS", false));
     instance_DD_NEW_POLE_CONSTRAINT.addParameter(
         Parameter<bool>("Z_TRANS", false));
-    available_cost_functions_.push_back(instance_DD_NEW_POLE_CONSTRAINT);
+    available_cost_functions_
+        [CostFunctionType::DirectDilationNewPoleConstraint] =
+            (instance_DD_NEW_POLE_CONSTRAINT);
     /*End Cost Function Listing*/
 
     /*Begin Cost Function Listing*/
@@ -411,8 +343,9 @@ void CostFunctionManager::listCostFunctions() {
         Parameter<double>("Pole_Weight", 1));
     instance_DIRECT_DILATION_POLE_CONSTRAINT.addParameter(
         Parameter<int>("Dilation", 6));
-    available_cost_functions_.push_back(
-        instance_DIRECT_DILATION_POLE_CONSTRAINT);
+    available_cost_functions_
+        [CostFunctionType::DirectDilationOldPoleConstraint] =
+            (instance_DIRECT_DILATION_POLE_CONSTRAINT);
     /*End Cost Function Listing*/
 
     /*Begin Cost Function Listing*/
@@ -423,7 +356,8 @@ void CostFunctionManager::listCostFunctions() {
     instance_DIRECT_DILATION_SAME_Z.addParameter(
         Parameter<double>("Z_Weight", 1));
     instance_DIRECT_DILATION_SAME_Z.addParameter(Parameter<int>("Dilation", 6));
-    available_cost_functions_.push_back(instance_DIRECT_DILATION_SAME_Z);
+    available_cost_functions_[CostFunctionType::DirectDilationConstrainZ] =
+        (instance_DIRECT_DILATION_SAME_Z);
     /*End Cost Function Listing*/
 
     /*Begin Cost Function Listing*/
@@ -432,7 +366,8 @@ void CostFunctionManager::listCostFunctions() {
     CostFunction instance_DIRECT_DILATION_T1 =
         CostFunction("DIRECT_DILATION_T1");
     instance_DIRECT_DILATION_T1.addParameter(Parameter<int>("Dilation", 6));
-    available_cost_functions_.push_back(instance_DIRECT_DILATION_T1);
+    available_cost_functions_[CostFunctionType::DirectDilationOldT1] =
+        (instance_DIRECT_DILATION_T1);
     /*End Cost Function Listing*/
 
     /*Begin Cost Function Listing*/
@@ -440,7 +375,8 @@ void CostFunctionManager::listCostFunctions() {
     /*Parameters: */
     CostFunction instance_direct_dilation = CostFunction("DIRECT_DILATION");
     instance_direct_dilation.addParameter(Parameter<int>("Dilation", 6));
-    available_cost_functions_.push_back(instance_direct_dilation);
+    available_cost_functions_[CostFunctionType::DirectDilation] =
+        (instance_direct_dilation);
     /*End Cost Function Listing*/
 
     /*Begin Cost Function Listing*/
@@ -449,7 +385,8 @@ void CostFunctionManager::listCostFunctions() {
     CostFunction instance_direct_mahfouz = CostFunction("DIRECT_MAHFOUZ");
     instance_direct_mahfouz.addParameter(
         Parameter<bool>("Black_Silhouette", true));
-    available_cost_functions_.push_back(instance_direct_mahfouz);
+    available_cost_functions_[CostFunctionType::DirectDilationMahfouzVariant] =
+        (instance_direct_mahfouz);
     /*End Cost Function Listing*/
 }
 /*END FUNCTIONS THAT INTERACT WITH WIZARD*/
@@ -461,8 +398,10 @@ void CostFunctionManager::listCostFunctions() {
 
 /******************************************************************************/
 /******************************************************************************/
-/******************************** END WARNING *********************************/
+/******************************** END WARNING
+ * *********************************/
 /******************************************************************************/
-/*************************DO NOT EDIT ANYTING IN THIS FILE ********************/
+/*************************DO NOT EDIT ANYTING IN THIS FILE
+ * ********************/
 /******************************************************************************/
 /******************************************************************************/

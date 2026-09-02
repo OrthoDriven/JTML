@@ -3,6 +3,8 @@
 
 /*DD_NEW_POLE_CONSTRAINT Source*/
 #include "CostFunctionManager.h"
+#include "DD_NEW_POLE_CONSTRAINTCustomVariables.h"
+#include "DIRECT_DILATIONCustomVariables.h"
 
 namespace jta_cost_function {
 bool CostFunctionManager::initializeDD_NEW_POLE_CONSTRAINT(

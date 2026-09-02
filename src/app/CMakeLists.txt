@@ -69,3 +69,11 @@ endif()
 target_link_options(${PROJECT_NAME} PRIVATE
     "-Wl,--no-undefined"
 )
+
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    -Wswitch-enum
+    -Werror=switch-enum
+    -Wswitch
+    -Werror=switch
+)

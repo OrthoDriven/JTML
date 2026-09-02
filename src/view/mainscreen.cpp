@@ -69,6 +69,11 @@
 #include "services/segmentation_controller.h"
 
 using namespace std;
+using namespace std;
+
+using jta_cost_function::CostFunctionType;
+using jta_cost_function::cost_function_type_from_string;
+using jta_cost_function::to_string;
 
 int MainScreen::curr_frame() {
     // Keep the service in sync and read the current frame from it (plan U7).
@@ -3904,7 +3909,7 @@ void MainScreen::on_aperture_spin_box_valueChanged() {
             low_val,
             high_val,
             dilation_val,
-            trunk_manager_.getActiveCostFunction()};
+            std::string(to_string(trunk_manager_.getActiveCostFunction()))};
 
         if (ui.image_list_widget->currentIndex().row() >= 0 &&
             ui.image_list_widget->currentIndex().row() < loaded_frames.size()) {
@@ -3995,7 +4000,7 @@ void MainScreen::on_low_threshold_slider_valueChanged() {
             ui.low_threshold_slider->value(),
             high_val,
             dilation_val,
-            trunk_manager_.getActiveCostFunction()};
+            std::string(to_string(trunk_manager_.getActiveCostFunction()))};
 
         if (ui.image_list_widget->currentIndex().row() >= 0 &&
             ui.image_list_widget->currentIndex().row() < loaded_frames.size()) {
@@ -4085,7 +4090,7 @@ void MainScreen::on_high_threshold_slider_valueChanged() {
             low_val,
             ui.high_threshold_slider->value(),
             dilation_val,
-            trunk_manager_.getActiveCostFunction()};
+            std::string(to_string(trunk_manager_.getActiveCostFunction()))};
 
         if (ui.image_list_widget->currentIndex().row() >= 0 &&
             ui.image_list_widget->currentIndex().row() < loaded_frames.size()) {
@@ -4150,7 +4155,7 @@ void MainScreen::on_apply_all_edge_button_clicked() {
         ui.low_threshold_slider->value(),
         ui.high_threshold_slider->value(),
         dilation_val,
-        trunk_manager_.getActiveCostFunction()};
+        std::string(to_string(trunk_manager_.getActiveCostFunction()))};
 
     /*Apply Edge Detect to All Images*/
     jta::EdgeProcessor::ApplyToFrames(edge_params, loaded_frames);
@@ -4714,21 +4719,22 @@ void MainScreen::LoadSettingsBetweenSessions() {
             QStringList key_codes =
                 cost_function_settings_keys[i].key.split("@");
             if (key_codes.size() == 2 && key_codes[1] == "ACTIVE_CF") {
+                auto cost_function_type =
+                    cost_function_type_from_string(
+                        cost_function_settings_keys[i]
+                            .value.toString()
+                            .toStdString());
+
+                if (!cost_function_type) {
+                    continue;
+                }
+
                 if (key_codes[0] == "TRUNK") {
-                    trunk_manager_.setActiveCostFunction(
-                        cost_function_settings_keys[i]
-                            .value.toString()
-                            .toStdString());
+                    trunk_manager_.setActiveCostFunction(*cost_function_type);
                 } else if (key_codes[0] == "BRANCH") {
-                    branch_manager_.setActiveCostFunction(
-                        cost_function_settings_keys[i]
-                            .value.toString()
-                            .toStdString());
+                    branch_manager_.setActiveCostFunction(*cost_function_type);
                 } else if (key_codes[0] == "LEAF") {
-                    leaf_manager_.setActiveCostFunction(
-                        cost_function_settings_keys[i]
-                            .value.toString()
-                            .toStdString());
+                    leaf_manager_.setActiveCostFunction(*cost_function_type);
                 } else {
                     QMessageBox::critical(
                         this,
@@ -4737,95 +4743,57 @@ void MainScreen::LoadSettingsBetweenSessions() {
                         QMessageBox::Ok);
                 }
             } else if (key_codes.size() == 4) {
+                auto cost_function_type =
+                    cost_function_type_from_string(
+                        key_codes[1].toStdString());
+
+                if (!cost_function_type) {
+                    continue;
+                }
+
+                jta_cost_function::CostFunctionManager* manager = nullptr;
+                const char* parameter_type_error = nullptr;
+
                 if (key_codes[0] == "TRUNK") {
-                    if (key_codes[3] == "DOUBLE") {
-                        trunk_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setDoubleParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i]
-                                    .value.toDouble());
-                    } else if (key_codes[3] == "INT") {
-                        trunk_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setIntParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i].value.toInt());
-                    } else if (key_codes[3] == "BOOL") {
-                        trunk_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setBoolParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i].value.toBool());
-                    } else {
-                        QMessageBox::critical(
-                            this,
-                            "Error",
-                            "Error in key registry! Code D",
-                            QMessageBox::Ok);
-                    }
+                    manager = &trunk_manager_;
+                    parameter_type_error = "Error in key registry! Code D";
                 } else if (key_codes[0] == "BRANCH") {
-                    if (key_codes[3] == "DOUBLE") {
-                        branch_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setDoubleParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i]
-                                    .value.toDouble());
-                    } else if (key_codes[3] == "INT") {
-                        branch_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setIntParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i].value.toInt());
-                    } else if (key_codes[3] == "BOOL") {
-                        branch_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setBoolParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i].value.toBool());
-                    } else {
-                        QMessageBox::critical(
-                            this,
-                            "Error",
-                            "Error in key registry! Code E",
-                            QMessageBox::Ok);
-                    }
+                    manager = &branch_manager_;
+                    parameter_type_error = "Error in key registry! Code E";
                 } else if (key_codes[0] == "LEAF") {
-                    if (key_codes[3] == "DOUBLE") {
-                        leaf_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setDoubleParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i]
-                                    .value.toDouble());
-                    } else if (key_codes[3] == "INT") {
-                        leaf_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setIntParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i].value.toInt());
-                    } else if (key_codes[3] == "BOOL") {
-                        leaf_manager_
-                            .getCostFunctionClass(key_codes[1].toStdString())
-                            ->setBoolParameterValue(
-                                key_codes[2].toStdString(),
-                                cost_function_settings_keys[i].value.toBool());
-                    } else {
-                        QMessageBox::critical(
-                            this,
-                            "Error",
-                            "Error in key registry! Code F",
-                            QMessageBox::Ok);
-                    }
+                    manager = &leaf_manager_;
+                    parameter_type_error = "Error in key registry! Code F";
                 } else {
                     QMessageBox::critical(
                         this,
                         "Error",
                         "Error in key registry! Code B",
                         QMessageBox::Ok);
+                    continue;
                 }
 
+                auto* cost_function =
+                    manager->getCostFunctionClass(*cost_function_type);
+
+                if (key_codes[3] == "DOUBLE") {
+                    cost_function->setDoubleParameterValue(
+                        key_codes[2].toStdString(),
+                        cost_function_settings_keys[i].value.toDouble());
+                } else if (key_codes[3] == "INT") {
+                    cost_function->setIntParameterValue(
+                        key_codes[2].toStdString(),
+                        cost_function_settings_keys[i].value.toInt());
+                } else if (key_codes[3] == "BOOL") {
+                    cost_function->setBoolParameterValue(
+                        key_codes[2].toStdString(),
+                        cost_function_settings_keys[i].value.toBool());
+                } else {
+                    QMessageBox::critical(
+                        this,
+                        "Error",
+                        parameter_type_error,
+                        QMessageBox::Ok);
+                }
             } else {
                 QMessageBox::critical(
                     this,
@@ -4903,9 +4871,11 @@ void MainScreen::LoadSettingsBetweenSessions() {
 
         /*Change the Default Settings of Dilation for branch and leaf to 4
          * and 1 respectively*/
-        branch_manager_.getCostFunctionClass("DIRECT_DILATION")
+        branch_manager_
+            .getCostFunctionClass(CostFunctionType::DirectDilation)
             ->setIntParameterValue("Dilation", 4);
-        leaf_manager_.getCostFunctionClass("DIRECT_DILATION")
+        leaf_manager_
+            .getCostFunctionClass(CostFunctionType::DirectDilation)
             ->setIntParameterValue("Dilation", 1);
 
         /*Save to Registry*/
@@ -4987,7 +4957,8 @@ void MainScreen::UpdateDilationFrames() {
         dilation_val = 0;
     }
     /*Mahfouz Case*/
-    if (trunk_manager_.getActiveCostFunction() == "DIRECT_MAHFOUZ") {
+    if (trunk_manager_.getActiveCostFunction() ==
+        CostFunctionType::DirectDilationMahfouzVariant) {
         dilation_val = 3;
     }
 

@@ -97,6 +97,16 @@ depends-on = ["configure-profiling"]
 cmd = ["cmake", "--build", "--preset", "release"]
 depends-on = ["configure", "build-vtk"]
 #inputs = ["CMakeLists.txt", "src/*"]
+#
+[tasks.ninja-check]
+cmd = [
+  "ninja",
+  "-C",
+  ".build",
+  "-k",
+  "0"
+]
+
 
 [tasks.run]
 # Run task that depends on build
