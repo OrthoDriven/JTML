@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
 /*Cost Function Manager*/
-#include <limits>
-
 #include "CostFunctionManager.h"
+
+#include <limits>
 /******************************************************************************/
 /******************************************************************************/
 /******************************** BEGIN WARNING *******************************/
@@ -149,8 +149,8 @@ void CostFunctionManager::UploadDistanceMap(
 void CostFunctionManager::setActiveCostFunction(
     std::string cost_function_name) {
     /*Check Active Cost Function Name Exists*/
-    for (int i = 0; i < available_cost_functions_.size(); i++) {
-        if (available_cost_functions_[i].getCostFunctionName() ==
+    for (auto& available_cost_function : available_cost_functions_) {
+        if (available_cost_function.getCostFunctionName() ==
             cost_function_name) {
             active_cost_function_ = cost_function_name;
             return;
@@ -253,10 +253,10 @@ std::string CostFunctionManager::getActiveCostFunction() {
 
 /*Return Active Cost Function Class*/
 CostFunction* CostFunctionManager::getActiveCostFunctionClass() {
-    for (int i = 0; i < available_cost_functions_.size(); i++) {
-        if (available_cost_functions_[i].getCostFunctionName() ==
+    for (auto& available_cost_function : available_cost_functions_) {
+        if (available_cost_function.getCostFunctionName() ==
             active_cost_function_) {
-            return &(available_cost_functions_[i]);
+            return &available_cost_function;
         }
     }
 

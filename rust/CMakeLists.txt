@@ -7,9 +7,9 @@ FetchContent_MakeAvailable(Corrosion)
 
 corrosion_import_crate(
   MANIFEST_PATH Cargo.toml
-  CRATES direct-rs nfd
+  CRATES optimizer-rs nfd
 )
 
-add_subdirectory(direct-rs)
+add_subdirectory(optimizer-rs)
 add_subdirectory(nfd)
 

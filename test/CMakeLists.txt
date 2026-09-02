@@ -56,7 +56,7 @@ target_include_directories(jtml_test_direct_optimizer_props PRIVATE ${PROJECT_SO
 # Same two hegel link/rpath tweaks as the smoke target (kept next to the lib so
 # the rationale is co-located for both).
 target_link_libraries(jtml_test_direct_optimizer_props PRIVATE
-    Catch2::Catch2WithMain hegel dl direct-rs_bridge)
+    Catch2::Catch2WithMain hegel dl optimizer-rs_bridge)
 target_link_options(jtml_test_direct_optimizer_props PRIVATE
     "-Wl,-rpath,${CMAKE_BINARY_DIR}/_deps/hegel-build/libhegel")
 add_test(NAME jtml.direct_optimizer_props COMMAND jtml_test_direct_optimizer_props)
@@ -92,7 +92,7 @@ add_executable(jtml_test_direct_optimizer
     ${PROJECT_SOURCE_DIR}/src/domain/direct_data_storage.cpp
 )
 target_include_directories(jtml_test_direct_optimizer PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(jtml_test_direct_optimizer PRIVATE Catch2::Catch2WithMain direct-rs_bridge)
+target_link_libraries(jtml_test_direct_optimizer PRIVATE Catch2::Catch2WithMain optimizer-rs_bridge)
 add_test(NAME jtml.direct_optimizer COMMAND jtml_test_direct_optimizer)
 set_tests_properties(jtml.direct_optimizer PROPERTIES LABELS "headless" TIMEOUT 300)
 
@@ -458,7 +458,7 @@ find_package(Qt6 COMPONENTS Core Test REQUIRED)
 #     ${PROJECT_SOURCE_DIR}/src/domain/direct_data_storage.cpp
 # )
 # target_include_directories(jtml_test_coordinator PRIVATE ${PROJECT_SOURCE_DIR}/include)
-# target_link_libraries(jtml_test_coordinator PRIVATE Qt6::Core Qt6::Test direct-rs_bridge)
+# target_link_libraries(jtml_test_coordinator PRIVATE Qt6::Core Qt6::Test optimizer-rs_bridge)
 # add_test(NAME jtml.coordinator COMMAND jtml_test_coordinator)
 # set_tests_properties(jtml.coordinator PROPERTIES LABELS "headless" TIMEOUT 120)
 

@@ -5,12 +5,12 @@
 #include "coordinator/optimizer_manager.h"
 
 /*Pose Matrix Class*/
-#include <stdlib.h>
-
 #include <chrono>
+#include <cstdlib>
 #include <stdexcept>
 #include <string>
 #include <thread>
+#include <utility>
 
 #include "compute/batch_outcome.h"
 #include "compute/gpu_heatmaps.cuh"
@@ -32,11 +32,11 @@ bool OptimizerManager::Initialize(
     QModelIndexList selected_models,
     unsigned int primary_model_index,
     LocationStorage pose_matrix,
-    OptimizerSettings opt_settings,
-    jta_cost_function::CostFunctionManager trunk_manager,
-    jta_cost_function::CostFunctionManager branch_manager,
-    jta_cost_function::CostFunctionManager leaf_manager,
-    QString opt_directive,
+    const OptimizerSettings& opt_settings,
+    const jta_cost_function::CostFunctionManager& trunk_manager,
+    const jta_cost_function::CostFunctionManager& branch_manager,
+    const jta_cost_function::CostFunctionManager& leaf_manager,
+    const QString& opt_directive,
     QString& error_message,
     int iter_count,
     DirectOptimizer::Options direct_options) {
@@ -60,18 +60,18 @@ bool OptimizerManager::Initialize(
         SLOT(deleteLater()));
 
     /*Store Calibration File Locally*/
-    calibration_ = calibration_file;
+    calibration_ = std::move(calibration_file);
     optimization_directive_ = opt_directive;
 
     /*Just In Case Have to Delete*/
-    gpu_principal_model_ = 0;
-    gpu_metrics_ = 0;
+    gpu_principal_model_ = nullptr;
+    gpu_metrics_ = nullptr;
 
     /*Store Camera Frame Lists Locally and Check That, if Biplane is Enabled ->
     both lists are the same size. Also Check that the current frame index is
     within the range of the frame list sizes.*/
-    frames_A_ = camera_A_frame_list;
-    frames_B_ = camera_B_frame_list;
+    frames_A_ = std::move(camera_A_frame_list);
+    frames_B_ = std::move(camera_B_frame_list);
     if (calibration_.biplane_calibration &&
         frames_A_.size() != frames_B_.size()) {
         error_message =
@@ -90,9 +90,9 @@ bool OptimizerManager::Initialize(
 
     /*Store Model List, Non-Primary Selected Models (Blue) and Primary Model
     Also store indices of all models and the index of the primary model*/
-    all_models_ = model_list;
-    if (selected_models.size() == 0 ||
-        selected_models[0].row() != primary_model_index) {
+    all_models_ = std::move(model_list);
+    if (selected_models.empty() ||
+        std::cmp_not_equal(selected_models[0].row(), primary_model_index)) {
         error_message = "Can't find primary model!";
         succesfull_initialization_ = false;
         return succesfull_initialization_;
@@ -244,8 +244,10 @@ bool OptimizerManager::Initialize(
     int height = frames_A_[0].GetEdgeImage().rows;
 
     /*Check CUDA Compatibility*/
-    int cuda_device_id = 0, gpu_device_count = 0, device_count;
-    struct cudaDeviceProp properties;
+    int cuda_device_id = 0;
+    int gpu_device_count = 0;
+    int device_count = 0;
+    struct cudaDeviceProp properties{};
     cudaError_t cudaResultCode = cudaGetDeviceCount(&device_count);
     if (cudaResultCode != cudaSuccess) {
         device_count = 0;
@@ -291,14 +293,14 @@ bool OptimizerManager::Initialize(
     /*Intensity Frames*/
     /*Trunk*/
     /*Camera A*/
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto intensity_frame = new GPUIntensityFrame(
+    for (auto& i : frames_A_) {
+        auto* intensity_frame = new GPUIntensityFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetOriginalImage().data,
+            i.GetOriginalImage().data,
             trunk_dark_silhouette_val_,
-            frames_A_[i].GetInvertedImage().data);
+            i.GetInvertedImage().data);
         if (intensity_frame->IsInitializedCorrectly()) {
             gpu_intensity_frames_trunk_A_.push_back(intensity_frame);
         } else {
@@ -310,14 +312,14 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto intensity_frame = new GPUIntensityFrame(
+        for (auto& i : frames_B_) {
+            auto* intensity_frame = new GPUIntensityFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetOriginalImage().data,
+                i.GetOriginalImage().data,
                 trunk_dark_silhouette_val_,
-                frames_B_[i].GetInvertedImage().data);
+                i.GetInvertedImage().data);
             if (intensity_frame->IsInitializedCorrectly()) {
                 gpu_intensity_frames_trunk_B_.push_back(intensity_frame);
             } else {
@@ -330,14 +332,14 @@ bool OptimizerManager::Initialize(
     }
     /*Branch*/
     /*Camera A*/
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto intensity_frame = new GPUIntensityFrame(
+    for (auto& i : frames_A_) {
+        auto* intensity_frame = new GPUIntensityFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetOriginalImage().data,
+            i.GetOriginalImage().data,
             branch_dark_silhouette_val_,
-            frames_A_[i].GetInvertedImage().data);
+            i.GetInvertedImage().data);
         if (intensity_frame->IsInitializedCorrectly()) {
             gpu_intensity_frames_branch_A_.push_back(intensity_frame);
         } else {
@@ -349,14 +351,14 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto intensity_frame = new GPUIntensityFrame(
+        for (auto& i : frames_B_) {
+            auto* intensity_frame = new GPUIntensityFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetOriginalImage().data,
+                i.GetOriginalImage().data,
                 branch_dark_silhouette_val_,
-                frames_B_[i].GetInvertedImage().data);
+                i.GetInvertedImage().data);
             if (intensity_frame->IsInitializedCorrectly()) {
                 gpu_intensity_frames_branch_B_.push_back(intensity_frame);
             } else {
@@ -369,14 +371,14 @@ bool OptimizerManager::Initialize(
     }
     /*Leaf*/
     /*Camera A*/
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto intensity_frame = new GPUIntensityFrame(
+    for (auto& i : frames_A_) {
+        auto* intensity_frame = new GPUIntensityFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetOriginalImage().data,
+            i.GetOriginalImage().data,
             leaf_dark_silhouette_val_,
-            frames_A_[i].GetInvertedImage().data);
+            i.GetInvertedImage().data);
         if (intensity_frame->IsInitializedCorrectly()) {
             gpu_intensity_frames_leaf_A_.push_back(intensity_frame);
         } else {
@@ -388,14 +390,14 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto intensity_frame = new GPUIntensityFrame(
+        for (auto& i : frames_B_) {
+            auto* intensity_frame = new GPUIntensityFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetOriginalImage().data,
+                i.GetOriginalImage().data,
                 leaf_dark_silhouette_val_,
-                frames_B_[i].GetInvertedImage().data);
+                i.GetInvertedImage().data);
             if (intensity_frame->IsInitializedCorrectly()) {
                 gpu_intensity_frames_leaf_B_.push_back(intensity_frame);
             } else {
@@ -412,20 +414,20 @@ bool OptimizerManager::Initialize(
     /*Leaf*/
     /*Camera A*/
     /*Update Dilation Images to Leaf Mode*/
-    for (int i = 0; i < frames_A_.size(); i++) {
+    for (auto& i : frames_A_) {
         dilate(
-            frames_A_[i].GetEdgeImage(),
-            frames_A_[i].GetDilationImage(),
+            i.GetEdgeImage(),
+            i.GetDilationImage(),
             cv::Mat(),
             cv::Point(-1, -1),
             leaf_dilation_val_); /*Reset Dilation In That Image*/
     }
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto dilated_frame = new GPUDilatedFrame(
+    for (auto& i : frames_A_) {
+        auto* dilated_frame = new GPUDilatedFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetDilationImage().data,
+            i.GetDilationImage().data,
             leaf_dilation_val_);
         if (dilated_frame->IsInitializedCorrectly()) {
             gpu_dilated_frames_leaf_A_.push_back(dilated_frame);
@@ -438,22 +440,22 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
+        for (auto& i : frames_B_) {
             dilate(
-                frames_B_[i].GetEdgeImage(),
-                frames_B_[i].GetDilationImage(),
+                i.GetEdgeImage(),
+                i.GetDilationImage(),
                 cv::Mat(),
                 cv::Point(-1, -1),
                 leaf_dilation_val_); /*Reset Dilation In That Image*/
         }
     }
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto dilated_frame = new GPUDilatedFrame(
+        for (auto& i : frames_B_) {
+            auto* dilated_frame = new GPUDilatedFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetDilationImage().data,
+                i.GetDilationImage().data,
                 leaf_dilation_val_);
             if (dilated_frame->IsInitializedCorrectly()) {
                 gpu_dilated_frames_leaf_B_.push_back(dilated_frame);
@@ -467,20 +469,20 @@ bool OptimizerManager::Initialize(
     }
     /*Branch*/
     /*Camera A*/
-    for (int i = 0; i < frames_A_.size(); i++) {
+    for (auto& i : frames_A_) {
         dilate(
-            frames_A_[i].GetEdgeImage(),
-            frames_A_[i].GetDilationImage(),
+            i.GetEdgeImage(),
+            i.GetDilationImage(),
             cv::Mat(),
             cv::Point(-1, -1),
             branch_dilation_val_); /*Reset Dilation In That Image*/
     }
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto dilated_frame = new GPUDilatedFrame(
+    for (auto& i : frames_A_) {
+        auto* dilated_frame = new GPUDilatedFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetDilationImage().data,
+            i.GetDilationImage().data,
             branch_dilation_val_);
         if (dilated_frame->IsInitializedCorrectly()) {
             gpu_dilated_frames_branch_A_.push_back(dilated_frame);
@@ -493,22 +495,22 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
+        for (auto& i : frames_B_) {
             dilate(
-                frames_B_[i].GetEdgeImage(),
-                frames_B_[i].GetDilationImage(),
+                i.GetEdgeImage(),
+                i.GetDilationImage(),
                 cv::Mat(),
                 cv::Point(-1, -1),
                 branch_dilation_val_); /*Reset Dilation In That Image*/
         }
     }
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto dilated_frame = new GPUDilatedFrame(
+        for (auto& i : frames_B_) {
+            auto* dilated_frame = new GPUDilatedFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetDilationImage().data,
+                i.GetDilationImage().data,
                 branch_dilation_val_);
             if (dilated_frame->IsInitializedCorrectly()) {
                 gpu_dilated_frames_branch_B_.push_back(dilated_frame);
@@ -522,20 +524,20 @@ bool OptimizerManager::Initialize(
     }
     /*Trunk*/
     /*Camera A*/
-    for (int i = 0; i < frames_A_.size(); i++) {
+    for (auto& i : frames_A_) {
         dilate(
-            frames_A_[i].GetEdgeImage(),
-            frames_A_[i].GetDilationImage(),
+            i.GetEdgeImage(),
+            i.GetDilationImage(),
             cv::Mat(),
             cv::Point(-1, -1),
             trunk_dilation_val_); /*Reset Dilation In That Image*/
     }
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto dilated_frame = new GPUDilatedFrame(
+    for (auto& i : frames_A_) {
+        auto* dilated_frame = new GPUDilatedFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetDilationImage().data,
+            i.GetDilationImage().data,
             trunk_dilation_val_);
         if (dilated_frame->IsInitializedCorrectly()) {
             gpu_dilated_frames_trunk_A_.push_back(dilated_frame);
@@ -548,22 +550,22 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
+        for (auto& i : frames_B_) {
             dilate(
-                frames_B_[i].GetEdgeImage(),
-                frames_B_[i].GetDilationImage(),
+                i.GetEdgeImage(),
+                i.GetDilationImage(),
                 cv::Mat(),
                 cv::Point(-1, -1),
                 trunk_dilation_val_); /*Reset Dilation In That Image*/
         }
     }
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto dilated_frame = new GPUDilatedFrame(
+        for (auto& i : frames_B_) {
+            auto* dilated_frame = new GPUDilatedFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetDilationImage().data,
+                i.GetDilationImage().data,
                 trunk_dilation_val_);
             if (dilated_frame->IsInitializedCorrectly()) {
                 gpu_dilated_frames_trunk_B_.push_back(dilated_frame);
@@ -578,15 +580,15 @@ bool OptimizerManager::Initialize(
 
     /*Edge Frames*/
     /*Camera A*/
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto edge_frame = new GPUEdgeFrame(
+    for (auto& i : frames_A_) {
+        auto* edge_frame = new GPUEdgeFrame(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetEdgeImage().data,
-            frames_A_[i].GetHighThreshold(),
-            frames_A_[i].GetLowThreshold(),
-            frames_A_[i].GetAperture());
+            i.GetEdgeImage().data,
+            i.GetHighThreshold(),
+            i.GetLowThreshold(),
+            i.GetAperture());
         if (edge_frame->IsInitializedCorrectly()) {
             gpu_edge_frames_A_.push_back(edge_frame);
         } else {
@@ -598,15 +600,15 @@ bool OptimizerManager::Initialize(
     }
     /*Camera B*/
     if (calibration_.biplane_calibration) {
-        for (int i = 0; i < frames_B_.size(); i++) {
-            auto edge_frame = new GPUEdgeFrame(
+        for (auto& i : frames_B_) {
+            auto* edge_frame = new GPUEdgeFrame(
                 width,
                 height,
                 cuda_device_id,
-                frames_B_[i].GetEdgeImage().data,
-                frames_B_[i].GetHighThreshold(),
-                frames_B_[i].GetLowThreshold(),
-                frames_B_[i].GetAperture());
+                i.GetEdgeImage().data,
+                i.GetHighThreshold(),
+                i.GetLowThreshold(),
+                i.GetAperture());
             if (edge_frame->IsInitializedCorrectly()) {
                 gpu_edge_frames_B_.push_back(edge_frame);
             } else {
@@ -619,9 +621,9 @@ bool OptimizerManager::Initialize(
     }
 
     /*Upload distance maps*/
-    for (int i = 0; i < frames_A_.size(); i++) {
-        auto distance_map = new GPUFrame(
-            width, height, cuda_device_id, frames_A_[i].GetDistanceMap().data);
+    for (auto& i : frames_A_) {
+        auto* distance_map = new GPUFrame(
+            width, height, cuda_device_id, i.GetDistanceMap().data);
         if (distance_map->IsInitializedCorrectly()) {
             gpu_distance_maps_.push_back(distance_map);
 
@@ -632,7 +634,7 @@ bool OptimizerManager::Initialize(
             return succesfull_initialization_;
         }
     }
-    for (int i = 0; i < frames_A_.size(); i++) {
+    for (auto& i : frames_A_) {
         /*Owner fix (2026-08-12): curvature heatmaps only exist after an ML
          * segmentation (Frame::setCurvatureHeatmaps); a study loaded
          * without segmentation has none, and the upload must not abort the
@@ -641,12 +643,12 @@ bool OptimizerManager::Initialize(
          * the vector frame-aligned so the cost functions' per-frame at(i)
          * access stays valid (GetNumKeypoints() == 0 -> the curvature
          * costs no-op; the distance-map costs are unaffected).*/
-        auto frame_heatmaps = frames_A_[i].getCurvatureHeatmaps();
-        auto heatmap = new GPUHeatmap(
+        auto frame_heatmaps = i.getCurvatureHeatmaps();
+        auto* heatmap = new GPUHeatmap(
             width,
             height,
             cuda_device_id,
-            frames_A_[i].GetNumCurvatureKeypoints(),
+            i.GetNumCurvatureKeypoints(),
             frame_heatmaps.empty() ? nullptr : frame_heatmaps.data());
         if (heatmap->IsInitializedCorrectly()) {
             gpu_heatmaps_.push_back(heatmap);
@@ -669,31 +671,31 @@ bool OptimizerManager::Initialize(
             height,
             cuda_device_id,
             true,
-            &primary_model_.triangle_vertices_[0],
-            &primary_model_.triangle_normals_[0],
+            primary_model_.triangle_vertices_.data(),
+            primary_model_.triangle_normals_.data(),
             primary_model_.triangle_vertices_.size() / 9,
             calibration_.camera_A_principal_);
 
         if (!gpu_principal_model_->IsInitializedCorrectly()) {
             delete gpu_principal_model_;
-            gpu_principal_model_ = 0;
+            gpu_principal_model_ = nullptr;
             error_message = "Error uploading principal model to GPU!";
             succesfull_initialization_ = false;
             return succesfull_initialization_;
         }
         /*Non-principal models*/
         for (int i = 1; i < selected_model_list_.size(); i++) {
-            auto gpu_non_principal_model = new GPUModel(
+            auto* gpu_non_principal_model = new GPUModel(
                 all_models_[selected_model_list_[i].row()].model_name_,
                 true,
                 width,
                 height,
                 cuda_device_id,
                 true,
-                &all_models_[selected_model_list_[i].row()]
-                     .triangle_vertices_[0],
-                &all_models_[selected_model_list_[i].row()]
-                     .triangle_normals_[0],
+                all_models_[selected_model_list_[i].row()]
+                    .triangle_vertices_.data(),
+                all_models_[selected_model_list_[i].row()]
+                    .triangle_normals_.data(),
                 all_models_[selected_model_list_[i].row()]
                         .triangle_vertices_.size() /
                     9,
@@ -720,21 +722,21 @@ bool OptimizerManager::Initialize(
             cuda_device_id,
             true,
             true,
-            &primary_model_.triangle_vertices_[0],
-            &primary_model_.triangle_normals_[0],
+            primary_model_.triangle_vertices_.data(),
+            primary_model_.triangle_normals_.data(),
             primary_model_.triangle_vertices_.size() / 9,
             calibration_.camera_A_principal_,
             calibration_.camera_B_principal_);
         if (!gpu_principal_model_->IsInitializedCorrectly()) {
             delete gpu_principal_model_;
-            gpu_principal_model_ = 0;
+            gpu_principal_model_ = nullptr;
             error_message = "Error uploading principal model to GPU!";
             succesfull_initialization_ = false;
             return succesfull_initialization_;
         }
         /*Non-principal models*/
         for (int i = 1; i < selected_model_list_.size(); i++) {
-            auto gpu_non_principal_model = new GPUModel(
+            auto* gpu_non_principal_model = new GPUModel(
                 all_models_[selected_model_list_[i].row()].model_name_,
                 true,
                 width,
@@ -743,10 +745,10 @@ bool OptimizerManager::Initialize(
                 cuda_device_id,
                 true,
                 true,
-                &all_models_[selected_model_list_[i].row()]
-                     .triangle_vertices_[0],
-                &all_models_[selected_model_list_[i].row()]
-                     .triangle_normals_[0],
+                all_models_[selected_model_list_[i].row()]
+                    .triangle_vertices_.data(),
+                all_models_[selected_model_list_[i].row()]
+                    .triangle_normals_.data(),
                 all_models_[selected_model_list_[i].row()]
                         .triangle_vertices_.size() /
                     9,
@@ -833,20 +835,20 @@ void OptimizerManager::Optimize() {
     /*Check That Succesfull Initialization*/
     if (!succesfull_initialization_) {
         /*Restore Dilation OpenCV Images*/
-        for (int i = 0; i < frames_A_.size(); i++) {
+        for (auto& i : frames_A_) {
             dilate(
-                frames_A_[i].GetEdgeImage(),
-                frames_A_[i].GetDilationImage(),
+                i.GetEdgeImage(),
+                i.GetDilationImage(),
                 cv::Mat(),
                 cv::Point(-1, -1),
                 trunk_dilation_val_); /*Reset Dilation In That Image*/
         }
         /*Camera B*/
         if (calibration_.biplane_calibration) {
-            for (int i = 0; i < frames_B_.size(); i++) {
+            for (auto& i : frames_B_) {
                 dilate(
-                    frames_B_[i].GetEdgeImage(),
-                    frames_B_[i].GetDilationImage(),
+                    i.GetEdgeImage(),
+                    i.GetDilationImage(),
                     cv::Mat(),
                     cv::Point(-1, -1),
                     trunk_dilation_val_); /*Reset Dilation In That Image*/
@@ -883,24 +885,20 @@ void OptimizerManager::Optimize() {
 
             /*Set Current Primary (and if biplane, secondary) Poses for Non
              * Principal Models*/
-            for (int non_prin_model_ind = 0;
-                 non_prin_model_ind < gpu_non_principal_models_.size();
-                 non_prin_model_ind++) {
+            for (auto& gpu_non_principal_model : gpu_non_principal_models_) {
                 Pose temp_primary_pose;
                 if (pose_storage_.GetModelPose(
-                        gpu_non_principal_models_[non_prin_model_ind]
-                            ->GetModelName(),
+                        gpu_non_principal_model->GetModelName(),
                         frame_index,
                         &temp_primary_pose)) {
-                    gpu_non_principal_models_[non_prin_model_ind]
-                        ->SetCurrentPrimaryCameraPose(temp_primary_pose);
+                    gpu_non_principal_model->SetCurrentPrimaryCameraPose(
+                        temp_primary_pose);
                 } else {
                     emit OptimizerError(
                         QString::fromStdString(
                             "Could not retrieve pose for non-principal model "
                             "\"" +
-                            gpu_non_principal_models_[non_prin_model_ind]
-                                ->GetModelName() +
+                            gpu_non_principal_model->GetModelName() +
                             "\" at frame " +
                             QString::number(frame_index).toStdString() + "!"));
                     error_occurrred_ = true;
@@ -917,14 +915,13 @@ void OptimizerManager::Optimize() {
                     Point6D temp_secondary_point =
                         calibration_.convert_Pose_A_to_Pose_B(
                             temp_primary_point);
-                    gpu_non_principal_models_[non_prin_model_ind]
-                        ->SetCurrentSecondaryCameraPose(Pose(
-                            temp_secondary_point.x,
-                            temp_secondary_point.y,
-                            temp_secondary_point.z,
-                            temp_secondary_point.xa,
-                            temp_secondary_point.ya,
-                            temp_secondary_point.za));
+                    gpu_non_principal_model->SetCurrentSecondaryCameraPose(Pose(
+                        temp_secondary_point.x,
+                        temp_secondary_point.y,
+                        temp_secondary_point.z,
+                        temp_secondary_point.xa,
+                        temp_secondary_point.ya,
+                        temp_secondary_point.za));
                 }
             }
 
@@ -986,13 +983,13 @@ void OptimizerManager::Optimize() {
             /*cfm_index -> the three managers (fail fast on a bad index).*/
             jta_cost_function::CostFunctionManager* stage_manager = nullptr;
             switch (spec.cfm_index) {
-            case 0u:
+            case 0U:
                 stage_manager = &trunk_manager_;
                 break;
-            case 1u:
+            case 1U:
                 stage_manager = &branch_manager_;
                 break;
-            case 2u:
+            case 2U:
                 stage_manager = &leaf_manager_;
                 break;
             default:
@@ -1180,7 +1177,7 @@ void OptimizerManager::Optimize() {
         emit UpdateDilationBackground();
 
         /*Move on and Wrap Up*/
-        if (error_occurrred_ || frame_index == end_frame_index_) {
+        if (error_occurrred_ || std::cmp_equal(frame_index, end_frame_index_)) {
             progress_next_frame_ = false;
         }
         emit OptimizedFrame(
@@ -1306,167 +1303,6 @@ void OptimizerManager::RunDirectStage(
     DirectOptimizer opt(
         serial_cost, range, starting_point_, budget_, direct_options_);
 
-    /* U12 production batch bridge: only the admitted monoplane
-     * DIRECT_DILATION path receives the bank scheduler. All unsupported,
-     * biplane, unavailable, or pool-size-one cases retain the exact serial
-     * adapter above. */
-    if (capacity_service_ != nullptr && capacity_service_->poolSize() > 1 &&
-
-        !calibration_.biplane_calibration &&
-        stage_manager.getActiveCostFunction() == "DIRECT_DILATION") {
-        std::cout << "Using capacity service\n";
-        opt.SetBatchCost([this, &stage_manager, serial_cost](
-                             const std::vector<Point6D>& poses) {
-            const auto enqueue = [this, &stage_manager](
-                                     const Point6D& physical,
-                                     gpu_cost_function::BankState& bank) {
-                gpu_principal_model_->SetCurrentPrimaryCameraPose(Pose(
-                    physical.x,
-                    physical.y,
-                    physical.z,
-                    physical.xa,
-                    physical.ya,
-                    physical.za));
-                const auto error =
-                    stage_manager.EnqueueDirectDilationOnBank(bank);
-                if (error != cudaSuccess) {
-                    return static_cast<int>(error);
-                }
-                return static_cast<int>(error);
-            };
-            const auto complete =
-                [&stage_manager](gpu_cost_function::BankState& bank) {
-                    return stage_manager.CompleteDirectDilationOnBank(bank);
-                };
-            return capacity_service_->RunCostBatchGreedy(
-                poses, serial_cost, enqueue, complete);
-        });
-    }
-
-    /* Plan 012 U1+U2: graph executor admission is default-deny (C10/R14) and
-     * uses the U2 full key+generation assembler. The U12/serial adapter above
-     * stays installed unless a complete admission transaction (policy +
-     * recipe + preflight) succeeds —
-     * which no production path can reach yet. */
-    {
-        bool monoplaneEligible = !calibration_.biplane_calibration &&
-            stage_manager.getActiveCostFunction() == "DIRECT_DILATION";
-        const auto* recipe = (evaluation_executor_ != nullptr)
-            ? evaluation_executor_->registry().FindEligible(
-                  "DIRECT_DILATION", false)
-            : nullptr;
-        bool recipeFound = recipe != nullptr;
-        bool preflightCapturable = false;
-        gpu_cost_function::GraphRecipeKey preparedKey;
-        bool haveKey = false;
-        if (recipeFound) {
-            int liveDilation = 6;
-            // Canonical dilation read (graph_recipe.h:9-11) — NOT a by-value
-            // getAvailableCostFunctions() copy, which could diverge from the
-            // provider. The active cost function is DIRECT_DILATION here (gated
-            // above) and always present in available_cost_functions_, so
-            // getActiveCostFunctionClass() hits and does not leak.
-            if (auto* cls = stage_manager.getActiveCostFunctionClass()) {
-                int v = 6;
-                cls->getIntParameterValue("Dilation", v);
-                liveDilation = v;
-            }
-            (void)liveDilation;  // consumed below in kin.dilation
-            gpu_cost_function::GraphKeyAssemblerInputs kin;
-            kin.recipeId = recipe->recipeId();
-            kin.width = gpu_principal_model_
-                ? gpu_principal_model_->GetPrimaryWidth()
-                : 0;
-            kin.height = gpu_principal_model_
-                ? gpu_principal_model_->GetPrimaryHeight()
-                : 0;
-            kin.triangle_count = gpu_principal_model_
-                ? static_cast<std::uint64_t>(
-                      gpu_principal_model_->GetPrimaryTriangleCount())
-                : 0;
-            kin.dilation = liveDilation;
-            kin.camera_calib_hash =
-                gpu_cost_function::HashCameraCalibrationParams(
-                    calibration_.camera_A_principal_.principal_distance_,
-                    calibration_.camera_A_principal_.principal_x_,
-                    calibration_.camera_A_principal_.principal_y_,
-                    calibration_.camera_A_principal_.pixel_pitch_,
-                    calibration_.biplane_calibration);
-            kin.cub_storage_bytes = gpu_principal_model_
-                ? gpu_principal_model_->GetPrimaryCubStorageBytes()
-                : 0;
-            kin.curvature_capacity = 0;
-            kin.maximum_stride_size =
-                static_cast<std::uint64_t>(maximum_stride_size);
-            kin.graph_overhead_bytes = 0;
-            kin.biplane = false;
-            kin.version = "1";
-            auto key = gpu_cost_function::AssembleGraphRecipeKey(kin);
-            preparedKey = key;
-            haveKey = true;
-            gpu_cost_function::GraphRecipeCaptureInputs capInputs;
-            bool inputsOk =
-                stage_manager.GetGraphRecipeCaptureInputs(capInputs);
-            int stage_id = 0;
-            if (&stage_manager == &branch_manager_) {
-                stage_id = 1;
-            } else if (&stage_manager == &leaf_manager_) {
-                stage_id = 2;
-            }
-            gpu_cost_function::CaptureGenerationAssemblerInputs gin;
-            gin.frame_index =
-                static_cast<int>(stage_manager.getCurrentFrameIndex());
-            gin.stage_id = stage_id;
-            gin.dilation = key.dilation;
-            gin.upload_epoch = stage_manager.getUploadEpoch();
-            gin.rendered_image = capInputs.rendered_image;
-            gin.comparison_frame = capInputs.comparison_frame;
-            gin.distance_map = capInputs.distance_map;
-            auto gen = gpu_cost_function::AssembleCaptureGeneration(gin);
-            (void)gen;
-            if (!inputsOk ||
-                !gpu_cost_function::ValidateGraphKeyVsInputs(key, capInputs)) {
-                preflightCapturable = false;
-            } else {
-                auto pre = recipe->preflight(key);
-                preflightCapturable = pre.capturable;
-            }
-        }
-        bool executorReady = evaluation_executor_ != nullptr &&
-            evaluation_executor_->poolSize() > 1;
-        gpu_cost_function::GraphAdmissionInputs inputs;
-        inputs.executorReady = executorReady;
-        inputs.monoplaneEligible = monoplaneEligible;
-        inputs.recipeFound = recipeFound;
-        inputs.preflightCapturable = preflightCapturable;
-        inputs.evidence = gpu_cost_function::GraphAdmissionEvidence{};
-        gpu_cost_function::GraphAdmissionPolicy defaultPolicy;
-        auto decision =
-            gpu_cost_function::DecideGraphAdmission(inputs, defaultPolicy);
-        if (decision.install) {
-            auto* exec = evaluation_executor_;
-            // Plan 012 U4 (C5): install CUDA feeder hooks only after admission.
-            gpu_cost_function::InstallCudaFeederHooks(*exec);
-            bool prepareOk = false;
-            if (haveKey && exec->poolSize() > 1) {
-                auto prep = exec->Prepare(preparedKey, exec->poolSize());
-                prepareOk = prep.isOrderedScores();
-            } else if (haveKey) {
-                // Pool not yet sized (lazy) — treat as prepare not needed for
-                // U4 seam compile
-                prepareOk = true;
-            }
-            if (prepareOk) {
-                opt.SetBatchCost(
-                    [exec, serial_cost](const std::vector<Point6D>& poses)
-                        -> std::vector<double> {
-                        return gpu_cost_function::MaterializeOrderedScores(
-                            exec->RunBatch(poses, serial_cost));
-                    });
-            }
-        }
-    }
-
     /*Cumulative budget semantics: this stage continues from the running call
      * count, so the extracted optimizer's loop guard uses call_offset_ + its
      * own count against the (already-accumulated) budget_ member.*/
@@ -1523,7 +1359,7 @@ void OptimizerManager::CalculateSymTrap() {
     if (current_optimum_location_.xa == 0 &&
         current_optimum_location_.ya == 0 &&
         current_optimum_location_.za == 0) {
-        std::cout << "ERROR: INVALID STARTING POSE FOR SYMMETRY TRAP" << endl;
+        std::cout << "ERROR: INVALID STARTING POSE FOR SYMMETRY TRAP" << '\n';
         return;
     }
     // Store cost values to input to csv
@@ -1532,7 +1368,7 @@ void OptimizerManager::CalculateSymTrap() {
     // Get number of iterations from sym_trap spin box
     // int iter_val = sym_trap_obj->getIterCount() * 3;
     int iter_val = 60;  // iter_count * 3;
-    std::cout << "Sym Trap Iteration size: " << iter_val << std::endl;
+    std::cout << "Sym Trap Iteration size: " << iter_val << '\n';
 
     // Get pose list from sym trap
     std::vector<Point6D> pose_list(0);
@@ -1555,7 +1391,7 @@ void OptimizerManager::CalculateSymTrap() {
         Costs.push_back(myCost);
         std::cout << i + 1 << ": " << myCost << " @ rotation ("
                   << pose_list.at(i).xa << " " << pose_list.at(i).ya << " "
-                  << pose_list.at(i).za << ")" << std::endl;
+                  << pose_list.at(i).za << ")" << '\n';
 
         // Update progress bar according to number of iterations
         progress_val = (i + 1) * 100 / iter_val;
@@ -1587,7 +1423,7 @@ void OptimizerManager::CalculateSymTrap() {
     std::ofstream myfile3;
     myfile3.open("Results2D.xy");
     for (int i = 0; i < iter_val; i++) {
-        myfile3 << i - iter_val / 3 << " " << Costs.at(i) << "\n";
+        myfile3 << i - (iter_val / 3) << " " << Costs.at(i) << "\n";
     }
     myfile3.close();
 
@@ -1650,54 +1486,54 @@ OptimizerManager::~OptimizerManager() {
     because their values could change with the stage from a black silhouette
     bool or a dilation int)*/
     /*Camera A (Monoplane or Biplane)*/
-    for (int i = 0; i < gpu_intensity_frames_trunk_A_.size(); i++) {
-        delete gpu_intensity_frames_trunk_A_[i];
+    for (auto& i : gpu_intensity_frames_trunk_A_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_intensity_frames_branch_A_.size(); i++) {
-        delete gpu_intensity_frames_branch_A_[i];
+    for (auto& i : gpu_intensity_frames_branch_A_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_intensity_frames_leaf_A_.size(); i++) {
-        delete gpu_intensity_frames_leaf_A_[i];
+    for (auto& i : gpu_intensity_frames_leaf_A_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_edge_frames_A_.size(); i++) {
-        delete gpu_edge_frames_A_[i];
+    for (auto& i : gpu_edge_frames_A_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_dilated_frames_trunk_A_.size(); i++) {
-        delete gpu_dilated_frames_trunk_A_[i];
+    for (auto& i : gpu_dilated_frames_trunk_A_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_dilated_frames_branch_A_.size(); i++) {
-        delete gpu_dilated_frames_branch_A_[i];
+    for (auto& i : gpu_dilated_frames_branch_A_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_dilated_frames_leaf_A_.size(); i++) {
-        delete gpu_dilated_frames_leaf_A_[i];
+    for (auto& i : gpu_dilated_frames_leaf_A_) {
+        delete i;
     }
     /*Camera B (Biplane only)*/
-    for (int i = 0; i < gpu_intensity_frames_trunk_B_.size(); i++) {
-        delete gpu_intensity_frames_trunk_B_[i];
+    for (auto& i : gpu_intensity_frames_trunk_B_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_intensity_frames_branch_B_.size(); i++) {
-        delete gpu_intensity_frames_branch_B_[i];
+    for (auto& i : gpu_intensity_frames_branch_B_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_intensity_frames_leaf_B_.size(); i++) {
-        delete gpu_intensity_frames_leaf_B_[i];
+    for (auto& i : gpu_intensity_frames_leaf_B_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_edge_frames_B_.size(); i++) {
-        delete gpu_edge_frames_B_[i];
+    for (auto& i : gpu_edge_frames_B_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_dilated_frames_trunk_B_.size(); i++) {
-        delete gpu_dilated_frames_trunk_B_[i];
+    for (auto& i : gpu_dilated_frames_trunk_B_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_dilated_frames_branch_B_.size(); i++) {
-        delete gpu_dilated_frames_branch_B_[i];
+    for (auto& i : gpu_dilated_frames_branch_B_) {
+        delete i;
     }
-    for (int i = 0; i < gpu_dilated_frames_leaf_B_.size(); i++) {
-        delete gpu_dilated_frames_leaf_B_[i];
+    for (auto& i : gpu_dilated_frames_leaf_B_) {
+        delete i;
     }
 
     /*Models*/
     delete gpu_principal_model_;
-    for (int i = 0; i < gpu_non_principal_models_.size(); i++) {
-        delete gpu_non_principal_models_[i];
+    for (auto& gpu_non_principal_model : gpu_non_principal_models_) {
+        delete gpu_non_principal_model;
     }
 };
 
@@ -1706,22 +1542,22 @@ bool RunDirectStageGuarded(::DirectOptimizer& opt, QString* errorOut) {
     try {
         bool ok = opt.Run();
         if (!ok) {
-            if (errorOut) {
+            if (errorOut != nullptr) {
                 *errorOut = QStringLiteral("Error optimizing current frame!");
             }
             return false;
         }
-        if (errorOut) {
+        if (errorOut != nullptr) {
             errorOut->clear();
         }
         return true;
     } catch (const gpu_cost_function::CoordinatorBatchAbort& e) {
-        if (errorOut) {
+        if (errorOut != nullptr) {
             *errorOut = QString::fromStdString(std::string(e.what()));
         }
         return false;
     } catch (const std::invalid_argument& e) {
-        if (errorOut) {
+        if (errorOut != nullptr) {
             *errorOut = QString::fromStdString(
                 std::string("DirectOptimizer contract violation: ") + e.what());
         }

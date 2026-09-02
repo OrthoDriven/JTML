@@ -61,7 +61,7 @@ struct GPUMetrics;
 /*Cost Function Library*/
 
 #include "compute/CostFunctionManager.h"
-#include "direct-rs_bridge/bridge.h"
+#include "optimizer-rs_bridge/bridge.h"
 #include "rust/cxx.h"
 
 using namespace gpu_cost_function;
@@ -83,11 +83,11 @@ public:
         QModelIndexList selected_models,
         unsigned int primary_model_index,
         LocationStorage pose_matrix,
-        OptimizerSettings opt_settings,
-        jta_cost_function::CostFunctionManager trunk_manager,
-        jta_cost_function::CostFunctionManager branch_manager,
-        jta_cost_function::CostFunctionManager leaf_manager,
-        QString opt_directive,
+        const OptimizerSettings& opt_settings,
+        const jta_cost_function::CostFunctionManager& trunk_manager,
+        const jta_cost_function::CostFunctionManager& branch_manager,
+        const jta_cost_function::CostFunctionManager& leaf_manager,
+        const QString& opt_directive,
         QString& error_message,
         int iter_count,
         DirectOptimizer::Options direct_options = DirectOptimizer::Options());
@@ -145,7 +145,7 @@ private:
     OptimizerSettings optimizer_settings_;
 
     /*SYM TRAP SETTINGS*/
-    bool sym_trap_call;
+    bool sym_trap_call{};
     // sym_trap *sym_trap_obj;
 
     /*Frames*/
@@ -160,7 +160,7 @@ private:
     /*Indices of All Selected Models*/
     QModelIndexList selected_model_list_;
     /*Index of Primary Model*/
-    unsigned int primary_model_index_;
+    unsigned int primary_model_index_{};
 
     /*Cost Function Managers For Each Stage*/
     jta_cost_function::CostFunctionManager trunk_manager_;
@@ -168,42 +168,42 @@ private:
     jta_cost_function::CostFunctionManager leaf_manager_;
 
     /*Should we progess to next frame?*/
-    bool progress_next_frame_;
+    bool progress_next_frame_{};
     /*Should we initialize with previous frame's best guess?*/
-    bool init_prev_frame_;
+    bool init_prev_frame_{};
     /*Index For Starting Frame in Optimization*/
-    unsigned int start_frame_index_;
-    unsigned int end_frame_index_;
-    int iter_count;
+    unsigned int start_frame_index_{};
+    unsigned int end_frame_index_{};
+    int iter_count{};
 
     std::vector<int> img_indices_;
 
     QString optimization_directive_;
 
-    void
+    static void
     create_image_indices(std::vector<int>& img_indices, int start, int end);
 
     /*Error Check*/
     cudaError_t cuda_status_;
 
     /*Correctly Initialized*/
-    bool succesfull_initialization_;
+    bool succesfull_initialization_{};
 
     /*Dilation Values Based on Parameter Names (Dilation or DILATION or
      * dilation) that are ints*/
-    int trunk_dilation_val_;
-    int branch_dilation_val_;
-    int leaf_dilation_val_;
+    int trunk_dilation_val_{};
+    int branch_dilation_val_{};
+    int leaf_dilation_val_{};
 
     /*Black Silhouette Values Based on Parameter Names (Black_Silhouette or
      * Dark_Silhouette or BLACK_SILHOUETTE or DARK_SILHOUETTE or
      * black_silhouette or dark_silhouette)*/
-    bool trunk_dark_silhouette_val_;
-    bool branch_dark_silhouette_val_;
-    bool leaf_dark_silhouette_val_;
+    bool trunk_dark_silhouette_val_{};
+    bool branch_dark_silhouette_val_{};
+    bool leaf_dark_silhouette_val_{};
 
     /*GPU Metrics Class*/
-    GPUMetrics* gpu_metrics_;
+    GPUMetrics* gpu_metrics_{};
 
     /*CUDA Cost Function Objects (Vector of GPU Models and vector of GPU Frames
     - note Dilated and Intensity must have own vector for each stage because
@@ -229,7 +229,7 @@ private:
     std::vector<GPUDilatedFrame*> gpu_dilated_frames_leaf_B_;
 
     /*Models*/
-    GPUModel* gpu_principal_model_;
+    GPUModel* gpu_principal_model_{};
     std::vector<GPUModel*> gpu_non_principal_models_;
 
     /*Set Search Range*/
@@ -245,10 +245,10 @@ private:
     Point6D starting_point_;
 
     /*Valid Search Range*/
-    bool valid_range_;
+    bool valid_range_{};
 
     /*Budget*/
-    unsigned int budget_;
+    unsigned int budget_{};
     /*Plan 008 U8: the per-stage optimizer-variant slot, stored from
      * Initialize and consumed by RunDirectStage's DirectOptimizer ctor.
      * Defaults = the bit-identical classic search (non-default fields are
@@ -261,7 +261,7 @@ private:
      * pre-shim DeriveStageCostParams calls were (in the stage loop AFTER the
      * stage's InitializeActiveCostFunction — the init-gating order is
      * load-bearing).*/
-    jta::StageCostParams DeriveStageParams(
+    static jta::StageCostParams DeriveStageParams(
         jta_cost_function::CostFunctionManager& manager);
 
     /*The stage dilate-A / dilate-B (if biplane) / emit UpdateDilationBackground
@@ -282,20 +282,20 @@ private:
         jta_cost_function::CostFunctionManager& stage_manager);
 
     /*Cost Function Calls*/
-    unsigned int cost_function_calls_;
+    unsigned int cost_function_calls_{};
 
     /*Lowest Min Value*/
-    double current_optimum_value_;
+    double current_optimum_value_{};
 
     /*Argument (Location) of Lowest Min Value*/
     Point6D current_optimum_location_;
 
     /*Error Ocurred*/
-    bool error_occurrred_;
+    bool error_occurrred_{};
 
     /*Clock for Timing Speed*/
     /*(Milliseconds)*/
-    clock_t start_clock_, update_screen_clock_;
+    clock_t start_clock_{}, update_screen_clock_{};
 
     /*Store Post Matrix on Cost Functions*/
     PoseMatrix pose_storage_;

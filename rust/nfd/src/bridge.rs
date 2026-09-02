@@ -1,6 +1,6 @@
 #[cxx::bridge]
 pub mod ffi {
-    #[namespace = "nfd-rs"]
+    #[namespace = "nfd_rs"]
     extern "Rust" {}
     unsafe extern "C++" {}
 }

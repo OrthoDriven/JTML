@@ -342,19 +342,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "930c7171c8df9fb1782bdf9b918ed9ed2d33d1d22300abb754f9085bc48bf8e8"
 
 [[package]]
-name = "direct-rs"
-version = "0.1.0"
-dependencies = [
- "basin",
- "cxx",
- "cxx-build",
- "nalgebra 0.35.0",
- "ordered-float",
- "plotters",
- "proptest",
-]
-
-[[package]]
 name = "dyn-stack"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1254,6 +1241,19 @@ name = "once_cell"
 version = "1.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
+
+[[package]]
+name = "optimizer-rs"
+version = "0.1.0"
+dependencies = [
+ "basin",
+ "cxx",
+ "cxx-build",
+ "nalgebra 0.35.0",
+ "ordered-float",
+ "plotters",
+ "proptest",
+]
 
 [[package]]
 name = "ordered-float"
