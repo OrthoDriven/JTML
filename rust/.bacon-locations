@@ -1,61 +1,63 @@
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/tree.rs:39:12 method `longest_axis` is never used
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:36 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:42 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:48 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:54 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:60 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:66 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:32 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:38 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:44 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:50 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:56 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:62 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:43:16 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:46:16 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:29:34 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:25:13 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:26:13 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:49:18 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:49:45 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:50:18 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:50:45 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/tree.rs:61:9 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/tree.rs:63:33 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/mod.rs:235:17 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/mod.rs:237:51 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/mod.rs:240:31 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:36 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:42 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:48 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:54 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:60 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:49:66 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:32 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:38 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:44 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:50 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:56 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/basin_opt/mod.rs:99:62 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:43:16 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:46:16 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:29:34 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:25:13 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/bridge.rs:26:13 this `unsafe` block contains 2 unsafe operations, expected only one
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:49:18 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:49:45 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:50:18 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/poh.rs:50:45 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/tree.rs:61:9 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/tree.rs:63:33 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/mod.rs:235:17 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/mod.rs:237:51 indexing may panic
-warning /home/ajj/repo/uf/JTML/rust/direct-rs/src/direct/mod.rs:240:31 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:36 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:42 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:48 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:54 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:60 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:66 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:32 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:38 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:44 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:50 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:56 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:62 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:43:16 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:46:16 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:29:34 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:25:13 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:26:13 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:49:18 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:49:45 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:50:18 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:50:45 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/tree.rs:61:9 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/tree.rs:63:33 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/mod.rs:235:17 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/mod.rs:237:51 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/mod.rs:240:31 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/tree.rs:39:12 method `longest_axis` is never used
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:36 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:42 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:48 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:54 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:60 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:49:66 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:32 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:38 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:44 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:50 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:56 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/basin_opt/mod.rs:99:62 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:43:16 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:43:80 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:46:16 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:46:98 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:29:34 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:25:13 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/bridge.rs:26:13 this `unsafe` block contains 2 unsafe operations, expected only one
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:49:18 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:49:45 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:50:18 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/poh.rs:50:45 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/tree.rs:61:9 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/tree.rs:63:33 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/mod.rs:235:17 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/mod.rs:237:51 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/optimizer-rs/src/direct/mod.rs:240:31 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/registration_settings/src/qml_settings.rs:240:9 indexing may panic
+warning /home/ajj/repo/uf/JTML/rust/registration_settings/src/qml_settings.rs:240:9 indexing may panic

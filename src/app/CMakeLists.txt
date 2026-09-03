@@ -37,7 +37,7 @@ target_link_libraries(${PROJECT_NAME}
     ${REQUIRED_LIBS_QUALIFIED}
     jtml_view
     jtml_coordinator
-    jtml_settings_qml
+    jtml_settings_rust
     ${JTA_LIBS}
     ${VTK_LIBRARIES}
     ${TORCH_LIBRARIES}

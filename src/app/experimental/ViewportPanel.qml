@@ -1,8 +1,3 @@
-import QtQuick
-import QtQuick.Controls
-import "."  // Theme
-import jtml.experimental 1.0
-
 // 007 U2: center viewport region (extracted from main.qml): the single
 // QmlVtkRenderer + placeholder + debug readout, plus the scene-glue
 // Connections that forward the bridge's scene relays to the renderer's
@@ -10,7 +5,21 @@ import jtml.experimental 1.0
 // state stays render-thread-owned). Exposes `property alias viewport` so
 // the toolbar + root glue reach the renderer without findChild.
 
+import "." // Theme
+import QtQuick
+import QtQuick.Controls
+import jtml.experimental 1.0
+
 Item {
+    // Review I-03 guard (removed in the ce-code-review round): the old
+    // `Component.onCompleted: if (!viewportItem)` was unreachable (the id
+    // always exists), so it guarded nothing. The real failure mode — the
+    // QmlVtkRenderer failing to materialize (GL/xcb) — is still silently
+    // unobservable: the renderer reports no failure and the glue no-ops.
+    // Surfacing it needs a real failure signal out of
+    // QmlVtkRenderer::initializeVTK, which currently never reports
+    // failure.
+
     id: root
 
     // 007 U6 (D1): injected bridge surface — the composition root passes
@@ -19,9 +28,7 @@ Item {
     required property var appBridge
     required property var studyBridge
     required property var optimizerBridge
-
     property alias viewport: viewportItem
-
     // D5 (plan 007 U3): single run-lock source — every locked control on
     // this panel binds to it (the review found the spread
     // !optimizerBridge.running bindings are how controls keep escaping
@@ -30,6 +37,7 @@ Item {
 
     QmlVtkRenderer {
         id: viewportItem
+
         anchors.fill: parent
         // D5 (plan 007 U3): block mouse events during a run — a mid-run
         // drag is a semantic clobber (the run would overwrite it).
@@ -42,17 +50,19 @@ Item {
             visible: root.appBridge.frameCount === 0
             anchors.fill: parent
             color: Theme.surface
+
             Label {
                 anchors.centerIn: parent
                 width: parent.width - 40
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
-                text: qsTr("No study loaded — load a calibration, "
-                           + "then images and models.")
+                text: qsTr("No study loaded — load a calibration, " + "then images and models.")
                 color: Theme.fgDim
                 font.pixelSize: Theme.body
             }
+
         }
+
     }
 
     // D5 (plan 007 U3): the run lock has a VISIBLE state — dead input on
@@ -79,42 +89,49 @@ Item {
 
             Label {
                 id: label
+
                 anchors.centerIn: parent
                 text: qsTr("Running — interaction locked")
                 color: Theme.fg
                 font.bold: true
                 font.pixelSize: Theme.body
             }
+
         }
+
     }
 
     // ---- Scene glue (U4): bridge wrote the scene; forward the relays ----
     Connections {
-        target: studyBridge
         function onSceneBackgroundChanged() {
-            viewportItem.updateBackground()
+            viewportItem.updateBackground();
         }
+
         function onSceneModelsChanged() {
-            viewportItem.updateModels()
+            viewportItem.updateModels();
         }
+
         function onSceneCameraChanged() {
-            viewportItem.updateCamera()
+            viewportItem.updateCamera();
         }
+
         function onViewerPoseApplied(sceneModelIndex) {
             // Idempotently re-apply the synced pose.
-            viewportItem.updatePose(sceneModelIndex)
+            viewportItem.updatePose(sceneModelIndex);
         }
+
+        target: studyBridge
     }
 
     // Model-centric pose sync (plan-005 feedback #2): the renderer reports
     // the interaction-end transform; the bridge writes it into the storage
     // + scene (the optimizer starts from the visually arranged pose).
     Connections {
-        target: viewportItem
         function onModelPoseAdjusted(sceneModelIndex, x, y, z, xa, ya, za) {
-            root.studyBridge.applyViewerPose(
-                        sceneModelIndex, x, y, z, xa, ya, za)
+            root.studyBridge.applyViewerPose(sceneModelIndex, x, y, z, xa, ya, za);
         }
+
+        target: viewportItem
     }
 
     // Which model the interactor moves (owner feedback 2026-08-11): the
@@ -124,18 +141,11 @@ Item {
     // sync tail emits selectionChanged after populate) and on every
     // selection toggle.
     Connections {
-        target: studyBridge
         function onSelectionChanged() {
-            viewportItem.setActiveModel(root.studyBridge.primaryModelIndex)
+            viewportItem.setActiveModel(root.studyBridge.primaryModelIndex);
         }
+
+        target: studyBridge
     }
 
-    // Review I-03 guard (removed in the ce-code-review round): the old
-    // `Component.onCompleted: if (!viewportItem)` was unreachable (the id
-    // always exists), so it guarded nothing. The real failure mode — the
-    // QmlVtkRenderer failing to materialize (GL/xcb) — is still silently
-    // unobservable: the renderer reports no failure and the glue no-ops.
-    // Surfacing it needs a real failure signal out of
-    // QmlVtkRenderer::initializeVTK, which currently never reports
-    // failure.
 }

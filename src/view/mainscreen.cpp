@@ -234,21 +234,21 @@ MainScreen::MainScreen(QWidget* parent) :
     QApplication::setFont(application_font);
 
     /*Set Up Settings Control Window*/
-    // settings_control = new SettingsControl(this);
-    // connect(
-    //     settings_control,
-    //     SIGNAL(SaveSettings(
-    //         OptimizerSettings,
-    //         jta_cost_function::CostFunctionManager,
-    //         jta_cost_function::CostFunctionManager,
-    //         jta_cost_function::CostFunctionManager)),
-    //     this,
-    //     SLOT(onSaveSettings(
-    //         OptimizerSettings,
-    //         jta_cost_function::CostFunctionManager,
-    //         jta_cost_function::CostFunctionManager,
-    //         jta_cost_function::CostFunctionManager)),
-    //     Qt::DirectConnection);
+    settings_control = new SettingsControl(this);
+    connect(
+        settings_control,
+        SIGNAL(SaveSettings(
+            OptimizerSettings,
+            jta_cost_function::CostFunctionManager,
+            jta_cost_function::CostFunctionManager,
+            jta_cost_function::CostFunctionManager)),
+        this,
+        SLOT(onSaveSettings(
+            OptimizerSettings,
+            jta_cost_function::CostFunctionManager,
+            jta_cost_function::CostFunctionManager,
+            jta_cost_function::CostFunctionManager)),
+        Qt::DirectConnection);
 
     /* SYM TRAP */
     // The standalone sym-trap window was removed; the Sym_Trap directive
@@ -379,6 +379,7 @@ MainScreen::MainScreen(QWidget* parent) :
     coronal_vw->load_render_window(ui.qvtk_cpv->renderWindow());
     // vw->load_renderers_into_render_window();
     ui.qvtk_widget->renderWindow()->Render();
+    ui.qvtk_widget->setEnabled(false);
 
     /*Interactor*/
     key_press_vtk->AutoAdjustCameraClippingRangeOff();
@@ -2328,8 +2329,19 @@ void MainScreen::on_actionControls_triggered() {
 
 /*Optimizer Window*/
 void MainScreen::on_actionOptimizer_Settings_triggered() {
-    QmlSettingsDialog dialog(this);
-    dialog.exec();
+    switch (settings_impl()) {
+    case SettingsImpl::CppWidgets:
+        settings_control->show();
+        settings_control->raise();
+        settings_control->activateWindow();
+        break;
+
+    case SettingsImpl::RustQml: {
+        QmlSettingsDialog dialog(this);
+        dialog.exec();
+        break;
+    }
+    }
 }
 
 /*Symmetry Trap Window*/
@@ -2425,6 +2437,7 @@ void MainScreen::on_load_calibration_button_clicked() {
     /*Set Up QVTK Widget For Calibration*/
     /*Monoplane (Left Viewport)*/
     vw->load_renderers_into_render_window(calibration_file_);
+    ui.qvtk_widget->setEnabled(true);
     coronal_vw->load_renderers_into_render_window(calibration_file_);
     if (calibrated_for_monoplane_viewport_) {  // I loaded a single-plane
                                                // calibration

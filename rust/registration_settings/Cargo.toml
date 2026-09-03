@@ -1,0 +1,22 @@
+[package]
+name = "registration_settings"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cxx.workspace = true
+cxx-qt.workspace = true
+cxx-qt-lib.workspace = true
+registration_graph.workspace = true
+
+[build-dependencies]
+cxx-build.workspace = true
+cxx-qt-build.workspace = true
+
+[dev-dependencies]
+
+[lints]
+workspace = true
+
+[lib]
+crate-type=["staticlib"]

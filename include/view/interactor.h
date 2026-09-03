@@ -61,6 +61,17 @@ public:
         }
         return true;
     }
+    bool scene_ready() {
+        if (!this->Interactor) {
+            return false;
+        }
+        vtkRenderWindow* rw = this->Interactor->GetRenderWindow();
+        if (!rw) {
+            return false;
+        }
+        vtkRendererCollection* renderers = rw->GetRenderers();
+        return renderers && renderers->GetNumberOfItems() > 0;
+    }
 
     // KeyPress Turns Off Other Char Hotkeys
     void OnChar() override {
@@ -272,9 +283,10 @@ public:
 
     // Left Mouse Down Function
     void OnLeftButtonDown() override {
+        if (!scene_ready()) {
+            return;
+        }
         leftDown = true;
-
-        // Forward Events
         vtkInteractorStyleTrackballActor::OnLeftButtonDown();
     }
 

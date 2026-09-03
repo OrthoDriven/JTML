@@ -1,13 +1,17 @@
 [workspace.dependencies]
 cxx = { version = "1.0.199", features = ["c++20"] }
 cxx-build = { version = "1.0.199", features = ["parallel"] }
+cxx-qt = "0.10"
+cxx-qt-lib = { version="0.10", features = ["qt_full"] }
+cxx-qt-build = { version = "0.10", features = [ "link_qt_object_files" ] }
+registration_graph = {path = "registration_graph"}
 
 [workspace]
 resolver = "3"
 members = [
   "optimizer-rs",
-  "nfd"
-]
+  "nfd",
+  "registration_settings", "registration_graph"]
 
 
 [workspace.lints.clippy]

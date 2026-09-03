@@ -46,6 +46,7 @@ cuda-nvtx = ">=13.3.29,<14"
 pyyaml = ">=6.0.3,<7"
 rust = ">=1.98.0,<1.99"
 llvm = "21.*"
+lld = ">=21.1.8,<22"
 
 [feature.build.dependencies]
 cmake = ">=4.2.3,<5"
@@ -68,6 +69,15 @@ cmd = ["./vtk_installer.sh"]
 default-environment = "default"
 inputs = ["vtk_installer.sh"]
 outputs = ["_deps/vtk/install/lib64/cmake/vtk-9.7/VTKConfig.cmake"]
+
+[tasks.cargo-build]
+cmd = [
+  "cargo",
+  "build",
+  "-m",
+  "./rust/Cargo.toml",
+  "--release"
+]
 
 [tasks.configure]
 # Preset-based configure (pixi-base -> release). Keep depends-on build-vtk so the
@@ -117,8 +127,6 @@ depends-on = ["build"]
 env = {"QT_QPA_PLATFORM" = "xcb"}
 #set(USE_CUDNN 1)
 #
-[tasks.cargo-build]
-cmd = "cargo build --manifest-path rust/Cargo.toml"
 
 [tasks.test]
 # Run the headless suite: no GUI/display or VTK render window. Fast compute-only

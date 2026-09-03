@@ -30,6 +30,7 @@ add_library(jtml_view STATIC
   model_list_model.cpp
   settings_control.cpp
   viewer.cpp
+  qml/qml_settings_dialog.cpp
   ${HEADER_FILES}
   ${HEADER_DIR}/mainscreen.qrc
 )
@@ -54,10 +55,10 @@ target_link_libraries(jtml_view PUBLIC
     Qt6::Widgets
     Qt6::QuickWidgets
 )
-target_link_libraries(jtml_view
-    PRIVATE
-        jtml_settings_qml
-)
+# target_link_libraries(jtml_view
+#     PRIVATE
+#         jtml_settings_qml
+# )
 target_include_directories(jtml_view PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     ${RESOURCE_DIR}
@@ -77,4 +78,3 @@ target_include_directories(jtml_view PUBLIC
 # CUDA for any view TU that pulls compute headers.
 set_property(TARGET jtml_view PROPERTY CUDA_ARCHITECTURES native)
 
-add_subdirectory(qml)

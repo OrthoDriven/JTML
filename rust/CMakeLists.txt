@@ -12,4 +12,4 @@ corrosion_import_crate(
 
 add_subdirectory(optimizer-rs)
 add_subdirectory(nfd)
-
+add_subdirectory(registration_settings)

@@ -5,7 +5,6 @@ import QtQuick.Layouts
 Rectangle {
     implicitWidth: 1000
     implicitHeight: 700
-
     color: palette.window
 
     ColumnLayout {
@@ -36,6 +35,9 @@ Rectangle {
             Button {
                 text: "Save"
             }
+
         }
+
     }
+
 }

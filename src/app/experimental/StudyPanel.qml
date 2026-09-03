@@ -1,8 +1,3 @@
-import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
-import "."  // Theme
-
 // 007 U2: left-column study lists (extracted from main.qml): the frame
 // list (current-frame contract) over the model list (bridge-owned
 // multi-select) + the selection summary. Delegate selection contract
@@ -10,7 +5,6 @@ import "."  // Theme
 // The onDatasetChanged relay keeps the Qt.callLater deferral (it outlasts
 // the clearDataset list-model swap). 007 U2 review fixes: delegate root-id
 // references converted to ListView.view + required properties (I-04).
-//
 // 007 U3 (D7, I6): keyboard wiring — every currentIndex change on the
 // frame list (click, keyboard Up/Down, programmatic) syncs to the bridge
 // via onCurrentIndexChanged, so the highlight and the bridge state cannot
@@ -22,28 +16,32 @@ import "."  // Theme
 // focusable (activeFocusOnTab) with a visible focus indicator (the full
 // keyboard audit is U4).
 
+import "." // Theme
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
 ColumnLayout {
     id: root
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-    spacing: Theme.spacingSm
 
     // 007 U6 (D1): injected bridge surface — the composition root passes
     // the real bridges; tests pass fakes. No context-property coupling.
     required property var appBridge
     required property var studyBridge
     required property var optimizerBridge
-
     // Testability (plan 007 U6): the lists are reachable from the Qt
     // Quick Test via findChild (keyboard contract + run-lock pins).
     readonly property string frameListObjectName: "studyFrameList"
     readonly property string modelListObjectName: "studyModelList"
-
     // D5 (plan 007 U3): single run-lock source for this panel.
     readonly property bool runLocked: root.optimizerBridge.running
     // D7 dataset-swap guard: set when a dataset replace is in flight so a
     // transient currentIndex reset never syncs to the bridge.
     property bool suppressFrameSync: false
+
+    Layout.fillWidth: true
+    Layout.fillHeight: true
+    spacing: Theme.spacingSm
 
     // Frame list (delegate selection contract: currentIndex drives the
     // bridge — no QItemSelectionModel).
@@ -53,8 +51,10 @@ ColumnLayout {
         font.bold: true
         font.pixelSize: Theme.label
     }
+
     ListView {
         id: frameList
+
         objectName: root.frameListObjectName
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -66,18 +66,27 @@ ColumnLayout {
         // sets currentIndex; Up/Down arrives via the ListView's key
         // handling once a row has focus).
         onCurrentIndexChanged: {
-            if (root.suppressFrameSync) return
-            root.studyBridge.setCurrentFrame(frameList.currentIndex)
+            if (root.suppressFrameSync)
+                return ;
+
+            root.studyBridge.setCurrentFrame(frameList.currentIndex);
         }
+        highlightFollowsCurrentItem: true
+
         delegate: Rectangle {
             required property int index
             required property string display
+
             width: ListView.view.width
             height: 24
-            color: ListView.view.currentIndex === index
-                   ? Theme.selection : "transparent"
+            color: ListView.view.currentIndex === index ? Theme.selection : "transparent"
             // D7: rows are reachable by keyboard (Tab in, arrows move).
             activeFocusOnTab: true
+            // Plan 007 U4: screen-reader surface (the row is a custom
+            // item built from primitives).
+            Accessible.role: Accessible.ListItem
+            Accessible.name: display
+
             // D7: visible focus indicator for keyboard users.
             Rectangle {
                 visible: parent.activeFocus
@@ -87,10 +96,7 @@ ColumnLayout {
                 border.color: Theme.accent
                 border.width: 1
             }
-            // Plan 007 U4: screen-reader surface (the row is a custom
-            // item built from primitives).
-            Accessible.role: Accessible.ListItem
-            Accessible.name: display
+
             Text {
                 anchors.fill: parent
                 anchors.leftMargin: 4
@@ -99,6 +105,7 @@ ColumnLayout {
                 text: display
                 elide: Text.ElideRight
             }
+
             MouseArea {
                 anchors.fill: parent
                 // Owner fix (2026-08-12): ListView.view is NULL in nested
@@ -108,8 +115,9 @@ ColumnLayout {
                 // list id is in file scope and works from delegates.
                 onClicked: frameList.currentIndex = index
             }
+
         }
-        highlightFollowsCurrentItem: true
+
     }
 
     // Model list (multi-select via the bridge-owned set).
@@ -119,24 +127,38 @@ ColumnLayout {
         font.bold: true
         font.pixelSize: Theme.label
     }
+
     ListView {
         id: modelList
+
         objectName: root.modelListObjectName
         Layout.fillWidth: true
         Layout.fillHeight: true
         clip: true
         enabled: !root.runLocked
         model: root.studyBridge.modelListModel
+
         delegate: Rectangle {
             required property int index
             required property string display
+
             width: ListView.view.width
             height: 24
-            color: root.studyBridge.selectedModels.indexOf(index) !== -1
-                   ? Theme.selection : "transparent"
+            color: root.studyBridge.selectedModels.indexOf(index) !== -1 ? Theme.selection : "transparent"
             // D7: rows are reachable by keyboard; Space/Enter toggles the
             // row (the bridge-owned multi-select set).
             activeFocusOnTab: true
+            // Plan 007 U4: screen-reader surface (the row is a custom
+            // item built from primitives).
+            Accessible.role: Accessible.ListItem
+            Accessible.name: display
+            Keys.onPressed: (event) => {
+                if (event.key === Qt.Key_Space || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    root.studyBridge.toggleModelSelected(index);
+                    event.accepted = true;
+                }
+            }
+
             // D7: visible focus indicator for keyboard users.
             Rectangle {
                 visible: parent.activeFocus
@@ -146,10 +168,7 @@ ColumnLayout {
                 border.color: Theme.accent
                 border.width: 1
             }
-            // Plan 007 U4: screen-reader surface (the row is a custom
-            // item built from primitives).
-            Accessible.role: Accessible.ListItem
-            Accessible.name: display
+
             Text {
                 anchors.fill: parent
                 anchors.leftMargin: 4
@@ -158,26 +177,18 @@ ColumnLayout {
                 text: display
                 elide: Text.ElideRight
             }
-            Keys.onPressed: (event) => {
-                if (event.key === Qt.Key_Space
-                        || event.key === Qt.Key_Return
-                        || event.key === Qt.Key_Enter) {
-                    root.studyBridge.toggleModelSelected(index)
-                    event.accepted = true
-                }
-            }
+
             MouseArea {
                 anchors.fill: parent
                 onClicked: root.studyBridge.toggleModelSelected(index)
             }
+
         }
+
     }
+
     Label {
-        text: root.studyBridge.selectedModelCount > 0
-              ? qsTr("Selected %1 · primary %2")
-                    .arg(root.studyBridge.selectedModelCount)
-                    .arg(root.studyBridge.primaryModelIndex)
-              : qsTr("No model selected")
+        text: root.studyBridge.selectedModelCount > 0 ? qsTr("Selected %1 · primary %2").arg(root.studyBridge.selectedModelCount).arg(root.studyBridge.primaryModelIndex) : qsTr("No model selected")
         color: Theme.fgMuted
         font.pixelSize: Theme.caption
     }
@@ -189,13 +200,15 @@ ColumnLayout {
     // deferral re-syncs currentIndex to the bridge's frame, then clears
     // the flag.
     Connections {
-        target: studyBridge
         function onDatasetChanged() {
-            root.suppressFrameSync = true
+            root.suppressFrameSync = true;
             Qt.callLater(function() {
-                frameList.currentIndex = root.studyBridge.currentFrame
-                root.suppressFrameSync = false
-            })
+                frameList.currentIndex = root.studyBridge.currentFrame;
+                root.suppressFrameSync = false;
+            });
         }
+
+        target: studyBridge
     }
+
 }
