@@ -4,7 +4,7 @@
 /*Cuda*/
 #include <cuda_runtime.h>
 
-#include "device_launch_parameters.h"
+/*Cub Library (CUDA)*/
 
 /*Camera Principal Calibration*/
 #include <string>
@@ -12,8 +12,10 @@
 #include "compute/camera_calibration.h"
 
 /*Launch Parameters*/
-#include "cuda_launch_parameters.h"
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
+#include "cuda_launch_parameters.h"
 /*GPU Image Class*/
 #include "compute/gpu_image.cuh"
 
@@ -81,6 +83,7 @@ public:
     /*Render (Opaque) Image to GPUImage renderer_output_'s dev_image_ via Kernel
      * calls (CUDA)*/
     JTML_DLL cudaError_t Render();
+    JTML_DLL cudaError_t Render(Pose pose);
 
     /*Create an object that returns the pointer to the opencv Mat object*/
     JTML_DLL cv::Mat GetcvMatImage();
@@ -115,9 +118,12 @@ private:
 
     /*Render with back face culling*/
     bool use_backface_culling_;
+    cudaError_t RenderImpl(const Pose& pose);
 
     /*Triangles in model*/
     int triangle_count_;
+
+    RotationMatrix RotationFromPose(const Pose& pose);
 
     /*Model Location and Orientation (Z-X-Y Euler Angles), and Corresponding
      * Rotation Matrix*/

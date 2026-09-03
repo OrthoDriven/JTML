@@ -1,4 +1,5 @@
 /*Gpu model header*/
+
 #include "compute/gpu_model.cuh"
 
 namespace gpu_cost_function {
@@ -110,26 +111,21 @@ GPUModel::~GPUModel() {
     delete secondary_cam_render_engine_;
 };
 
-/*Render to cache function (returns true if worked correctly)
-Primary is used in monoplane and biplane, Secondary only used in biplane*/
+/*Render to cache function (returns true if worked correctly) Primary is used in
+monoplane and biplane, Secondary only used in biplane*/
 bool GPUModel::RenderPrimaryCamera(Pose model_pose) {
-    if (initialized_correctly_) {
-        primary_cam_render_engine_->SetPose(model_pose);
-        if (cudaSuccess == primary_cam_render_engine_->Render()) {
-            return true;
-        }
+    if (!initialized_correctly_) {
         return false;
     }
-    return false;
-};
+
+    return cudaSuccess == primary_cam_render_engine_->Render(model_pose);
+}
+
 bool GPUModel::RenderPrimaryCamera_RotationMatrix(
     RotationMatrix model_pose_matrix) {
     if (initialized_correctly_) {
         primary_cam_render_engine_->SetRotationMatrix(model_pose_matrix);
-        if (cudaSuccess == primary_cam_render_engine_->Render()) {
-            return true;
-        }
-        return false;
+        return cudaSuccess == primary_cam_render_engine_->Render();
     }
     return false;
 }
@@ -141,15 +137,12 @@ void GPUModel::RenderPrimaryCameraAndWriteImage(
 };
 
 bool GPUModel::RenderSecondaryCamera(Pose model_pose) {
-    if (initialized_correctly_ && biplane_mode_) {
-        secondary_cam_render_engine_->SetPose(model_pose);
-        if (cudaSuccess == secondary_cam_render_engine_->Render()) {
-            return true;
-        }
+    if (!initialized_correctly_ || !biplane_mode_) {
         return false;
     }
-    return false;
-};
+
+    return cudaSuccess == secondary_cam_render_engine_->Render(model_pose);
+}
 
 /*Render DRR to cache function (returns true if worked correctly)
 Primary is used in monoplane and biplane, Secondary only used in biplane*/
@@ -159,11 +152,8 @@ bool GPUModel::RenderDRRPrimaryCamera(
     float upper_bound) {
     if (initialized_correctly_) {
         primary_cam_render_engine_->SetPose(model_pose);
-        if (cudaSuccess ==
-            primary_cam_render_engine_->RenderDRR(lower_bound, upper_bound)) {
-            return true;
-        }
-        return false;
+        return cudaSuccess ==
+            primary_cam_render_engine_->RenderDRR(lower_bound, upper_bound);
     }
     return false;
 };
@@ -174,11 +164,8 @@ bool GPUModel::RenderDRRSecondaryCamera(
     float upper_bound) {
     if (initialized_correctly_ && biplane_mode_) {
         secondary_cam_render_engine_->SetPose(model_pose);
-        if (cudaSuccess ==
-            secondary_cam_render_engine_->RenderDRR(lower_bound, upper_bound)) {
-            return true;
-        }
-        return false;
+        return cudaSuccess ==
+            secondary_cam_render_engine_->RenderDRR(lower_bound, upper_bound);
     }
     return false;
 };

@@ -83,6 +83,10 @@ cut0_measurement.scratch.md
 
 rust/target/*
 
-rust/direct-rs/plots/
+rust/optimizer-rs/plots/
 
 .panoptes
+
+docs/plans
+docs/brainstorms
+docs/solutions

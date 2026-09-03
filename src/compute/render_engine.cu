@@ -1,20 +1,17 @@
 /*Render Engine Header*/
-#include "compute/render_engine.cuh"
-
-/*Cub Library (CUDA)*/
 #include <cub/block/block_scan.cuh>
 
+#include "compute/render_engine.cuh"
 #include "cub/cub.cuh"
 #include "cub/device/device_scan.cuh"
 #include "cub/util_allocator.cuh"
+#include "device_launch_parameters.h"
 
 /*Standard Library*/
 #include <algorithm>
 #include <iostream>
 
 /*OpenCV 3.1 Library*/
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 
 /*CUDA Custom Registration Namespace (Compiling as DLL)*/
 namespace gpu_cost_function {
@@ -479,26 +476,32 @@ RenderEngine::InitializeCUDA(float* triangles, float* normals, int device) {
 
 void RenderEngine::SetPose(Pose model_pose) {
     model_pose_ = model_pose;
+    model_rotation_mat_ = RotationFromPose(model_pose);
+}
 
-    float cz = cos(model_pose_.z_angle_ * 3.14159265358979323846f / 180.0f);
-    float sz = sin(model_pose_.z_angle_ * 3.14159265358979323846f / 180.0f);
-    float cx = cos(model_pose_.x_angle_ * 3.14159265358979323846f / 180.0f);
-    float sx = sin(model_pose_.x_angle_ * 3.14159265358979323846f / 180.0f);
-    float cy = cos(model_pose_.y_angle_ * 3.14159265358979323846f / 180.0f);
-    float sy = sin(model_pose_.y_angle_ * 3.14159265358979323846f / 180.0f);
+RotationMatrix RenderEngine::RotationFromPose(const Pose& pose) {
+    constexpr float deg_to_rad = 3.14159265358979323846f / 180.0f;
+
+    const float cz = cos(pose.z_angle_ * deg_to_rad);
+    const float sz = sin(pose.z_angle_ * deg_to_rad);
+    const float cx = cos(pose.x_angle_ * deg_to_rad);
+    const float sx = sin(pose.x_angle_ * deg_to_rad);
+    const float cy = cos(pose.y_angle_ * deg_to_rad);
+    const float sy = sin(pose.y_angle_ * deg_to_rad);
 
     /* R*v = RzRxRy*v */
-    model_rotation_mat_ = RotationMatrix(
+    return RotationMatrix(
         cz * cy - sz * sx * sy,
-        -1.0 * sz * cx,
+        -sz * cx,
         cz * sy + sz * cy * sx,
         sz * cy + cz * sx * sy,
         cz * cx,
         sz * sy - cz * cy * sx,
-        -1.0 * cx * sy,
+        -cx * sy,
         sx,
         cx * cy);
 }
+
 void RenderEngine::SetRotationMatrix(RotationMatrix model_rotation_matrix) {
     model_rotation_mat_ = model_rotation_matrix;
 }
@@ -1604,7 +1607,16 @@ __global__ void RasterizeTrianglesWarpKernel(
 }
 
 cudaError_t RenderEngine::Render() {
+    return RenderImpl(model_pose_);
+}
+
+cudaError_t RenderEngine::Render(Pose pose) {
+    return RenderImpl(pose);
+}
+
+cudaError_t RenderEngine::RenderImpl(const Pose& pose) {
     /*Create Error Status*/
+    const auto rotation = RotationFromPose(pose);
     cudaGetLastError();  // Resets Errors (MAYBE DELETE TO SAVE TIME?)
 
     /*Transform Points (Rotate then Translate) and Project to Screen and Snap*/
@@ -1616,10 +1628,10 @@ cudaError_t RenderEngine::Render() {
         dist_over_pix_pitch_,
         pix_conversion_x_,
         pix_conversion_y_,
-        model_pose_.x_location_,
-        model_pose_.y_location_,
-        model_pose_.z_location_,
-        model_rotation_mat_,
+        pose.x_location_,
+        pose.y_location_,
+        pose.z_location_,
+        rotation,
         dev_normals_,
         dev_backface_,
         use_backface_culling_,
@@ -1665,13 +1677,7 @@ cudaError_t RenderEngine::Render() {
         width_,
         height_,
         dev_projected_triangles_);
-    cudaError_t err = cudaGetLastError();
-    if (err != cudaSuccess) {
-        std::cerr << "FillTriangleKernel_new launch failed: "
-                  << cudaGetErrorString(err) << '\n';
-    }
 
-    /*Check for Errors*/
     return cudaGetLastError();
 }
 
