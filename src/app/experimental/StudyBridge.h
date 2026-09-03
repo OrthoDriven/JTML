@@ -148,7 +148,7 @@ public:
     FrameListModel* frameListModel();
     ModelListModel* modelListModel();
 
-signals:
+Q_SIGNALS:
     void datasetChanged();
     void selectionChanged();
     // The viewer finished a model-centric drag; the arranged pose is written

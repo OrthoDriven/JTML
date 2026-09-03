@@ -124,7 +124,7 @@ public:
 
     QString poseReadout() const;
 
-signals:
+Q_SIGNALS:
     void sceneChanged();
     void interactionModeChanged();
     // (sceneModelIndex, x, y, z, xa, ya, za) — emitted on the GUI thread

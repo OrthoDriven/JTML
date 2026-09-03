@@ -71,8 +71,8 @@
 using namespace std;
 using namespace std;
 
-using jta_cost_function::CostFunctionType;
 using jta_cost_function::cost_function_type_from_string;
+using jta_cost_function::CostFunctionType;
 using jta_cost_function::to_string;
 
 int MainScreen::curr_frame() {
@@ -234,21 +234,21 @@ MainScreen::MainScreen(QWidget* parent) :
     QApplication::setFont(application_font);
 
     /*Set Up Settings Control Window*/
-    settings_control = new SettingsControl(this);
-    connect(
-        settings_control,
-        SIGNAL(SaveSettings(
-            OptimizerSettings,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager)),
-        this,
-        SLOT(onSaveSettings(
-            OptimizerSettings,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager)),
-        Qt::DirectConnection);
+    // settings_control = new SettingsControl(this);
+    // connect(
+    //     settings_control,
+    //     SIGNAL(SaveSettings(
+    //         OptimizerSettings,
+    //         jta_cost_function::CostFunctionManager,
+    //         jta_cost_function::CostFunctionManager,
+    //         jta_cost_function::CostFunctionManager)),
+    //     this,
+    //     SLOT(onSaveSettings(
+    //         OptimizerSettings,
+    //         jta_cost_function::CostFunctionManager,
+    //         jta_cost_function::CostFunctionManager,
+    //         jta_cost_function::CostFunctionManager)),
+    //     Qt::DirectConnection);
 
     /* SYM TRAP */
     // The standalone sym-trap window was removed; the Sym_Trap directive
@@ -1974,9 +1974,10 @@ void MainScreen::on_actionEstimate_Femoral_Implant_s_triggered() {
     ui.qvtk_cpv->update();
     ui.qvtk_cpv->renderWindow()->Render();
     auto orientation = new float[3];
-    torch::Tensor gpu_byte_placeholder(torch::zeros(
-        {1, 1, input_height, input_width},
-        device(torch::kCUDA).dtype(torch::kByte)));
+    torch::Tensor gpu_byte_placeholder(
+        torch::zeros(
+            {1, 1, input_height, input_width},
+            device(torch::kCUDA).dtype(torch::kByte)));
     /*Per-frame estimate context (plan 004 U8 / R12): the estimator is
      * stateless; the slot builds the context once (GPU model, torch pose
      * model, scratch buffers, calibration) and the loop feeds it one
@@ -2205,9 +2206,10 @@ void MainScreen::on_actionEstimate_Tibial_Implant_s_triggered() {
     ui.qvtk_cpv->update();
     ui.qvtk_cpv->renderWindow()->Render();
     auto orientation = new float[3];
-    torch::Tensor gpu_byte_placeholder(torch::zeros(
-        {1, 1, input_height, input_width},
-        device(torch::kCUDA).dtype(torch::kByte)));
+    torch::Tensor gpu_byte_placeholder(
+        torch::zeros(
+            {1, 1, input_height, input_width},
+            device(torch::kCUDA).dtype(torch::kByte)));
     /*Per-frame estimate context (plan 004 U8 / R12): the estimator is
      * stateless; the slot builds the context once (GPU model, torch pose
      * model, scratch buffers, calibration) and the loop feeds it one
@@ -2326,12 +2328,8 @@ void MainScreen::on_actionControls_triggered() {
 
 /*Optimizer Window*/
 void MainScreen::on_actionOptimizer_Settings_triggered() {
-    /*Load the Optimizer Settings to the Window*/
-    settings_control->LoadSettings(
-        trunk_manager_, branch_manager_, leaf_manager_, optimizer_settings_);
-
-    // Open Optimizer Settings Window
-    settings_control->show();
+    QmlSettingsDialog dialog(this);
+    dialog.exec();
 }
 
 /*Symmetry Trap Window*/
@@ -2866,29 +2864,35 @@ void MainScreen::on_camera_A_radio_button_clicked() {
                 /*Text Actor if On*/
                 if (actor_text->GetTextProperty()->GetOpacity() > 0.5) {
                     std::string infoText = "Location: <";
-                    infoText += std::to_string(static_cast<long double>(
-                                    model_actor_list[selected[r].row()]
-                                        ->GetPosition()[0])) +
+                    infoText += std::to_string(
+                                    static_cast<long double>(
+                                        model_actor_list[selected[r].row()]
+                                            ->GetPosition()[0])) +
                         "," +
-                        std::to_string(static_cast<long double>(
-                            model_actor_list[selected[r].row()]
-                                ->GetPosition()[1])) +
+                        std::to_string(
+                                    static_cast<long double>(
+                                        model_actor_list[selected[r].row()]
+                                            ->GetPosition()[1])) +
                         "," +
-                        std::to_string(static_cast<long double>(
-                            model_actor_list[selected[r].row()]
-                                ->GetPosition()[2])) +
+                        std::to_string(
+                                    static_cast<long double>(
+                                        model_actor_list[selected[r].row()]
+                                            ->GetPosition()[2])) +
                         ">\nOrientation: <" +
-                        std::to_string(static_cast<long double>(
-                            model_actor_list[selected[r].row()]
-                                ->GetOrientation()[0])) +
+                        std::to_string(
+                                    static_cast<long double>(
+                                        model_actor_list[selected[r].row()]
+                                            ->GetOrientation()[0])) +
                         "," +
-                        std::to_string(static_cast<long double>(
-                            model_actor_list[selected[r].row()]
-                                ->GetOrientation()[1])) +
+                        std::to_string(
+                                    static_cast<long double>(
+                                        model_actor_list[selected[r].row()]
+                                            ->GetOrientation()[1])) +
                         "," +
-                        std::to_string(static_cast<long double>(
-                            model_actor_list[selected[r].row()]
-                                ->GetOrientation()[2])) +
+                        std::to_string(
+                                    static_cast<long double>(
+                                        model_actor_list[selected[r].row()]
+                                            ->GetOrientation()[2])) +
                         ">";
                     actor_text->SetInput(infoText.c_str());
                 }
@@ -3577,27 +3581,35 @@ void MainScreen::VTKMakePrincipalSignal(vtkActor* new_principal_actor) {
         /*Text Actor if On */
         if (actor_text->GetTextProperty()->GetOpacity() > 0.5) {
             std::string infoText = "Location: <";
-            infoText +=
-                std::to_string(static_cast<long double>(
-                    model_actor_list[index_new_principal]->GetPosition()[0])) +
+            infoText += std::to_string(
+                            static_cast<long double>(
+                                model_actor_list[index_new_principal]
+                                    ->GetPosition()[0])) +
                 "," +
-                std::to_string(static_cast<long double>(
-                    model_actor_list[index_new_principal]->GetPosition()[1])) +
+                std::to_string(
+                            static_cast<long double>(
+                                model_actor_list[index_new_principal]
+                                    ->GetPosition()[1])) +
                 "," +
-                std::to_string(static_cast<long double>(
-                    model_actor_list[index_new_principal]->GetPosition()[2])) +
+                std::to_string(
+                            static_cast<long double>(
+                                model_actor_list[index_new_principal]
+                                    ->GetPosition()[2])) +
                 ">\nOrientation: <" +
-                std::to_string(static_cast<long double>(
-                    model_actor_list[index_new_principal]
-                        ->GetOrientation()[0])) +
+                std::to_string(
+                            static_cast<long double>(
+                                model_actor_list[index_new_principal]
+                                    ->GetOrientation()[0])) +
                 "," +
-                std::to_string(static_cast<long double>(
-                    model_actor_list[index_new_principal]
-                        ->GetOrientation()[1])) +
+                std::to_string(
+                            static_cast<long double>(
+                                model_actor_list[index_new_principal]
+                                    ->GetOrientation()[1])) +
                 "," +
-                std::to_string(static_cast<long double>(
-                    model_actor_list[index_new_principal]
-                        ->GetOrientation()[2])) +
+                std::to_string(
+                            static_cast<long double>(
+                                model_actor_list[index_new_principal]
+                                    ->GetOrientation()[2])) +
                 ">";
             actor_text->SetInput(infoText.c_str());
             actor_text->GetTextProperty()->SetColor(
@@ -4719,11 +4731,10 @@ void MainScreen::LoadSettingsBetweenSessions() {
             QStringList key_codes =
                 cost_function_settings_keys[i].key.split("@");
             if (key_codes.size() == 2 && key_codes[1] == "ACTIVE_CF") {
-                auto cost_function_type =
-                    cost_function_type_from_string(
-                        cost_function_settings_keys[i]
-                            .value.toString()
-                            .toStdString());
+                auto cost_function_type = cost_function_type_from_string(
+                    cost_function_settings_keys[i]
+                        .value.toString()
+                        .toStdString());
 
                 if (!cost_function_type) {
                     continue;
@@ -4744,8 +4755,7 @@ void MainScreen::LoadSettingsBetweenSessions() {
                 }
             } else if (key_codes.size() == 4) {
                 auto cost_function_type =
-                    cost_function_type_from_string(
-                        key_codes[1].toStdString());
+                    cost_function_type_from_string(key_codes[1].toStdString());
 
                 if (!cost_function_type) {
                     continue;
@@ -4789,10 +4799,7 @@ void MainScreen::LoadSettingsBetweenSessions() {
                         cost_function_settings_keys[i].value.toBool());
                 } else {
                     QMessageBox::critical(
-                        this,
-                        "Error",
-                        parameter_type_error,
-                        QMessageBox::Ok);
+                        this, "Error", parameter_type_error, QMessageBox::Ok);
                 }
             } else {
                 QMessageBox::critical(
@@ -4871,11 +4878,9 @@ void MainScreen::LoadSettingsBetweenSessions() {
 
         /*Change the Default Settings of Dilation for branch and leaf to 4
          * and 1 respectively*/
-        branch_manager_
-            .getCostFunctionClass(CostFunctionType::DirectDilation)
+        branch_manager_.getCostFunctionClass(CostFunctionType::DirectDilation)
             ->setIntParameterValue("Dilation", 4);
-        leaf_manager_
-            .getCostFunctionClass(CostFunctionType::DirectDilation)
+        leaf_manager_.getCostFunctionClass(CostFunctionType::DirectDilation)
             ->setIntParameterValue("Dilation", 1);
 
         /*Save to Registry*/

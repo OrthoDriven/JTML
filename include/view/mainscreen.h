@@ -95,8 +95,8 @@
 #include "coordinator/session_state_controller.h"
 
 /*Optimizer Settings Control Window*/
-#include "view/settings_control.h"
-
+#include "../../src/view/qml/qml_settings_dialog.h"
+// #include "view/settings_control.h"
 /*App-State Service (plan U7, R8/E11)*/
 #include "domain/session_state.h"
 
@@ -365,7 +365,7 @@ private:
         jta_cost_function::CostFunctionManager& leaf_manager) const;
 
     /*Optimizer Window Control*/
-    SettingsControl* settings_control;
+    // SettingsControl* settings_control;
 
     /*Sym Trap Window*/
 

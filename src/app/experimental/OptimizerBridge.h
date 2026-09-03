@@ -140,7 +140,7 @@ public:
     // dataset + selection state (previous == current by construction, H2).
     jta::OptimizerRunControllerCore::GateInput buildGateInput() const;
 
-signals:
+Q_SIGNALS:
     void runStateChanged();
     void progressChanged();
     // Relay binds for the QML glue (main.qml forwards the pose ones to
@@ -160,7 +160,7 @@ signals:
     // controller's severity is ignored (Dialog mapping).
     void messageRequested(const QString& title, const QString& message);
 
-private slots:
+private Q_SLOTS:
     void onControllerRunStateChanged();
     void onControllerProgressChanged();
     void onControllerMessage(

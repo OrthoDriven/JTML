@@ -10,6 +10,7 @@
 #include <cstdint>
 
 #include "CostFunction.h"
+#include "compute/objective_spec.h"
 #include "domain/preprocessor-defs.h"
 
 /*Cost Function Tools Library*/
@@ -141,6 +142,7 @@ private:
 
     /*Vector of Cost Functions*/
     std::map<CostFunctionType, CostFunction> available_cost_functions_;
+    ObjectiveSpec objective_spec_;
 
     /*Active Cost Function*/
     CostFunctionType active_cost_function_;

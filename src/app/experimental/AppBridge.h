@@ -99,7 +99,7 @@ public:
     // U8: the pose-editing adapter.
     PoseBridge* poseBridge();
 
-signals:
+Q_SIGNALS:
     // Placeholder surface-change signals (U2). Later units refine these into
     // the per-surface signals QML binds to (settings panel, pose table,
     // optimizer progress).

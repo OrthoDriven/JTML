@@ -195,7 +195,7 @@ public:
     bool dirty() const;
     QString validationMessage() const;
 
-signals:
+Q_SIGNALS:
     void poseTableChanged();
     void dirtyChanged();
     void validationChanged();
@@ -207,7 +207,7 @@ signals:
     // viewport.updatePose(modelIndex).
     void scenePoseChanged(int modelIndex);
 
-private slots:
+private Q_SLOTS:
     void onSelectionChanged();
     void onDatasetChanged();
 

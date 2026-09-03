@@ -37,12 +37,14 @@ target_link_libraries(${PROJECT_NAME}
     ${REQUIRED_LIBS_QUALIFIED}
     jtml_view
     jtml_coordinator
+    jtml_settings_qml
     ${JTA_LIBS}
     ${VTK_LIBRARIES}
     ${TORCH_LIBRARIES}
     ${OpenCV_LIBRARIES}
     Eigen3::Eigen
 )
+
 
 # CUDA Configuration for the executable (QVTK/OpenGL + compute linkage).
 set_property(TARGET ${PROJECT_NAME} PROPERTY CUDA_ARCHITECTURES native)

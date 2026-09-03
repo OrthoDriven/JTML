@@ -107,7 +107,7 @@ public:
         return *state_;
     }
 
-signals:
+Q_SIGNALS:
     /*Emitted when the frame/model counts changed (dataset facts). Also
      * emitted by ResetForDatasetClear after the mirrors reset.*/
     void datasetChanged();

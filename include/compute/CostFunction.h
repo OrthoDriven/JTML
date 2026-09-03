@@ -57,65 +57,6 @@ constexpr std::optional<CostFunctionType> cost_function_type_from_string(
 
 #undef COST_FUNCTION_TYPE_LIST
 
-// enum class CostFunctionType : unsigned char {
-//     DirectDilation = 0,
-//     SymmetryTrap = 1,
-//     DirectDilationNewPoleConstraint = 2,
-//     DirectDilationOldPoleConstraint = 3,
-//     DirectDilationConstrainZ = 4,
-//     DirectDilationOldT1 = 5,
-//     DirectDilationMahfouzVariant = 6,
-
-// };
-
-// constexpr std::string_view to_string(CostFunctionType type) {
-//     switch (type) {
-//     case CostFunctionType::DirectDilation:
-//         return "DirectDilation";
-//     case CostFunctionType::SymmetryTrap:
-//         return "SymmetryTrap";
-//     case CostFunctionType::DirectDilationNewPoleConstraint:
-//         return "DirectDilationNewPoleConstraint";
-//     case CostFunctionType::DirectDilationOldPoleConstraint:
-//         return "DirectDilationOldPoleConstraint";
-//     case CostFunctionType::DirectDilationConstrainZ:
-//         return "DirectDilationConstrainZ";
-//     case CostFunctionType::DirectDilationOldT1:
-//         return "DirectDilationOldT1";
-//     case CostFunctionType::DirectDilationMahfouzVariant:
-//         return "DirectDilationMahfouzVariant";
-//     }
-
-//     return "Unknown";
-// }
-
-// constexpr std::optional<CostFunctionType> cost_function_type_from_string(
-//     std::string_view name) {
-//     if (name == "DirectDilation") {
-//         return CostFunctionType::DirectDilation;
-//     }
-//     if (name == "SymmetryTrap") {
-//         return CostFunctionType::SymmetryTrap;
-//     }
-//     if (name == "DirectDilationNewPoleConstraint") {
-//         return CostFunctionType::DirectDilationNewPoleConstraint;
-//     }
-//     if (name == "DirectDilationOldPoleConstraint") {
-//         return CostFunctionType::DirectDilationOldPoleConstraint;
-//     }
-//     if (name == "DirectDilationConstrainZ") {
-//         return CostFunctionType::DirectDilationConstrainZ;
-//     }
-//     if (name == "DirectDilationOldT1") {
-//         return CostFunctionType::DirectDilationOldT1;
-//     }
-//     if (name == "DirectDilationMahfouzVariant") {
-//         return CostFunctionType::DirectDilationMahfouzVariant;
-//     }
-
-//     return std::nullopt;
-// }
-
 class CostFunction {
 public:
     /*Constructor*/

@@ -170,7 +170,7 @@ public:
         int primary_model_index,
         int model_count);
 
-signals:
+Q_SIGNALS:
     void runStateChanged();
     void progressChanged();
     /*The single severity-carrying message channel (L14).*/
@@ -227,7 +227,7 @@ signals:
      * Not meant for views.*/
     void StopOptimizer();
 
-private slots:
+private Q_SLOTS:
     void onManagerUpdateDisplay(
         double iteration_speed,
         int current_iteration,

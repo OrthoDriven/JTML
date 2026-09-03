@@ -340,8 +340,6 @@ void CostFunctionManager::listCostFunctions() {
     instance_DIRECT_DILATION_POLE_CONSTRAINT.addParameter(
         Parameter<double>("PoleWeight", 1));
     instance_DIRECT_DILATION_POLE_CONSTRAINT.addParameter(
-        Parameter<double>("Pole_Weight", 1));
-    instance_DIRECT_DILATION_POLE_CONSTRAINT.addParameter(
         Parameter<int>("Dilation", 6));
     available_cost_functions_
         [CostFunctionType::DirectDilationOldPoleConstraint] =
@@ -389,19 +387,4 @@ void CostFunctionManager::listCostFunctions() {
         (instance_direct_mahfouz);
     /*End Cost Function Listing*/
 }
-/*END FUNCTIONS THAT INTERACT WITH WIZARD*/
-/******************************** END WARNING *********************************/
-/******************************************************************************/
-/*************************DO NOT EDIT FUNCTIONS ABOVE *************************/
-/******************************************************************************/
 }  // namespace jta_cost_function
-
-/******************************************************************************/
-/******************************************************************************/
-/******************************** END WARNING
- * *********************************/
-/******************************************************************************/
-/*************************DO NOT EDIT ANYTING IN THIS FILE
- * ********************/
-/******************************************************************************/
-/******************************************************************************/

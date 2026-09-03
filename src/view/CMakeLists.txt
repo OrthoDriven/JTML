@@ -22,17 +22,18 @@ file(GLOB HEADER_FILES CONFIGURE_DEPENDS ${HEADER_DIR}/*.ui ${HEADER_DIR}/*.h)
 set(RESOURCE_DIR ${PROJECT_SOURCE_DIR}/res)
 
 add_library(jtml_view STATIC
-    about.cpp
-    controls.cpp
-    drr_tool.cpp
-    frame_list_model.cpp
-    mainscreen.cpp
-    model_list_model.cpp
-    settings_control.cpp
-    viewer.cpp
-    ${HEADER_FILES}
-    ${HEADER_DIR}/mainscreen.qrc
+  about.cpp
+  controls.cpp
+  drr_tool.cpp
+  frame_list_model.cpp
+  mainscreen.cpp
+  model_list_model.cpp
+  settings_control.cpp
+  viewer.cpp
+  ${HEADER_FILES}
+  ${HEADER_DIR}/mainscreen.qrc
 )
+
 # NOTE: no interactor.cpp is compiled - include/view/interactor.h defines its VTK
 # interactor classes inline (vtkStandardNewMacro in the header). The orphan .cpp was
 # deleted in 003 U6; compiling a copy would redefine New() (link error).
@@ -47,8 +48,16 @@ target_link_libraries(jtml_view PUBLIC
     ${TORCH_LIBRARIES}
     ${OpenCV_LIBRARIES}
     Eigen3::Eigen
+    Qt6::Quick
+    Qt6::Qml
+    Qt6::QuickControls2
+    Qt6::Widgets
+    Qt6::QuickWidgets
 )
-
+target_link_libraries(jtml_view
+    PRIVATE
+        jtml_settings_qml
+)
 target_include_directories(jtml_view PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     ${RESOURCE_DIR}
@@ -67,3 +76,5 @@ target_include_directories(jtml_view PUBLIC
 
 # CUDA for any view TU that pulls compute headers.
 set_property(TARGET jtml_view PROPERTY CUDA_ARCHITECTURES native)
+
+add_subdirectory(qml)

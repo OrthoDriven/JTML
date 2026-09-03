@@ -97,7 +97,7 @@ public:
     double EvaluateCostFunctionAtPoint(Point6D point, int stage);
     void CalculateSymTrap();
 
-signals:
+Q_SIGNALS:
     /*Update Blue Current Optimum*/
     void
     UpdateOptimum(double, double, double, double, double, double, unsigned int);
@@ -129,7 +129,7 @@ signals:
     void onProgressBarUpdate(int);
     void get_iter_count();
 
-public slots:
+public Q_SLOTS:
     /*Optimizer Biplane Single Model*/
     void Optimize();
 

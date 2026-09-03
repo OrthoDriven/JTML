@@ -46,7 +46,7 @@ private:
     /*Optimizer Settings for Everything but the Cost Function Stuff*/
     OptimizerSettings opt_settings_;
 
-public slots:
+public Q_SLOTS:
     /*Save Button*/
     void on_save_button_clicked();
 
@@ -80,7 +80,7 @@ public slots:
     void on_bool_parameter_true_radioButton_clicked();
     void on_bool_parameter_false_radioButton_clicked();
 
-signals:
+Q_SIGNALS:
     /*Saves the three Cost Function Manager Settings and the Optimizer Settings
     to:
     - the registry

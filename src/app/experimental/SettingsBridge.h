@@ -243,7 +243,7 @@ public:
      * function the widgets MainScreen calls.*/
     std::vector<jta::RegistryEntry> buildCostFunctionRegistryEntries() const;
 
-signals:
+Q_SIGNALS:
     void settingsEdited();
     void dirtyChanged();
 

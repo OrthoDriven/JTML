@@ -47,7 +47,7 @@ public:
     /*Draw DRR*/
     void DrawDRR();
 
-public slots:
+public Q_SLOTS:
     /*Threshold Changes*/
     void on_minLowerSpinBox_valueChanged();
     void on_maxLowerSpinBox_valueChanged();

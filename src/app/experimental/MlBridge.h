@@ -174,7 +174,7 @@ public:
     // machine).
     QString activeSegmentModelPath() const;
 
-signals:
+Q_SIGNALS:
     // .pt paths / availability / knobs changed (button + label rebinding).
     void mlModelsChanged();
     // The estimate result display changed.
