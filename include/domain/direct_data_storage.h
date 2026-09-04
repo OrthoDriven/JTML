@@ -45,11 +45,6 @@ public:
     /*Delete Contents of storage_matrix_ safely (also called in destructor)*/
     void DeleteAllStoredHyperboxes();
 
-    /*Print Columns, Min/Max/Avg Column Length*/
-    void PrintSize();
-    /*Print */
-    void PrintContents();
-
 private:
     /*Vector of Vector of HyperBoxes:
     Low Level Vector of HyperBoxes Represents All Hyperboxes of a Given Size,

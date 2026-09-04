@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="4254938786253151081">
+  <FileInfo check="Null pointer">
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="1" my-argname="importer" file="src/services/render_pipeline_builder.cpp" line="46" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="3" my-argname="mapper" file="src/services/render_pipeline_builder.cpp" line="47" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="4" my-argname="actor" file="src/services/render_pipeline_builder.cpp" line="48" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="5" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="50" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:121:6" my-argnr="1" my-argname="renderWindow" file="src/services/render_pipeline_builder.cpp" line="88" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:121:6" my-argnr="2" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="84" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:121:6" my-argnr="3" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="86" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:129:6" my-argnr="1" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="96" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:138:6" my-argnr="1" my-argname="imageActor" file="src/services/render_pipeline_builder.cpp" line="108" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:138:6" my-argnr="2" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="109" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:151:6" my-argnr="1" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="115" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:159:6" my-argnr="1" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="124" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:167:6" my-argnr="1" my-argname="mapper" file="src/services/render_pipeline_builder.cpp" line="134" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:167:6" my-argnr="2" my-argname="actor" file="src/services/render_pipeline_builder.cpp" line="135" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:167:6" my-argnr="4" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="136" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:176:6" my-argnr="1" my-argname="actor" file="src/services/render_pipeline_builder.cpp" line="140" col="5" value="0"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:93:19" my-argnr="1" my-argname="mat" file="src/services/render_pipeline_builder.cpp" line="27" col="9" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="1" my-argname="importer" file="src/services/render_pipeline_builder.cpp" line="46" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="3" my-argname="mapper" file="src/services/render_pipeline_builder.cpp" line="47" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="4" my-argname="actor" file="src/services/render_pipeline_builder.cpp" line="48" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:99:6" my-argnr="5" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="50" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:121:6" my-argnr="1" my-argname="renderWindow" file="src/services/render_pipeline_builder.cpp" line="88" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:121:6" my-argnr="2" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="84" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:121:6" my-argnr="3" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="86" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:129:6" my-argnr="1" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="96" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:138:6" my-argnr="1" my-argname="imageActor" file="src/services/render_pipeline_builder.cpp" line="108" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:138:6" my-argnr="2" my-argname="backgroundRenderer" file="src/services/render_pipeline_builder.cpp" line="109" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:151:6" my-argnr="1" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="115" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:159:6" my-argnr="1" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="124" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:167:6" my-argnr="1" my-argname="mapper" file="src/services/render_pipeline_builder.cpp" line="134" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:167:6" my-argnr="2" my-argname="actor" file="src/services/render_pipeline_builder.cpp" line="135" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:167:6" my-argnr="4" my-argname="sceneRenderer" file="src/services/render_pipeline_builder.cpp" line="136" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/render_pipeline_builder.h:176:6" my-argnr="1" my-argname="actor" file="src/services/render_pipeline_builder.cpp" line="140" col="5" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="DeriveImageImportParams" lineNumber="25" column="19"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="ConfigureBackgroundChain" lineNumber="40" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="RefreshBackgroundImport" lineNumber="53" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="SetupLayeredRenderers" lineNumber="80" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="SetupBackgroundCamera" lineNumber="93" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="PlaceBackgroundImage" lineNumber="102" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="SetupSceneCameraFocal" lineNumber="114" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="ApplySceneCameraProjection" lineNumber="120" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="BuildModelActor" lineNumber="129" column="6"/>
+    <functiondecl file="src/services/render_pipeline_builder.cpp" functionName="ApplyActorPose" lineNumber="139" column="6"/>
+    <functioncall functionName="AddActor"/>
+    <functioncall functionName="AddRenderer"/>
+    <functioncall functionName="DeriveImageImportParams"/>
+    <functioncall functionName="GetActiveCamera"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="InteractiveOff"/>
+    <functioncall functionName="InteractiveOn"/>
+    <functioncall functionName="Modified"/>
+    <functioncall functionName="ParallelProjectionOn"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="SetClippingRange"/>
+    <functioncall functionName="SetDataExtentToWholeExtent"/>
+    <functioncall functionName="SetDataOrigin"/>
+    <functioncall functionName="SetDataScalarTypeToUnsignedChar"/>
+    <functioncall functionName="SetDataSpacing"/>
+    <functioncall functionName="SetFocalPoint"/>
+    <functioncall functionName="SetImportVoidPointer"/>
+    <functioncall functionName="SetInputConnection"/>
+    <functioncall functionName="SetInputData"/>
+    <functioncall functionName="SetLayer"/>
+    <functioncall functionName="SetMapper"/>
+    <functioncall functionName="SetNumberOfLayers"/>
+    <functioncall functionName="SetNumberOfScalarComponents"/>
+    <functioncall functionName="SetOrientation"/>
+    <functioncall functionName="SetOutput"/>
+    <functioncall functionName="SetParallelScale"/>
+    <functioncall functionName="SetPickable"/>
+    <functioncall functionName="SetPosition"/>
+    <functioncall functionName="SetViewAngle"/>
+    <functioncall functionName="SetWholeExtent"/>
+    <functioncall functionName="Update"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="channels"/>
+    <functioncall functionName="empty"/>
+  </FileInfo>
+</analyzerinfo>

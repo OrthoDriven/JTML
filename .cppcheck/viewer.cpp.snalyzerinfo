@@ -1,0 +1,89 @@
+Frame
+CameraCalibration
+CameraCalibration
+CameraCalibration
+fx
+fy
+cx
+cy
+Vect_3
+Vect_3
+Matrix_3_3
+Matrix_3_3
+tranpose call:[Matrix_3_3] noreturn:[Matrix_3_3]
+Calibration
+Calibration
+Calibration
+multiplication_mat_mat call:[Matrix_3_3] noreturn:[Matrix_3_3]
+multiplication_mat_vec call:[Vect_3] noreturn:[Vect_3]
+convert_Pose_A_to_Pose_B call:[Point6D,R_x,R_y,R_z,Vect_3,asin,atan2,cos,multiplication_mat_mat,multiplication_mat_vec,sin,tranpose] noreturn:[Point6D,atan2]
+convert_Pose_B_to_Pose_A call:[Point6D,R_x,R_y,R_z,Vect_3,asin,atan2,cos,multiplication_mat_mat,multiplication_mat_vec,sin] noreturn:[Point6D,atan2]
+Model
+ViewingAngleFromCalibration call:[atan2,return] noreturn:[atan2]
+Viewer call:[initialize_vtk_mappers,initialize_vtk_pointers,initialize_vtk_renderers] noreturn:[initialize_vtk_renderers]
+Viewer
+initialize_vtk_pointers call:[GetActiveCamera,GetTextProperty,New,SetColor,SetFontFamilyToCourier,SetFontSize,SetPosition2] noreturn:[New]
+initialize_vtk_mappers call:[ConfigureBackgroundChain,Get,SetPickable] noreturn:[SetPickable]
+initialize_vtk_renderers call:[AddActor] noreturn:[AddActor]
+load_render_window call:[SetRenderWindow] noreturn:[SetRenderWindow]
+get_renderer
+get_number_of_model_actors call:[size] noreturn:[size]
+get_actor_image
+get_current_background
+get_stl_reader
+get_image_mapper
+get_actor_text
+get_importer
+update_display_background call:[RefreshBackgroundImport] noreturn:[RefreshBackgroundImport]
+make_image_invisible call:[SetVisibility] noreturn:[SetVisibility]
+set_loaded_frames
+set_loaded_frames_b
+update_display_background_to_edge_image call:[GetEdgeImage,update_display_background] noreturn:[update_display_background]
+update_display_background_to_original_image call:[GetOriginalImage,update_display_background] noreturn:[update_display_background]
+update_display_background_to_dilation_image call:[GetDilationImage,update_display_background] noreturn:[update_display_background]
+update_display_background_to_inverted_image call:[GetInvertedImage,update_display_background] noreturn:[update_display_background]
+setup_camera_calibration call:[SetupBackgroundCamera,fy] noreturn:[SetupBackgroundCamera]
+setup_camera_coronal_plane call:[SetPosition] noreturn:[SetPosition]
+place_image_actors_according_to_calibration call:[PlaceBackgroundImage,fy] noreturn:[PlaceBackgroundImage]
+load_3d_models_into_actor_and_mapper_list call:[BuildModelActor,GetOutputPort,New,at,push_back,size]
+load_model_actors_and_mappers_with_3d_data call:[PickableOff,VisibilityOff,size] noreturn:[VisibilityOff]
+get_model_mapper_list
+get_model_actor_list
+set_3d_model_color call:[GetProperty,SetColor] noreturn:[SetColor]
+load_models call:[Model,push_back,size,toStdString] noreturn:[push_back]
+are_models_loaded_correctly call:[at]
+are_models_loaded_incorrectly call:[at]
+change_model_opacity_to_original call:[GetProperty,PickableOn,SetAmbient,SetDiffuse,SetOpacity,SetRepresentationToSurface,VisibilityOn] noreturn:[SetOpacity]
+change_model_opacity_to_wire_frame call:[GetProperty,PickableOn,SetAmbient,SetDiffuse,SetOpacity,SetRepresentationToWireframe,VisibilityOn] noreturn:[SetOpacity]
+change_model_opacity_to_transparent call:[GetProperty,PickableOn,SetAmbient,SetDiffuse,SetOpacity,SetRepresentationToSurface,VisibilityOn] noreturn:[SetOpacity]
+change_model_opacity_to_solid call:[GetProperty,PickableOn,SetAmbient,SetDiffuse,SetOpacity,SetRepresentationToSurface,VisibilityOn] noreturn:[SetOpacity]
+set_model_position_at_index call:[SetPosition] noreturn:[SetPosition]
+set_model_orientation_at_index call:[SetOrientation] noreturn:[SetOrientation]
+print_location_and_orientation_of_model_at_index call:[GetOrientation,GetPosition,to_string]
+set_actor_text call:[SetInput,c_str] noreturn:[SetInput]
+set_actor_text_color_to_model_color_at_index call:[GetColor,GetProperty,GetTextProperty,SetColor] noreturn:[SetColor]
+render_scene call:[Render] noreturn:[Render]
+display_actors_in_renderer call:[GetActors,Print] noreturn:[Print]
+set_render_window_and_display call:[AddRenderer,New,Render,SetRenderWindow,SetWindowName,Start] noreturn:[Start]
+get_model_orientation_at_index call:[GetOrientation] noreturn:[GetOrientation]
+get_model_position_at_index call:[GetPosition] noreturn:[GetPosition]
+make_model_invisible_and_nonpickable_at_index call:[PickableOff,VisibilityOff] noreturn:[VisibilityOff]
+make_model_visible_and_pickable_at_index call:[PickableOn,VisibilityOn] noreturn:[VisibilityOn]
+make_all_models_invisible call:[PickableOff,VisibilityOff] noreturn:[VisibilityOff]
+get_loaded_models
+load_renderers_into_render_window call:[SetupLayeredRenderers,SetupSceneCameraFocal] noreturn:[SetupSceneCameraFocal]
+print_render_window call:[Print] noreturn:[Print]
+make_actor_text_invisible call:[GetTextProperty,SafeDownCast,SetOpacity] noreturn:[SetOpacity]
+make_actor_text_visible call:[GetTextProperty,SafeDownCast,SetOpacity] noreturn:[SetOpacity]
+load_in_interactor_style call:[SetInteractorStyle] noreturn:[SetInteractorStyle]
+model_actor_list_size call:[size] noreturn:[size]
+get_model_actor_at_index call:[GetPointer] noreturn:[GetPointer]
+print_interactor_information call:[GetNumberOfItems,GetRenderWindow,GetRenderers,Print] noreturn:[GetNumberOfItems]
+get_interactor
+set_vtk_camera_from_calibration_and_image_size_if_jta call:[ApplySceneCameraProjection,ViewingAngleFromCalibration,calculate_and_set_camera_aspect_from_calibration,calculate_and_set_window_center_from_calibration,cx,cy,fx,fy] noreturn:[calculate_and_set_camera_aspect_from_calibration]
+set_vtk_camera_from_calibration_and_image_if_camera_matrix call:[ApplySceneCameraProjection,SetViewUp,ViewingAngleFromCalibration,calculate_and_set_camera_aspect_from_calibration,calculate_and_set_window_center_from_calibration,cx,cy,fx,fy] noreturn:[SetViewUp]
+calculate_and_set_window_center_from_calibration call:[SetWindowCenter] noreturn:[SetWindowCenter]
+windowCenterSet
+update_window_center_on_resize call:[GetSize,SetWindowCenter] noreturn:[SetWindowCenter]
+calculate_and_set_camera_aspect_from_calibration call:[GetElement,GetProjectionTransformMatrix,Identity,New,SetElement,SetMatrix,SetUserTransform]
+print_scene_camera_directions call:[GetFocalPoint,GetViewPlaneNormal,GetViewUp] noreturn:[GetViewPlaneNormal]

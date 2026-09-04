@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="2524983008502345472">
+  <FileInfo check="Class">
+<class name="CameraCalibration" file="include/compute/camera_calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="12" col="1" hash="12896866910451944345"/>
+<class name="Vect_3" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="20" col="1" hash="11040844689123257424"/>
+<class name="Matrix_3_3" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="39" col="1" hash="5819584710834062145"/>
+<class name="Calibration" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="89" col="1" hash="10691475651608726459"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/save_last_pose.h:70:5" my-argnr="2" my-argname="model_rows" file="src/services/save_last_pose.cpp" line="26" col="9" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/compute/camera_calibration.h" functionName="fx" lineNumber="83" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="fy" lineNumber="86" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="cx" lineNumber="89" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="cy" lineNumber="92" column="11"/>
+    <functiondecl file="include/services/calibration.h" functionName="tranpose" lineNumber="83" column="16"/>
+    <functiondecl file="include/services/calibration.h" functionName="multiplication_mat_mat" lineNumber="136" column="16"/>
+    <functiondecl file="include/services/calibration.h" functionName="multiplication_mat_vec" lineNumber="150" column="12"/>
+    <functiondecl file="include/services/calibration.h" functionName="convert_Pose_A_to_Pose_B" lineNumber="160" column="13"/>
+    <functiondecl file="include/services/calibration.h" functionName="convert_Pose_B_to_Pose_A" lineNumber="247" column="13"/>
+    <functiondecl file="src/services/save_last_pose.cpp" functionName="SaveLastPoseToStorage" lineNumber="16" column="5"/>
+    <functioncall functionName="Calibration"/>
+    <functioncall functionName="CameraCalibration"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Matrix_3_3"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="SavePose"/>
+    <functioncall functionName="Vect_3"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="asin"/>
+    <functioncall functionName="atan2"/>
+    <functioncall functionName="convert_Pose_B_to_Pose_A"/>
+    <functioncall functionName="cos"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="multiplication_mat_mat"/>
+    <functioncall functionName="multiplication_mat_vec"/>
+    <functioncall functionName="sin"/>
+    <functioncall functionName="tranpose"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

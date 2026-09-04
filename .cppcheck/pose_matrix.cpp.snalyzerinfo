@@ -1,0 +1,200 @@
+dim3
+dim3
+operatoruint3
+cudaCreateChannelDesc call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf1 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf2 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf4 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < signed char > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned char > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uchar1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uchar2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uchar4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned short > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ushort1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ushort2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ushort4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned int > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uint1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uint2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uint4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned long > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ulong1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ulong2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ulong4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescNV12 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized8X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized8X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized8X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized8X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized8X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized8X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized16X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized16X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized16X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized16X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized16X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized16X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindNV12 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized1010102 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed1SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed2SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed3 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed3SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedBlockCompressed4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed5 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedBlockCompressed5 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed6H > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedBlockCompressed6H > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed7 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed7SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Packed422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Packed444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8SemiPlanar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16SemiPlanar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8SemiPlanar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16SemiPlanar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8SemiPlanar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16SemiPlanar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Planar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16Planar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Planar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16Planar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Planar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16Planar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+make_cudaPitchedPtr
+make_cudaPos
+make_cudaExtent
+make_char1
+make_uchar1
+make_char2
+make_uchar2
+make_char3
+make_uchar3
+make_char4
+make_uchar4
+make_short1
+make_ushort1
+make_short2
+make_ushort2
+make_short3
+make_ushort3
+make_short4
+make_ushort4
+make_int1
+make_uint1
+make_int2
+make_uint2
+make_int3
+make_uint3
+make_int4
+make_uint4
+make_long1
+make_ulong1
+make_long2
+make_ulong2
+make_long3
+make_ulong3
+make_long4
+make_ulong4
+make_long4_16a
+make_long4_32a
+make_ulong4_16a
+make_ulong4_32a
+make_float1
+make_float2
+make_float3
+make_float4
+make_longlong1
+make_ulonglong1
+make_longlong2
+make_ulonglong2
+make_longlong3
+make_ulonglong3
+make_longlong4
+make_ulonglong4
+make_longlong4_16a
+make_longlong4_32a
+make_ulonglong4_16a
+make_ulonglong4_32a
+make_double1
+make_double2
+make_double3
+make_double4
+make_double4_16a
+make_double4_32a
+cudaLaunchKernel call:[cudaLaunchKernel] noreturn:[cudaLaunchKernel]
+cudaLaunchKernelEx call:[cudaLaunchKernelExC] noreturn:[cudaLaunchKernelExC]
+cudaLaunchKernelEx call:[cudaLaunchKernelExC] noreturn:[cudaLaunchKernelExC]
+cudaLaunchCooperativeKernel call:[cudaLaunchCooperativeKernel] noreturn:[cudaLaunchCooperativeKernel]
+cudaEventCreate call:[cudaEventCreateWithFlags] noreturn:[cudaEventCreateWithFlags]
+cudaGraphInstantiate call:[cudaGraphInstantiate] noreturn:[cudaGraphInstantiate]
+cudaMallocHost call:[cudaHostAlloc] noreturn:[cudaHostAlloc]
+cudaHostAlloc call:[cudaHostAlloc] noreturn:[cudaHostAlloc]
+cudaHostGetDevicePointer call:[cudaHostGetDevicePointer] noreturn:[cudaHostGetDevicePointer]
+cudaMallocManaged call:[cudaMallocManaged] noreturn:[cudaMallocManaged]
+cudaMemPrefetchBatchAsync call:[cudaMemPrefetchBatchAsync] noreturn:[cudaMemPrefetchBatchAsync]
+cudaMemPrefetchBatchAsync call:[cudaMemPrefetchBatchAsync] noreturn:[cudaMemPrefetchBatchAsync]
+cudaMemDiscardAndPrefetchBatchAsync call:[cudaMemDiscardAndPrefetchBatchAsync] noreturn:[cudaMemDiscardAndPrefetchBatchAsync]
+cudaMemDiscardAndPrefetchBatchAsync call:[cudaMemDiscardAndPrefetchBatchAsync] noreturn:[cudaMemDiscardAndPrefetchBatchAsync]
+cudaStreamAttachMemAsync call:[cudaStreamAttachMemAsync] noreturn:[cudaStreamAttachMemAsync]
+cudaMalloc call:[cudaMalloc] noreturn:[cudaMalloc]
+cudaMallocHost call:[cudaMallocHost] noreturn:[cudaMallocHost]
+cudaMallocPitch call:[cudaMallocPitch] noreturn:[cudaMallocPitch]
+cudaMallocAsync call:[cudaMallocFromPoolAsync] noreturn:[cudaMallocFromPoolAsync]
+cudaMallocAsync call:[cudaMallocFromPoolAsync] noreturn:[cudaMallocFromPoolAsync]
+cudaMallocAsync call:[cudaMallocAsync] noreturn:[cudaMallocAsync]
+cudaMallocFromPoolAsync call:[cudaMallocFromPoolAsync] noreturn:[cudaMallocFromPoolAsync]
+cudaMemcpyBatchAsync call:[cudaMemcpyBatchAsync] noreturn:[cudaMemcpyBatchAsync]
+cudaMemcpyBatchAsync call:[cudaMemcpyBatchAsync] noreturn:[cudaMemcpyBatchAsync]
+cudaMemcpyAsync call:[cudaMemcpyWithAttributesAsync] noreturn:[cudaMemcpyWithAttributesAsync]
+cudaOccupancyMaxActiveBlocksPerMultiprocessor call:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags] noreturn:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags]
+cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags call:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags] noreturn:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags]
+__cudaOccupancyB2DHelper
+operator()
+cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags call:[blockSizeToDynamicSMemSize,cudaDeviceGetAttribute,cudaFuncGetAttributes,cudaGetDevice,cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags]
+cudaOccupancyMaxPotentialBlockSizeVariableSMem call:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags] noreturn:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags]
+cudaOccupancyMaxPotentialBlockSize call:[__cudaOccupancyB2DHelper,cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags] noreturn:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags]
+cudaOccupancyAvailableDynamicSMemPerBlock call:[cudaOccupancyAvailableDynamicSMemPerBlock] noreturn:[cudaOccupancyAvailableDynamicSMemPerBlock]
+cudaOccupancyMaxPotentialBlockSizeWithFlags call:[__cudaOccupancyB2DHelper,cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags] noreturn:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags]
+cudaOccupancyMaxPotentialClusterSize call:[cudaOccupancyMaxPotentialClusterSize] noreturn:[cudaOccupancyMaxPotentialClusterSize]
+cudaOccupancyMaxActiveClusters call:[cudaOccupancyMaxActiveClusters] noreturn:[cudaOccupancyMaxActiveClusters]
+CameraCalibration
+CameraCalibration
+CameraCalibration
+fx
+fy
+cx
+cy
+GetDeviceBoundingBox
+PoseMatrix
+PoseMatrix
+AddModel call:[push_back,size] noreturn:[push_back]
+GetModelPose call:[at,size]
+GetModelPose call:[at,size]
+UpdatePrincipalModelPose call:[at]

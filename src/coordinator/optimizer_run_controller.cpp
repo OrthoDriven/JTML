@@ -98,21 +98,6 @@ bool OptimizerRunController::start(const OptimizerRunRequest& req) {
         return false;
     }
 
-    /*Seed (M10a): applied AFTER the gate so a rejected run never consumes
-     * it; snapshot kept so an Initialize failure restores the pre-seed
-     * pose (the estimate-wins-over-drift guarantee survives a failed run —
-     * the estimate's own storage write is untouched).*/
-    const auto seed = core_.takeSeedForRun(
-        req.current_frame, gate.intent.primary_model_index, req.model_count);
-    Point6D seed_snapshot;
-    bool have_seed_snapshot = false;
-    if (seed.applied && req.storage) {
-        seed_snapshot = req.storage->GetPose(seed.frame, seed.model);
-        have_seed_snapshot = true;
-        req.storage->SavePose(seed.frame, seed.model, seed.pose);
-        emit seedApplied(seed.frame, seed.model);
-    }
-
     /*Payload refresh (review fix P1-2): the SaveLastPose mirror AND the
      * seed write above both landed in req.storage — the manager's
      * Initialize consumes launch.pose_matrix (the by-value copy the view
@@ -170,12 +155,6 @@ bool OptimizerRunController::start(const OptimizerRunRequest& req) {
         if (driver_) {
             driver_->Start();
         }
-        /*M10a: restore the pre-seed snapshot on the failure path (the
-         * estimate is not silently kept).*/
-        if (have_seed_snapshot && req.storage) {
-            req.storage->SavePose(seed.frame, seed.model, seed_snapshot);
-            emit seedRestored(seed.frame, seed.model);
-        }
         core_.onInitializeFailed();
         emit runStateChanged();
         emit messageRequested(
@@ -201,23 +180,6 @@ void OptimizerRunController::stop() {
     core_.requestStop();
     emit runStateChanged();
 }
-
-void OptimizerRunController::applySeedPose(
-    LocationStorage* storage,
-    int current_frame,
-    int primary_model_index,
-    int model_count) {
-    if (!storage) {
-        return;
-    }
-    const auto seed =
-        core_.takeSeedForRun(current_frame, primary_model_index, model_count);
-    if (seed.applied) {
-        storage->SavePose(seed.frame, seed.model, seed.pose);
-        emit seedApplied(seed.frame, seed.model);
-    }
-}
-
 /*---- Lifecycle ----*/
 
 OptimizerRunController::OptimizerRunController(

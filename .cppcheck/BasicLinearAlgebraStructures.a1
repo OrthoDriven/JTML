@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="815235063171610928">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/app/Study2Grid/BasicLinearAlgebraStructures.cpp" functionName="RotatePoint" lineNumber="42" column="29"/>
+    <functioncall functionName="RotationMatrixZXY"/>
+    <functioncall functionName="XYPoint"/>
+    <functioncall functionName="XYZPoint"/>
+    <functioncall functionName="cos"/>
+    <functioncall functionName="sin"/>
+  </FileInfo>
+</analyzerinfo>

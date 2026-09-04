@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="16481322638154063004">
+  <FileInfo check="Class">
+<class name="CameraCalibration" file="include/compute/camera_calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="12" col="1" hash="12896866910451944345"/>
+<class name="Vect_3" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="20" col="1" hash="11040844689123257424"/>
+<class name="Matrix_3_3" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="39" col="1" hash="5819584710834062145"/>
+<class name="Calibration" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="89" col="1" hash="10691475651608726459"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/session_controller.h:130:21" my-argnr="1" my-argname="paths" file="src/services/session_controller.cpp" line="150" col="25" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:139:21" my-argnr="1" my-argname="paths_a" file="src/services/session_controller.cpp" line="197" col="9" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:139:21" my-argnr="2" my-argname="paths_b" file="src/services/session_controller.cpp" line="197" col="27" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:148:37" my-argnr="1" my-argname="paths" file="src/services/session_controller.cpp" line="266" col="40" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:155:10" my-argnr="1" my-argname="parsed_models" file="src/services/session_controller.cpp" line="279" col="42" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:190:10" my-argnr="1" my-argname="frames" file="src/services/session_controller.cpp" line="345" col="37" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:190:10" my-argnr="2" my-argname="locations" file="src/services/session_controller.cpp" line="346" col="20" value="0"/>
+    <unsafe-usage my-id="include/services/session_controller.h:193:10" my-argnr="1" my-argname="models" file="src/services/session_controller.cpp" line="350" col="37" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/compute/camera_calibration.h" functionName="fx" lineNumber="83" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="fy" lineNumber="86" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="cx" lineNumber="89" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="cy" lineNumber="92" column="11"/>
+    <functiondecl file="include/services/calibration.h" functionName="tranpose" lineNumber="83" column="16"/>
+    <functiondecl file="include/services/calibration.h" functionName="multiplication_mat_mat" lineNumber="136" column="16"/>
+    <functiondecl file="include/services/calibration.h" functionName="multiplication_mat_vec" lineNumber="150" column="12"/>
+    <functiondecl file="include/services/calibration.h" functionName="convert_Pose_A_to_Pose_B" lineNumber="160" column="13"/>
+    <functiondecl file="include/services/calibration.h" functionName="convert_Pose_B_to_Pose_A" lineNumber="247" column="13"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="ParseCalibration" lineNumber="29" column="43"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="ParseImages" lineNumber="144" column="36"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="ParseBiplaneImages" lineNumber="188" column="36"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="ParseModels" lineNumber="263" column="45"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="PopulateModels" lineNumber="273" column="25"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="SetActiveCamera" lineNumber="297" column="25"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="GetActiveCamera" lineNumber="301" column="33"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="DecideCameraRadios" lineNumber="305" column="39"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="SyncSessionState" lineNumber="342" column="25"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="SyncSessionState" lineNumber="349" column="25"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="GetFrameCount" lineNumber="353" column="24"/>
+    <functiondecl file="src/services/session_controller.cpp" functionName="GetModelCount" lineNumber="357" column="24"/>
+    <functioncall functionName="AllSameSize"/>
+    <functioncall functionName="Calibration"/>
+    <functioncall functionName="CameraCalibration"/>
+    <functioncall functionName="Frame"/>
+    <functioncall functionName="GetEdgeImage"/>
+    <functioncall functionName="GetModelCount"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="LoadNewFrame"/>
+    <functioncall functionName="LoadNewModel"/>
+    <functioncall functionName="Mat"/>
+    <functioncall functionName="Matrix_3_3"/>
+    <functioncall functionName="Model"/>
+    <functioncall functionName="Point"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="Point_"/>
+    <functioncall functionName="QFileInfo"/>
+    <functioncall functionName="QList"/>
+    <functioncall functionName="QRegularExpression"/>
+    <functioncall functionName="QString"/>
+    <functioncall functionName="ReadOnly"/>
+    <functioncall functionName="SkipEmptyParts"/>
+    <functioncall functionName="SyncSessionState"/>
+    <functioncall functionName="Vect_3"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="asin"/>
+    <functioncall functionName="atan2"/>
+    <functioncall functionName="baseName"/>
+    <functioncall functionName="close"/>
+    <functioncall functionName="cols"/>
+    <functioncall functionName="cos"/>
+    <functioncall functionName="emplace_back"/>
+    <functioncall functionName="multiplication_mat_mat"/>
+    <functioncall functionName="multiplication_mat_vec"/>
+    <functioncall functionName="open"/>
+    <functioncall functionName="pair"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="readAll"/>
+    <functioncall functionName="reserve"/>
+    <functioncall functionName="rows"/>
+    <functioncall functionName="sin"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="split"/>
+    <functioncall functionName="stop"/>
+    <functioncall functionName="stop_biplane"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toDouble"/>
+    <functioncall functionName="toStdString"/>
+    <functioncall functionName="tranpose"/>
+    <functioncall functionName="uchar"/>
+    <functioncall functionName="vector"/>
+    <functioncall functionName="vtkSTLReader"/>
+    <functioncall functionName="vtkSmartPointer"/>
+  </FileInfo>
+</analyzerinfo>

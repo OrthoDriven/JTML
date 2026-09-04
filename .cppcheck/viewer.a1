@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="18305339567888993262">
+  <FileInfo check="Bounds checking">
+    <array-index>
+    <unsafe-usage my-id="include/view/viewer.h:72:10" my-argnr="2" my-argname="RGB" file="src/view/viewer.cpp" line="236" col="9" value="0"/>
+    </array-index>
+  </FileInfo>
+  <FileInfo check="Class">
+<class name="CameraCalibration" file="include/compute/camera_calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NETWORK_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_QMLINTEGRATION_LIB=1;QT_QML_LIB=1;QT_QUICKCONTROLS2_LIB=1;QT_QUICKWIDGETS_LIB=1;QT_QUICK_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="12" col="1" hash="12896866910451944345"/>
+<class name="Vect_3" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NETWORK_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_QMLINTEGRATION_LIB=1;QT_QML_LIB=1;QT_QUICKCONTROLS2_LIB=1;QT_QUICKWIDGETS_LIB=1;QT_QUICK_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="20" col="1" hash="11040844689123257424"/>
+<class name="Matrix_3_3" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NETWORK_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_QMLINTEGRATION_LIB=1;QT_QML_LIB=1;QT_QUICKCONTROLS2_LIB=1;QT_QUICKWIDGETS_LIB=1;QT_QUICK_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="39" col="1" hash="5819584710834062145"/>
+<class name="Calibration" file="include/services/calibration.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NETWORK_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_QMLINTEGRATION_LIB=1;QT_QML_LIB=1;QT_QUICKCONTROLS2_LIB=1;QT_QUICKWIDGETS_LIB=1;QT_QUICK_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="89" col="1" hash="10691475651608726459"/>
+  </FileInfo>
+  <FileInfo check="Null pointer">
+    <unsafe-usage my-id="include/view/viewer.h:72:10" my-argnr="2" my-argname="RGB" file="src/view/viewer.cpp" line="236" col="9" value="0"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/view/viewer.h:72:10" my-argnr="2" my-argname="RGB" file="src/view/viewer.cpp" line="236" col="9" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/compute/camera_calibration.h" functionName="fx" lineNumber="83" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="fy" lineNumber="86" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="cx" lineNumber="89" column="11"/>
+    <functiondecl file="include/compute/camera_calibration.h" functionName="cy" lineNumber="92" column="11"/>
+    <functiondecl file="include/services/calibration.h" functionName="tranpose" lineNumber="83" column="16"/>
+    <functiondecl file="include/services/calibration.h" functionName="multiplication_mat_mat" lineNumber="136" column="16"/>
+    <functiondecl file="include/services/calibration.h" functionName="multiplication_mat_vec" lineNumber="150" column="12"/>
+    <functiondecl file="include/services/calibration.h" functionName="convert_Pose_A_to_Pose_B" lineNumber="160" column="13"/>
+    <functiondecl file="include/services/calibration.h" functionName="convert_Pose_B_to_Pose_A" lineNumber="247" column="13"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="ViewingAngleFromCalibration" lineNumber="20" column="8"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="initialize_vtk_pointers" lineNumber="35" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="initialize_vtk_mappers" lineNumber="59" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="initialize_vtk_renderers" lineNumber="74" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="load_render_window" lineNumber="78" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_renderer" lineNumber="83" column="38"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_number_of_model_actors" lineNumber="87" column="13"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_actor_image" lineNumber="91" column="35"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_current_background" lineNumber="95" column="39"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_stl_reader" lineNumber="99" column="39"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_image_mapper" lineNumber="103" column="43"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_actor_text" lineNumber="107" column="39"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_importer" lineNumber="111" column="41"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="update_display_background" lineNumber="115" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="make_image_invisible" lineNumber="125" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_loaded_frames" lineNumber="129" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_loaded_frames_b" lineNumber="133" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="update_display_background_to_edge_image" lineNumber="137" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="update_display_background_to_original_image" lineNumber="147" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="update_display_background_to_dilation_image" lineNumber="156" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="update_display_background_to_inverted_image" lineNumber="165" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="setup_camera_calibration" lineNumber="174" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="setup_camera_coronal_plane" lineNumber="182" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="place_image_actors_according_to_calibration" lineNumber="186" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="load_3d_models_into_actor_and_mapper_list" lineNumber="200" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="load_model_actors_and_mappers_with_3d_data" lineNumber="218" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_model_mapper_list" lineNumber="226" column="9"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_model_actor_list" lineNumber="230" column="48"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_3d_model_color" lineNumber="234" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="load_models" lineNumber="239" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="are_models_loaded_correctly" lineNumber="246" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="are_models_loaded_incorrectly" lineNumber="250" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="change_model_opacity_to_original" lineNumber="254" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="change_model_opacity_to_wire_frame" lineNumber="263" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="change_model_opacity_to_transparent" lineNumber="272" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="change_model_opacity_to_solid" lineNumber="281" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_model_position_at_index" lineNumber="290" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_model_orientation_at_index" lineNumber="298" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="print_location_and_orientation_of_model_at_index" lineNumber="306" column="21"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_actor_text" lineNumber="331" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_actor_text_color_to_model_color_at_index" lineNumber="335" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="render_scene" lineNumber="340" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="display_actors_in_renderer" lineNumber="345" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_render_window_and_display" lineNumber="349" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_model_orientation_at_index" lineNumber="361" column="17"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_model_position_at_index" lineNumber="365" column="17"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="make_model_invisible_and_nonpickable_at_index" lineNumber="369" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="make_model_visible_and_pickable_at_index" lineNumber="374" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="make_all_models_invisible" lineNumber="378" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_loaded_models" lineNumber="385" column="45"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="load_renderers_into_render_window" lineNumber="389" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="print_render_window" lineNumber="406" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="make_actor_text_invisible" lineNumber="410" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="make_actor_text_visible" lineNumber="414" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="load_in_interactor_style" lineNumber="418" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="model_actor_list_size" lineNumber="423" column="13"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_model_actor_at_index" lineNumber="427" column="19"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="print_interactor_information" lineNumber="431" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="get_interactor" lineNumber="438" column="52"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_vtk_camera_from_calibration_and_image_size_if_jta" lineNumber="442" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="set_vtk_camera_from_calibration_and_image_if_camera_matrix" lineNumber="463" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="calculate_and_set_window_center_from_calibration" lineNumber="479" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="windowCenterSet" lineNumber="491" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="update_window_center_on_resize" lineNumber="495" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="calculate_and_set_camera_aspect_from_calibration" lineNumber="506" column="14"/>
+    <functiondecl file="src/view/viewer.cpp" functionName="print_scene_camera_directions" lineNumber="530" column="14"/>
+    <functioncall functionName="AddActor"/>
+    <functioncall functionName="AddRenderer"/>
+    <functioncall functionName="ApplySceneCameraProjection"/>
+    <functioncall functionName="BuildModelActor"/>
+    <functioncall functionName="Calibration"/>
+    <functioncall functionName="CameraCalibration"/>
+    <functioncall functionName="ConfigureBackgroundChain"/>
+    <functioncall functionName="Get"/>
+    <functioncall functionName="GetActiveCamera"/>
+    <functioncall functionName="GetActors"/>
+    <functioncall functionName="GetColor"/>
+    <functioncall functionName="GetDilationImage"/>
+    <functioncall functionName="GetEdgeImage"/>
+    <functioncall functionName="GetElement"/>
+    <functioncall functionName="GetFocalPoint"/>
+    <functioncall functionName="GetInvertedImage"/>
+    <functioncall functionName="GetNumberOfItems"/>
+    <functioncall functionName="GetOrientation"/>
+    <functioncall functionName="GetOriginalImage"/>
+    <functioncall functionName="GetOutputPort"/>
+    <functioncall functionName="GetPointer"/>
+    <functioncall functionName="GetPosition"/>
+    <functioncall functionName="GetProjectionTransformMatrix"/>
+    <functioncall functionName="GetProperty"/>
+    <functioncall functionName="GetRenderWindow"/>
+    <functioncall functionName="GetRenderers"/>
+    <functioncall functionName="GetSize"/>
+    <functioncall functionName="GetTextProperty"/>
+    <functioncall functionName="GetViewPlaneNormal"/>
+    <functioncall functionName="GetViewUp"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Identity"/>
+    <functioncall functionName="Mat"/>
+    <functioncall functionName="Matrix_3_3"/>
+    <functioncall functionName="Model"/>
+    <functioncall functionName="New"/>
+    <functioncall functionName="PickableOff"/>
+    <functioncall functionName="PickableOn"/>
+    <functioncall functionName="PlaceBackgroundImage"/>
+    <functioncall functionName="Point"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="Point_"/>
+    <functioncall functionName="Print"/>
+    <functioncall functionName="QString"/>
+    <functioncall functionName="RefreshBackgroundImport"/>
+    <functioncall functionName="Render"/>
+    <functioncall functionName="SafeDownCast"/>
+    <functioncall functionName="SetAmbient"/>
+    <functioncall functionName="SetColor"/>
+    <functioncall functionName="SetDiffuse"/>
+    <functioncall functionName="SetElement"/>
+    <functioncall functionName="SetFontFamilyToCourier"/>
+    <functioncall functionName="SetFontSize"/>
+    <functioncall functionName="SetInput"/>
+    <functioncall functionName="SetInteractorStyle"/>
+    <functioncall functionName="SetMatrix"/>
+    <functioncall functionName="SetOpacity"/>
+    <functioncall functionName="SetOrientation"/>
+    <functioncall functionName="SetPickable"/>
+    <functioncall functionName="SetPosition"/>
+    <functioncall functionName="SetPosition2"/>
+    <functioncall functionName="SetRenderWindow"/>
+    <functioncall functionName="SetRepresentationToSurface"/>
+    <functioncall functionName="SetRepresentationToWireframe"/>
+    <functioncall functionName="SetUserTransform"/>
+    <functioncall functionName="SetViewUp"/>
+    <functioncall functionName="SetVisibility"/>
+    <functioncall functionName="SetWindowCenter"/>
+    <functioncall functionName="SetWindowName"/>
+    <functioncall functionName="SetupBackgroundCamera"/>
+    <functioncall functionName="SetupLayeredRenderers"/>
+    <functioncall functionName="SetupSceneCameraFocal"/>
+    <functioncall functionName="Start"/>
+    <functioncall functionName="Vect_3"/>
+    <functioncall functionName="Viewer"/>
+    <functioncall functionName="ViewingAngleFromCalibration"/>
+    <functioncall functionName="VisibilityOff"/>
+    <functioncall functionName="VisibilityOn"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="asin"/>
+    <functioncall functionName="at"/>
+    <functioncall functionName="atan2"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="calculate_and_set_camera_aspect_from_calibration"/>
+    <functioncall functionName="calculate_and_set_window_center_from_calibration"/>
+    <functioncall functionName="cos"/>
+    <functioncall functionName="cx"/>
+    <functioncall functionName="cy"/>
+    <functioncall functionName="fx"/>
+    <functioncall functionName="fy"/>
+    <functioncall functionName="initialize_vtk_mappers"/>
+    <functioncall functionName="initialize_vtk_pointers"/>
+    <functioncall functionName="initialize_vtk_renderers"/>
+    <functioncall functionName="make_shared"/>
+    <functioncall functionName="multiplication_mat_mat"/>
+    <functioncall functionName="multiplication_mat_vec"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="shared_ptr"/>
+    <functioncall functionName="sin"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="toStdString"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="tranpose"/>
+    <functioncall functionName="uchar"/>
+    <functioncall functionName="update_display_background"/>
+    <functioncall functionName="vector"/>
+    <functioncall functionName="vtkCamera"/>
+    <functioncall functionName="vtkInteractorStyleTrackballActor"/>
+    <functioncall functionName="vtkMatrix4x4"/>
+    <functioncall functionName="vtkRenderWindowInteractor"/>
+    <functioncall functionName="vtkSTLReader"/>
+    <functioncall functionName="vtkSmartPointer"/>
+    <functioncall functionName="vtkTextActor"/>
+    <functioncall functionName="vtkTransform"/>
+  </FileInfo>
+</analyzerinfo>

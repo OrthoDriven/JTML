@@ -231,9 +231,6 @@ private:
     std::vector<Model> loaded_models;
     /*Location Storage Class*/
     LocationStorage model_locations_;
-
-    QModelIndexList selected_model_indices();
-
     /*List view-models (plan 004 U2): write-once display-name models behind
      * the two passive QListViews (ui.image_list_widget / model_list_widget).
      * MainScreen's list bookkeeping (addItem/count/currentRow) is gone; the
@@ -375,18 +372,11 @@ private:
         std::string pt_model_location,
         unsigned int input_width,
         unsigned int input_height);
-
-    // Helper function for sym_trap to get information about the current pose
-    Point6D copy_current_pose();
-
     bool sym_trap_running;
 
     void update_image_list_widget(); /*Updates ui.image_list_widget*/
 
 public Q_SLOTS:
-    // Call Optimizer Launch
-    void optimizer_launch_slot();
-
     /*Load Buttons*/
     void on_load_calibration_button_clicked(); /*Load Calibration Clicked*/
     void on_load_image_button_clicked();       /*Load Images*/

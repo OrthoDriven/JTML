@@ -39,7 +39,8 @@
       "binaryDir": "${sourceDir}/.build",
 
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "JTML_BUILD_EXPERIMENTAL": false
       }
     },
 
@@ -51,14 +52,11 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
 
-        "CMAKE_CXX_FLAGS_RELWITHDEBINFO":
-          "-O3 -g -DNDEBUG -fno-omit-frame-pointer -funwind-tables",
+        "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-O3 -g -DNDEBUG -fno-omit-frame-pointer -funwind-tables",
 
-        "CMAKE_C_FLAGS_RELWITHDEBINFO":
-          "-O3 -g -DNDEBUG -fno-omit-frame-pointer -funwind-tables",
+        "CMAKE_C_FLAGS_RELWITHDEBINFO": "-O3 -g -DNDEBUG -fno-omit-frame-pointer -funwind-tables",
 
-        "CMAKE_CUDA_FLAGS_RELWITHDEBINFO":
-          "-O3 -g -DNDEBUG -lineinfo -Xcompiler=-fno-omit-frame-pointer -Xcompiler=-funwind-tables",
+        "CMAKE_CUDA_FLAGS_RELWITHDEBINFO": "-O3 -g -DNDEBUG -lineinfo -Xcompiler=-fno-omit-frame-pointer -Xcompiler=-funwind-tables",
 
         "JTML_BUILD_TESTS": false,
         "JTML_BUILD_EXPERIMENTAL": false,
@@ -75,9 +73,7 @@
     {
       "name": "profile",
       "configurePreset": "profile",
-      "targets": [
-        "joint-track-machine-learning"
-      ]
+      "targets": ["joint-track-machine-learning"]
     }
   ]
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8624745110147394685">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="src/coordinator/optimizer_stage_script.cpp:32:6" my-argnr="1" my-argname="settings" file="src/coordinator/optimizer_stage_script.cpp" line="34" col="25" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterName" lineNumber="52" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterValue" lineNumber="57" column="21"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="setParameterValue" lineNumber="60" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterType" lineNumber="65" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterName" lineNumber="101" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterValue" lineNumber="106" column="18"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="setParameterValue" lineNumber="109" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterType" lineNumber="114" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterName" lineNumber="147" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterValue" lineNumber="152" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="setParameterValue" lineNumber="155" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterType" lineNumber="160" column="26"/>
+    <functiondecl file="include/compute/CostFunction.h" functionName="to_string" lineNumber="29" column="28"/>
+    <functiondecl file="include/compute/CostFunction.h" functionName="cost_function_type_from_string" lineNumber="40" column="43"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="ThrowIfNegative" lineNumber="20" column="6"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="ValidateSettings" lineNumber="32" column="6"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="IsNormalDirective" lineNumber="49" column="6"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="BuildStageScript" lineNumber="56" column="13"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="CumulativeStageCaps" lineNumber="128" column="27"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="DeriveStageCostParams" lineNumber="145" column="17"/>
+    <functiondecl file="src/coordinator/optimizer_stage_script.cpp" functionName="ReservedStubGraphNames" lineNumber="181" column="33"/>
+    <functioncall functionName="CostFunction"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="IsNormalDirective"/>
+    <functioncall functionName="OptimizerSettings"/>
+    <functioncall functionName="Parameter"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="ThrowIfNegative"/>
+    <functioncall functionName="ValidateSettings"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="getParameterName"/>
+    <functioncall functionName="getParameterValue"/>
+    <functioncall functionName="invalid_argument"/>
+    <functioncall functionName="max"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

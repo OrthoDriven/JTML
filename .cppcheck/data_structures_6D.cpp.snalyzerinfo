@@ -1,0 +1,18 @@
+Point6D
+Point6D
+Point6D
+GetDistanceFrom call:[sqrt] noreturn:[sqrt]
+new_point call:[Point6D]
+to_array
+GetLargestDirection call:[max_element]
+GetDirection
+UpdateDirection
+HyperBox6D call:[sqrt] noreturn:[sqrt]
+HyperBox6D call:[Point6D,sqrt] noreturn:[sqrt]
+SetSides call:[sqrt] noreturn:[sqrt]
+GetSides
+containsPoint
+SetCenter
+GetCenter
+TrisectSide call:[sqrt] noreturn:[sqrt]
+PrintCenter

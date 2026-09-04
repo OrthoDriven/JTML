@@ -1,0 +1,115 @@
+swap call:[swap] noreturn:[swap]
+Slice
+operator+
+swap call:[swap] noreturn:[swap]
+swap call:[swap] noreturn:[swap]
+operator() call:[return]
+operator*
+Slice call:[sliceInit] noreturn:[sliceInit]
+Slice call:[assert,sliceInit] noreturn:[sliceInit]
+data call:[slicePtr]
+size call:[sliceLen] noreturn:[sliceLen]
+length call:[size] noreturn:[size]
+empty call:[size]
+operator[] call:[assert,size,slicePtr]
+at call:[return,size]
+front call:[assert,empty,return]
+back call:[assert,empty,return,size]
+operator*
+operator->
+operator[]
+operator++
+operator++ call:[iterator]
+operator--
+operator-- call:[iterator]
+operator+=
+operator-=
+operator+ call:[iterator]
+operator- call:[iterator]
+operator- call:[distance]
+operator==
+operator!=
+operator<
+operator<=
+operator>
+operator>=
+begin call:[slicePtr]
+end call:[begin,size]
+swap call:[swap] noreturn:[swap]
+allocation
+allocation call:[dealloc] noreturn:[dealloc]
+Box
+Box call:[T,new]
+Box call:[T,move,new]
+Box call:[drop] noreturn:[drop]
+operator= call:[drop] noreturn:[drop]
+operator->
+operator*
+operator->
+operator*
+in_place call:[from_raw,new] noreturn:[from_raw]
+swap call:[swap] noreturn:[swap]
+from_raw
+into_raw
+Box
+Vec call:[back_inserter,begin,end,move,reserve_total,size] noreturn:[move]
+Vec call:[back_inserter,begin,copy,end,reserve_total,size] noreturn:[copy]
+Vec call:[Vec,new] noreturn:[Vec]
+Vec call:[drop] noreturn:[drop]
+operator= call:[Vec,drop,new]
+operator= call:[Vec,drop,new] noreturn:[Vec]
+empty call:[size]
+data call:[data]
+operator[] call:[assert,data,size]
+at call:[return,size]
+front call:[assert,empty,return]
+back call:[assert,empty,return,size]
+operator[] call:[assert,data,size]
+at call:[return,size]
+front call:[assert,empty,return]
+back call:[assert,empty,return,size]
+reserve call:[reserve_total] noreturn:[reserve_total]
+push_back call:[emplace_back] noreturn:[emplace_back]
+push_back call:[emplace_back,move] noreturn:[emplace_back]
+emplace_back call:[T,data,new,reserve_total,set_len,size] noreturn:[set_len]
+clear call:[truncate] noreturn:[truncate]
+begin call:[begin,data,size] noreturn:[begin]
+end call:[data,end,size] noreturn:[end]
+begin call:[cbegin] noreturn:[cbegin]
+end call:[cend] noreturn:[cend]
+cbegin call:[begin,data,size] noreturn:[begin]
+cend call:[data,end,size] noreturn:[end]
+swap call:[swap] noreturn:[swap]
+Vec
+do_size_of call:[size] noreturn:[size]
+do_size_of call:[sizeof] noreturn:[sizeof]
+size_of
+do_align_of call:[align] noreturn:[align]
+do_align_of call:[alignof] noreturn:[alignof]
+align_of
+size_of
+align_of
+CppCost
+evaluate call:[fn_,quiet_NaN] noreturn:[fn_,quiet_NaN]
+evaluate_batch call:[fn_,point,push_back,quiet_NaN,reserve,size] noreturn:[push_back]
+IsBound
+Options
+UnitCenter call:[Point6D] noreturn:[Point6D]
+ValidateOptions call:[invalid_argument] noreturn:[invalid_argument]
+DirectOptimizer call:[ValidateOptions]
+DirectOptimizer call:[ValidateOptions]
+Run call:[ConvexHull,DirectDataStorage,EvaluateCostFunction,TrisectPotentiallyOptimal,UnitCenter,has_value,iteration_callback_,size] noreturn:[iteration_callback_]
+GetCostFunctionCalls
+GetOptimumLocation
+GetOptimumValue
+Stop
+SetCallOffset
+SetIterationCallback call:[move] noreturn:[move]
+SetImprovementCallback call:[move] noreturn:[move]
+SetBatchCost call:[move] noreturn:[move]
+ConvexHull call:[GetMinimumHyperboxValue,GetNumberColumns,GetSizeStoredInColumn,clear,push_back] noreturn:[push_back]
+TrisectPotentiallyOptimal call:[AddHyperBox,DeleteHyperBoxes,DenormalizeFromCenter,DenormalizeRange,EvaluateCostFunction,GetCenter,GetDirection,GetLargestDirection,GetMinimumHyperbox,GetSides,HyperBox6D,SetCenter,TrisectSide,UpdateDirection,batch_cost_,clear,has_value,improvement_callback_,invalid_argument,isfinite,iteration_callback_,make_changed,push_back,size,store_or_delete] noreturn:[AddHyperBox,improvement_callback_,invalid_argument,iteration_callback_,make_changed,push_back,store_or_delete]
+GetNonFiniteCount
+EvaluateCostFunction call:[DenormalizeFromCenter,cost_impl,decltype,evaluate,improvement_callback_,isfinite,iteration_callback_,visit] noreturn:[cost_impl,evaluate,improvement_callback_,iteration_callback_]
+DenormalizeRange call:[Point6D] noreturn:[Point6D]
+DenormalizeFromCenter call:[Point6D] noreturn:[Point6D]

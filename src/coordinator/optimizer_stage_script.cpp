@@ -177,20 +177,4 @@ StageCostParams DeriveStageCostParams(
     }
     return out;
 }
-
-const std::vector<std::string>& ReservedStubGraphNames() {
-    /*Future kinds recorded as data-only stubs (R6), NOT exercised: the polish
-     * stage (R5's future StageKind), the ML initializer prefix (origin
-     * R15/R16), and the flood-direct-jta shape (the lineage 3-branch / 50k +
-     * 15k×3 + 50k config with the (5,5,20,5,5,5) leaf, angle 04 R3-1).
-     * Requesting one fails fast with the stub error below until a follow-up
-     * plan registers it.*/
-    static const std::vector<std::string> names = {
-        "jtml-polish-stage",
-        "jtml-initializer-prefix",
-        "jtml-flood-direct-jta",
-    };
-    return names;
-}
-
 }  // namespace jta

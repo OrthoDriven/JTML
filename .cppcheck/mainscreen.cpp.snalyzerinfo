@@ -1,0 +1,453 @@
+CameraCalibration
+CameraCalibration
+CameraCalibration
+fx
+fy
+cx
+cy
+Vect_3
+Vect_3
+Matrix_3_3
+Matrix_3_3
+tranpose call:[Matrix_3_3] noreturn:[Matrix_3_3]
+Calibration
+Calibration
+Calibration
+multiplication_mat_mat call:[Matrix_3_3] noreturn:[Matrix_3_3]
+multiplication_mat_vec call:[Vect_3] noreturn:[Vect_3]
+convert_Pose_A_to_Pose_B call:[Point6D,R_x,R_y,R_z,Vect_3,asin,atan2,cos,multiplication_mat_mat,multiplication_mat_vec,sin,tranpose] noreturn:[Point6D,atan2]
+convert_Pose_B_to_Pose_A call:[Point6D,R_x,R_y,R_z,Vect_3,asin,atan2,cos,multiplication_mat_mat,multiplication_mat_vec,sin] noreturn:[Point6D,atan2]
+settings_impl_storage
+settings_impl call:[settings_impl_storage] noreturn:[settings_impl_storage]
+set_settings_impl call:[settings_impl_storage]
+Frame
+LocationStorage
+LocationStorage
+Model
+RunInFlight call:[run_in_flight_]
+state
+running
+canStart
+onRunStarted
+requestStop
+onInitializeFailed
+onOptimizerError
+onTerminalFrame
+epoch
+stageText
+costCalls
+currentMinimum
+progress
+clearSeedPose
+hasSeedPose
+swap call:[swap] noreturn:[swap]
+Slice
+operator+
+swap call:[swap] noreturn:[swap]
+swap call:[swap] noreturn:[swap]
+operator() call:[return]
+operator*
+Slice call:[sliceInit] noreturn:[sliceInit]
+Slice call:[assert,sliceInit] noreturn:[sliceInit]
+data call:[slicePtr]
+size call:[sliceLen] noreturn:[sliceLen]
+length call:[size] noreturn:[size]
+empty call:[size]
+operator[] call:[assert,size,slicePtr]
+at call:[return,size]
+front call:[assert,empty,return]
+back call:[assert,empty,return,size]
+operator*
+operator->
+operator[]
+operator++
+operator++ call:[iterator]
+operator--
+operator-- call:[iterator]
+operator+=
+operator-=
+operator+ call:[iterator]
+operator- call:[iterator]
+operator- call:[distance]
+operator==
+operator!=
+operator<
+operator<=
+operator>
+operator>=
+begin call:[slicePtr]
+end call:[begin,size]
+swap call:[swap] noreturn:[swap]
+allocation
+allocation call:[dealloc] noreturn:[dealloc]
+Box
+Box call:[T,new]
+Box call:[T,move,new]
+Box call:[drop] noreturn:[drop]
+operator= call:[drop] noreturn:[drop]
+operator->
+operator*
+operator->
+operator*
+in_place call:[from_raw,new] noreturn:[from_raw]
+swap call:[swap] noreturn:[swap]
+from_raw
+into_raw
+Box
+Vec call:[back_inserter,begin,end,move,reserve_total,size] noreturn:[move]
+Vec call:[back_inserter,begin,copy,end,reserve_total,size] noreturn:[copy]
+Vec call:[Vec,new] noreturn:[Vec]
+Vec call:[drop] noreturn:[drop]
+operator= call:[Vec,drop,new]
+operator= call:[Vec,drop,new] noreturn:[Vec]
+empty call:[size]
+data call:[data]
+operator[] call:[assert,data,size]
+at call:[return,size]
+front call:[assert,empty,return]
+back call:[assert,empty,return,size]
+operator[] call:[assert,data,size]
+at call:[return,size]
+front call:[assert,empty,return]
+back call:[assert,empty,return,size]
+reserve call:[reserve_total] noreturn:[reserve_total]
+push_back call:[emplace_back] noreturn:[emplace_back]
+push_back call:[emplace_back,move] noreturn:[emplace_back]
+emplace_back call:[T,data,new,reserve_total,set_len,size] noreturn:[set_len]
+clear call:[truncate] noreturn:[truncate]
+begin call:[begin,data,size] noreturn:[begin]
+end call:[data,end,size] noreturn:[end]
+begin call:[cbegin] noreturn:[cbegin]
+end call:[cend] noreturn:[cend]
+cbegin call:[begin,data,size] noreturn:[begin]
+cend call:[data,end,size] noreturn:[end]
+swap call:[swap] noreturn:[swap]
+Vec
+do_size_of call:[size] noreturn:[size]
+do_size_of call:[sizeof] noreturn:[sizeof]
+size_of
+do_align_of call:[align] noreturn:[align]
+do_align_of call:[alignof] noreturn:[alignof]
+align_of
+size_of
+align_of
+CppCost
+evaluate call:[fn_,quiet_NaN] noreturn:[fn_,quiet_NaN]
+evaluate_batch call:[fn_,point,push_back,quiet_NaN,reserve,size] noreturn:[push_back]
+IsBound
+dim3
+dim3
+operatoruint3
+cudaCreateChannelDesc call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf1 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf2 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescHalf4 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < signed char > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned char > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uchar1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uchar2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < char4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uchar4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned short > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ushort1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ushort2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < short4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ushort4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned int > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uint1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uint2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < int4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < uint4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < unsigned long > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ulong1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ulong2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < long4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < ulong4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float1 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float2 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < float4 > call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDescNV12 call:[cudaCreateChannelDesc,sizeof] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized8X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized8X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized8X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized8X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized8X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized8X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized16X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized16X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedNormalized16X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized16X1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized16X2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized16X4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindNV12 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedNormalized1010102 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed1 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed1SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed2 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed2SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed3 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed3SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedBlockCompressed4 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed5 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedBlockCompressed5 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed6H > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindSignedBlockCompressed6H > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed7 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsignedBlockCompressed7SRGB > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Packed422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Packed444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8SemiPlanar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16SemiPlanar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8SemiPlanar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16SemiPlanar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8SemiPlanar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16SemiPlanar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Planar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16Planar420 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Planar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16Planar422 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned8Planar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+cudaCreateChannelDesc < cudaChannelFormatKindUnsigned16Planar444 > call:[cudaCreateChannelDesc] noreturn:[cudaCreateChannelDesc]
+make_cudaPitchedPtr
+make_cudaPos
+make_cudaExtent
+make_char1
+make_uchar1
+make_char2
+make_uchar2
+make_char3
+make_uchar3
+make_char4
+make_uchar4
+make_short1
+make_ushort1
+make_short2
+make_ushort2
+make_short3
+make_ushort3
+make_short4
+make_ushort4
+make_int1
+make_uint1
+make_int2
+make_uint2
+make_int3
+make_uint3
+make_int4
+make_uint4
+make_long1
+make_ulong1
+make_long2
+make_ulong2
+make_long3
+make_ulong3
+make_long4
+make_ulong4
+make_long4_16a
+make_long4_32a
+make_ulong4_16a
+make_ulong4_32a
+make_float1
+make_float2
+make_float3
+make_float4
+make_longlong1
+make_ulonglong1
+make_longlong2
+make_ulonglong2
+make_longlong3
+make_ulonglong3
+make_longlong4
+make_ulonglong4
+make_longlong4_16a
+make_longlong4_32a
+make_ulonglong4_16a
+make_ulonglong4_32a
+make_double1
+make_double2
+make_double3
+make_double4
+make_double4_16a
+make_double4_32a
+cudaLaunchKernel call:[cudaLaunchKernel] noreturn:[cudaLaunchKernel]
+cudaLaunchKernelEx call:[cudaLaunchKernelExC] noreturn:[cudaLaunchKernelExC]
+cudaLaunchKernelEx call:[cudaLaunchKernelExC] noreturn:[cudaLaunchKernelExC]
+cudaLaunchCooperativeKernel call:[cudaLaunchCooperativeKernel] noreturn:[cudaLaunchCooperativeKernel]
+cudaEventCreate call:[cudaEventCreateWithFlags] noreturn:[cudaEventCreateWithFlags]
+cudaGraphInstantiate call:[cudaGraphInstantiate] noreturn:[cudaGraphInstantiate]
+cudaMallocHost call:[cudaHostAlloc] noreturn:[cudaHostAlloc]
+cudaHostAlloc call:[cudaHostAlloc] noreturn:[cudaHostAlloc]
+cudaHostGetDevicePointer call:[cudaHostGetDevicePointer] noreturn:[cudaHostGetDevicePointer]
+cudaMallocManaged call:[cudaMallocManaged] noreturn:[cudaMallocManaged]
+cudaMemPrefetchBatchAsync call:[cudaMemPrefetchBatchAsync] noreturn:[cudaMemPrefetchBatchAsync]
+cudaMemPrefetchBatchAsync call:[cudaMemPrefetchBatchAsync] noreturn:[cudaMemPrefetchBatchAsync]
+cudaMemDiscardAndPrefetchBatchAsync call:[cudaMemDiscardAndPrefetchBatchAsync] noreturn:[cudaMemDiscardAndPrefetchBatchAsync]
+cudaMemDiscardAndPrefetchBatchAsync call:[cudaMemDiscardAndPrefetchBatchAsync] noreturn:[cudaMemDiscardAndPrefetchBatchAsync]
+cudaStreamAttachMemAsync call:[cudaStreamAttachMemAsync] noreturn:[cudaStreamAttachMemAsync]
+cudaMalloc call:[cudaMalloc] noreturn:[cudaMalloc]
+cudaMallocHost call:[cudaMallocHost] noreturn:[cudaMallocHost]
+cudaMallocPitch call:[cudaMallocPitch] noreturn:[cudaMallocPitch]
+cudaMallocAsync call:[cudaMallocFromPoolAsync] noreturn:[cudaMallocFromPoolAsync]
+cudaMallocAsync call:[cudaMallocFromPoolAsync] noreturn:[cudaMallocFromPoolAsync]
+cudaMallocAsync call:[cudaMallocAsync] noreturn:[cudaMallocAsync]
+cudaMallocFromPoolAsync call:[cudaMallocFromPoolAsync] noreturn:[cudaMallocFromPoolAsync]
+cudaMemcpyBatchAsync call:[cudaMemcpyBatchAsync] noreturn:[cudaMemcpyBatchAsync]
+cudaMemcpyBatchAsync call:[cudaMemcpyBatchAsync] noreturn:[cudaMemcpyBatchAsync]
+cudaMemcpyAsync call:[cudaMemcpyWithAttributesAsync] noreturn:[cudaMemcpyWithAttributesAsync]
+cudaOccupancyMaxActiveBlocksPerMultiprocessor call:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags] noreturn:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags]
+cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags call:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags] noreturn:[cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags]
+__cudaOccupancyB2DHelper
+operator()
+cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags call:[blockSizeToDynamicSMemSize,cudaDeviceGetAttribute,cudaFuncGetAttributes,cudaGetDevice,cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags]
+cudaOccupancyMaxPotentialBlockSizeVariableSMem call:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags] noreturn:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags]
+cudaOccupancyMaxPotentialBlockSize call:[__cudaOccupancyB2DHelper,cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags] noreturn:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags]
+cudaOccupancyAvailableDynamicSMemPerBlock call:[cudaOccupancyAvailableDynamicSMemPerBlock] noreturn:[cudaOccupancyAvailableDynamicSMemPerBlock]
+cudaOccupancyMaxPotentialBlockSizeWithFlags call:[__cudaOccupancyB2DHelper,cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags] noreturn:[cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags]
+cudaOccupancyMaxPotentialClusterSize call:[cudaOccupancyMaxPotentialClusterSize] noreturn:[cudaOccupancyMaxPotentialClusterSize]
+cudaOccupancyMaxActiveClusters call:[cudaOccupancyMaxActiveClusters] noreturn:[cudaOccupancyMaxActiveClusters]
+GetDeviceBoundingBox
+GetPrimaryRenderEngine
+DirectDilationObjective
+Options
+Parameter < double >
+Parameter < double >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+Parameter < int >
+Parameter < int >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+Parameter < bool >
+Parameter < bool >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+to_string
+getStage
+invert_transformation
+matmult
+create_312_transform call:[cos,sin]
+runState call:[state] noreturn:[state]
+running call:[running] noreturn:[running]
+canRun call:[canStart] noreturn:[canStart]
+stageText call:[fromStdString,stageText] noreturn:[fromStdString]
+costCalls call:[costCalls] noreturn:[costCalls]
+currentMinimum call:[currentMinimum] noreturn:[currentMinimum]
+progress call:[progress] noreturn:[progress]
+setSeedPose call:[setSeedPose] noreturn:[setSeedPose]
+clearSeedPose call:[clearSeedPose] noreturn:[clearSeedPose]
+hasSeedPose call:[hasSeedPose] noreturn:[hasSeedPose]
+sessionState
+initialize_MainScreen
+initialize_viewer
+ActivePick
+scene_ready call:[GetNumberOfItems,GetRenderWindow,GetRenderers]
+OnChar call:[GetKeySym,VTKEscapeSignal] noreturn:[VTKEscapeSignal]
+update_info_text global:[information,interactor_calibration,interactor_camera_B,speed] call:[GetColor,GetOrientation,GetPosition,GetProperty,GetTextProperty,SetColor,SetInput,SetOpacity,c_str,convert_Pose_B_to_Pose_A,format_pose,get_actor_text,pose] noreturn:[SetColor,convert_Pose_B_to_Pose_A]
+OnKeyPress global:[information,speed] call:[GetControlKey,GetKeySym,GetPosition,GetRenderWindow,GetShiftKey,OnKeyPress,Render,RotateX,RotateY,RotateZ,SafeDownCast,SetPosition,VTKMakePrincipalSignal,get_interactor,make_actor_text_invisible,make_actor_text_visible,update_info_text] noreturn:[OnKeyPress,Render,make_actor_text_invisible,make_actor_text_visible]
+OnLeftButtonDown global:[leftDown] call:[OnLeftButtonDown,scene_ready] noreturn:[OnLeftButtonDown]
+OnRightButtonDown global:[rightDown,rightDownModelZ,rightDownY] call:[GetPosition,OnRightButtonDown,SafeDownCast,pos,y]
+OnMiddleButtonDown global:[middleDown] call:[OnMiddleButtonDown] noreturn:[OnMiddleButtonDown]
+OnLeftButtonUp global:[leftDown] call:[GetRenderWindow,OnLeftButtonUp,Render,SafeDownCast,update_info_text] noreturn:[OnLeftButtonUp]
+OnRightButtonUp global:[rightDown] call:[OnRightButtonUp] noreturn:[OnRightButtonUp]
+OnMiddleButtonUp global:[middleDown] call:[OnMiddleButtonUp] noreturn:[OnMiddleButtonUp]
+OnMouseMove global:[leftDown,middleDown,rightDown,rightDownModelZ,rightDownY] call:[GetPosition,GetRenderWindow,OnMouseMove,Render,SafeDownCast,SetPosition,get_model_actor_at_index,pos,update_info_text,y] noreturn:[OnMouseMove,Render,SetPosition]
+format_pose call:[n,to_string] noreturn:[n,to_string]
+OnChar
+curr_frame call:[GetCurrentFrame,SyncSessionState] noreturn:[GetCurrentFrame]
+SyncSessionState call:[UpdateSession,currentIndex,model,push_back,reserve,row,rowCount,selectedRows,selectionModel,size] noreturn:[UpdateSession,push_back]
+CalculateViewingAngle call:[abs,atan2] noreturn:[atan2]
+MainScreen global:[FONT_SIZE,MINIMUM_HEIGHT,MINIMUM_WIDTH,key_press_vtk] call:[ArrangeMainScreenLayout,AutoAdjustCameraClippingRangeOff,GetTextProperty,GlobalWarningDisplayOff,LoadSettingsBetweenSessions,LocationStorage,New,QActionGroup,QPixmap,QSize,Render,SaveSettings,SetColor,SetFontFamilyToCourier,SetFontSize,SetInputData,SetMapper,SetPickable,SetPosition2,SettingsControl,addAction,application_font,availableGeometry,connect,get_actor_image,get_actor_text,get_current_background,get_image_mapper,get_model_actor_list,get_model_mapper_list,get_renderer,get_stl_reader,height,initialize_MainScreen,initialize_viewer,initialize_vtk_mappers,initialize_vtk_pointers,initialize_vtk_renderers,isEmpty,load_in_interactor_style,load_render_window,number,onSaveSettings,primaryScreen,renderWindow,resize,screens,selectionModel,setChecked,setDisabled,setEnabled,setFont,setHeightForWidth,setIcon,setMaximum,setMinimum,setMinimumSize,setModel,setSelectionMode,setSizePolicy,setText,setValue,setVisible,setupUi,showMaximized,sizePolicy,update,value,width] noreturn:[availableGeometry,setSizePolicy,showMaximized]
+MainScreen
+ArrangeMainScreenLayout global:[APPLICATION_BORDER_TO_GROUP_BOX_PADDING_X,APPLICATION_BORDER_TO_GROUP_BOX_PADDING_Y,BUTTON_TO_BUTTON_PADDING_X,BUTTON_TO_BUTTON_PADDING_Y,GROUP_BOX_TO_BUTTON_PADDING_X,GROUP_BOX_TO_BUTTON_PADDING_Y,GROUP_BOX_TO_GROUP_BOX_Y,GROUP_BOX_TO_QVTK_PADDING_X,INSIDE_BUTTON_PADDING_RIGHT_COLUMN_X,INSIDE_BUTTON_PADDING_X,INSIDE_BUTTON_PADDING_Y,INSIDE_RADIO_BUTTON_PADDING_X,INSIDE_RADIO_BUTTON_PADDING_Y,INSIDE_SPIN_BOX_PADDING_X,INSIDE_SPIN_BOX_PADDING_Y,LABEL_TO_SPIN_BOX_PADDING_X,MINIMUM_LIST_WIDGET_SIZE,MINIMUM_QVTK_WIDGET_WIDTH,RADIO_BUTTON_TO_LIST_WIDGET_PADDING_Y,SPIN_BOX_TO_GROUP_BOX_PADDING_X,SPIN_BOX_TO_SPIN_BOX_PADDING_Y] call:[QRect,bottom,bottomLeft,font_metrics,geometry,height,horizontalAdvance,left,max,number,resize,right,setGeometry,setHeight,setMinimumHeight,setMinimumWidth,setStyleSheet,styleSheet,text,title,top,width,y] noreturn:[height,horizontalAdvance,setGeometry]
+resizeEvent call:[processEvents,resizeEvent,update_window_center_on_resize,windowCenterSet] noreturn:[update_window_center_on_resize]
+on_actionSave_Pose_triggered call:[CheckSelection,GetPose,GetPrimaryModelIndex,SaveLastPose,WritePoseFile,critical,currentIndex,getSaveFileName,isChecked,row,selectedRows,selectionModel,size,toStdString,tr] noreturn:[WritePoseFile]
+on_actionSave_Kinematics_triggered call:[CheckSelection,GetPose,GetPrimaryModelIndex,SaveLastPose,WriteKinematicsFile,critical,currentIndex,getSaveFileName,isChecked,model,push_back,reserve,row,rowCount,selectedRows,selectionModel,size,toStdString,tr] noreturn:[WriteKinematicsFile,push_back]
+on_actionLoad_Pose_triggered call:[CheckSelection,GetPrimaryModelIndex,ReadPoseFile,Render,SavePose,critical,currentIndex,getOpenFileName,isChecked,renderWindow,row,selectedRows,selectionModel,set_model_orientation_at_index,set_model_position_at_index,size,toStdString,tr,update] noreturn:[Render]
+on_actionCopy_Previous_Pose_triggered call:[CheckSelection,GetPose,GetPrimaryModelIndex,PreviousPose,Render,SavePose,critical,currentIndex,isChecked,model,renderWindow,row,rowCount,selectedRows,selectionModel,set_model_orientation_at_index,set_model_position_at_index,size,update] noreturn:[Render]
+copy_current_pose call:[CheckSelection,GetPose,GetPrimaryModelIndex,Point6D,critical,currentIndex,isChecked,row,selectedRows,selectionModel,size] noreturn:[Point6D]
+on_actionCopy_Next_Pose_triggered call:[CheckSelection,GetPose,GetPrimaryModelIndex,NextPose,Render,SavePose,critical,currentIndex,isChecked,model,renderWindow,row,rowCount,selectedRows,selectionModel,set_model_orientation_at_index,set_model_position_at_index,size,update] noreturn:[Render]
+on_actionLoad_Kinematics_triggered call:[CheckSelection,GetPose,GetPrimaryModelIndex,ReadKinematicsFile,Render,SavePose,critical,currentIndex,getOpenFileName,has_value,isChecked,model,renderWindow,row,rowCount,selectedRows,selectionModel,set_model_orientation_at_index,set_model_position_at_index,size,toStdString,tr,update] noreturn:[Render,SavePose]
+optimizer_launch_slot call:[LaunchOptimizer] noreturn:[LaunchOptimizer]
+on_actionStop_Optimizer_triggered call:[isEnabled,stop,warning] noreturn:[warning]
+on_actionReset_View_triggered global:[key_press_vtk] call:[CalculateViewingAngle,GetActiveCamera,GetInteractor,GetOriginalImage,GetPosition,Render,SetClippingRange,SetFocalPoint,SetInteractorStyle,SetPosition,SetViewAngle,SetViewUp,currentIndex,isChecked,renderWindow,row,selectedRows,selectionModel,size,update] noreturn:[Render,SetFocalPoint,SetViewAngle]
+on_actionReset_Normal_Up_triggered call:[GetActiveCamera,Render,SetViewUp,renderWindow,update] noreturn:[Render]
+on_actionModel_Interaction_Mode_triggered global:[key_press_vtk] call:[GetInteractor,Render,SetInteractorStyle,critical,renderWindow,setChecked,size,update] noreturn:[Render]
+on_actionCamera_Interaction_Mode_triggered call:[GetActiveCamera,GetInteractor,GetPosition,Render,SetFocalPoint,SetInteractorStyle,critical,renderWindow,row,selectedRows,selectionModel,setChecked,size,update] noreturn:[Render,SetFocalPoint]
+on_actionAbout_JointTrack_Auto_triggered global:[VER_FIRST_NUM,VER_LAST_NUM,VER_MIDDLE_NUM] call:[exec,setVersion] noreturn:[exec]
+on_actionSegment_FemHR_triggered call:[getOpenFileName,segmentHelperFunction,toStdString,tr] noreturn:[segmentHelperFunction]
+on_actionSegment_TibHR_triggered call:[getOpenFileName,segmentHelperFunction,toStdString,tr] noreturn:[segmentHelperFunction]
+update_image_list_widget call:[Render,curr_frame,isChecked,renderWindow,update,update_display_background_to_dilation_image,update_display_background_to_edge_image,update_display_background_to_inverted_image,update_display_background_to_original_image] noreturn:[Render,update_display_background_to_dilation_image,update_display_background_to_edge_image,update_display_background_to_inverted_image,update_display_background_to_original_image]
+segmentHelperFunction call:[Render,SegmentFrame,critical,currentIndex,fromStdString,getDilation,isChecked,isEmpty,join,load,model,module,number,push_back,renderWindow,row,rowCount,setText,setValue,update,update_image_list_widget,value,value_or] noreturn:[Render,SegmentFrame,push_back,update_image_list_widget]
+on_actionReset_Remove_All_Segmentation_triggered call:[ResetFromOriginal,currentIndex,model,row,rowCount,update_image_list_widget] noreturn:[ResetFromOriginal,update_image_list_widget]
+on_actionEstimate_Femoral_Implant_s_triggered call:[EstimateFrame,EstimateImplantPose,GPUModel,GetInvertedImage,GetPose,QString,Render,SavePose,SetOrientation,SetPosition,critical,currentIndex,device,dtype,free,fromStdString,getOpenFileName,gpu_byte_placeholder,isChecked,isEmpty,join,load,malloc,model,module,number,on_actionSegment_FemHR_triggered,processEvents,push_back,readAnySTL,renderWindow,row,rowCount,selectedRows,selectionModel,setText,setValue,setVisible,size,sizeof,toStdString,tr,update,zeros] noreturn:[EstimateImplantPose,SavePose,processEvents,push_back,setVisible]
+on_actionEstimate_Tibial_Implant_s_triggered call:[EstimateFrame,EstimateImplantPose,GPUModel,GetInvertedImage,GetPose,Render,SavePose,SetOrientation,SetPosition,critical,currentIndex,device,dtype,free,fromStdString,getOpenFileName,gpu_byte_placeholder,isChecked,isEmpty,join,load,malloc,model,module,number,on_actionSegment_TibHR_triggered,processEvents,push_back,readAnySTL,renderWindow,row,rowCount,selectedRows,selectionModel,setText,setValue,setVisible,size,sizeof,toStdString,tr,update,zeros] noreturn:[EstimateImplantPose,SavePose,processEvents,push_back,setVisible]
+on_actionControls_triggered call:[exec] noreturn:[exec]
+on_actionOptimizer_Settings_triggered call:[activateWindow,dialog,exec,raise,settings_impl,show]
+on_load_calibration_button_clicked global:[interactor_calibration,interactor_camera_B] call:[CalculateViewingAngle,DecideCameraRadios,GetActiveCamera,GetOriginalImage,LoadCalibration,SetClippingRange,SetFocalPoint,SetPosition,SetViewAngle,critical,curr_frame,currentIndex,getOpenFileName,load_renderers_into_render_window,place_image_actors_according_to_calibration,row,setChecked,setDisabled,setEnabled,setup_camera_calibration,setup_camera_coronal_plane,tr] noreturn:[SetViewAngle,setDisabled]
+on_load_image_button_clicked call:[AppendFrame,LoadBiplaneImages,LoadImages,SyncSessionState,critical,currentIndex,getDilation,getOpenFileNames,index,model,row,selectionModel,setCurrentIndex,set_loaded_frames,set_loaded_frames_b,size,tr,value,value_or] noreturn:[AppendFrame,SyncSessionState,critical,setCurrentIndex]
+on_load_model_button_clicked call:[AppendModels,GetOriginalImage,LoadModels,SyncSessionState,are_models_loaded_incorrectly,critical,empty,getOpenFileNames,index,load_3d_models_into_actor_and_mapper_list,load_model_actors_and_mappers_with_3d_data,load_models,model,selectedRows,selectionModel,setCurrentIndex,set_vtk_camera_from_calibration_and_image_if_camera_matrix,set_vtk_camera_from_calibration_and_image_size_if_jta,size,tr,warning] noreturn:[AppendModels,SyncSessionState,setCurrentIndex,set_vtk_camera_from_calibration_and_image_if_camera_matrix,set_vtk_camera_from_calibration_and_image_size_if_jta,warning]
+on_camera_A_radio_button_clicked global:[interactor_camera_B] call:[CalculateViewingAngle,DecideCameraRadios,GetActiveCamera,GetAperture,GetHighThreshold,GetLowThreshold,GetOpacity,GetOrientation,GetOriginalImage,GetPose,GetPosition,GetPreviousFrame,GetTextProperty,Point6D,Render,SaveLastPoseToStorage,SetActiveCamera,SetInput,SetOrientation,SetPosition,SetViewAngle,c_str,convert_Pose_B_to_Pose_A,curr_frame,currentIndex,place_image_actors_according_to_calibration,push_back,renderWindow,reserve,row,selectedRows,selectionModel,setEnabled,setValue,size,to_string,update,update_image_list_widget] noreturn:[Point6D,Render,SaveLastPoseToStorage,SetInput,SetOrientation,push_back]
+on_camera_B_radio_button_clicked global:[interactor_camera_B] call:[CalculateViewingAngle,DecideCameraRadios,GetActiveCamera,GetAperture,GetHighThreshold,GetLowThreshold,GetOpacity,GetOriginalImage,GetPose,GetPreviousFrame,GetTextProperty,Point6D,Render,SaveLastPoseToStorage,SetActiveCamera,SetViewAngle,convert_Pose_A_to_Pose_B,currentIndex,get_model_orientation_at_index,get_model_position_at_index,place_image_actors_according_to_calibration,print_location_and_orientation_of_model_at_index,push_back,renderWindow,reserve,row,selectedRows,selectionModel,setEnabled,setValue,set_actor_text,set_model_orientation_at_index,set_model_position_at_index,size,update,update_image_list_widget] noreturn:[Point6D,Render,SaveLastPoseToStorage,push_back,set_model_orientation_at_index]
+on_image_list_widget_itemSelectionChanged call:[CalculateViewingAngle,CommitSelection,GetActiveCamera,GetAperture,GetHighThreshold,GetLowThreshold,GetOpacity,GetOriginalImage,GetPose,GetTextProperty,Render,SaveLastPose,SetPosition,SetViewAngle,SyncSessionState,VisibilityOff,VisibilityOn,change_model_opacity_to_original,change_model_opacity_to_solid,change_model_opacity_to_transparent,change_model_opacity_to_wire_frame,convert_Pose_A_to_Pose_B,curr_frame,currentIndex,isChecked,place_image_actors_according_to_calibration,print_location_and_orientation_of_model_at_index,renderWindow,row,selectedRows,selectionModel,setChecked,setValue,set_actor_text,set_actor_text_color_to_model_color_at_index,set_model_orientation_at_index,set_model_position_at_index,size,update,update_image_list_widget] noreturn:[Render,SaveLastPose,SetViewAngle,VisibilityOff,VisibilityOn,change_model_opacity_to_original,change_model_opacity_to_solid,change_model_opacity_to_transparent,change_model_opacity_to_wire_frame,setChecked,setValue,set_actor_text_color_to_model_color_at_index]
+selected_model_indices call:[selectedRows,selectionModel] noreturn:[selectedRows]
+on_model_list_widget_itemSelectionChanged call:[CommitSelection,GetOpacity,GetPose,GetTextProperty,Render,SaveLastPose,SyncSessionState,VisibilityOff,VisibilityOn,change_model_opacity_to_original,change_model_opacity_to_solid,change_model_opacity_to_transparent,change_model_opacity_to_wire_frame,convert_Pose_A_to_Pose_B,currentIndex,index,isChecked,make_all_models_invisible,model,print_location_and_orientation_of_model_at_index,renderWindow,row,select,selectedRows,selectionModel,setStyleSheet,set_3d_model_color,set_actor_text,set_actor_text_color_to_model_color_at_index,set_model_orientation_at_index,set_model_position_at_index,size,update] noreturn:[Render,SaveLastPose,VisibilityOn,change_model_opacity_to_original,change_model_opacity_to_solid,change_model_opacity_to_transparent,change_model_opacity_to_wire_frame,set_3d_model_color,set_actor_text_color_to_model_color_at_index]
+VTKMakePrincipalSignal call:[GetColor,GetOpacity,GetOrientation,GetPose,GetPosition,GetProperty,GetTextProperty,Render,SetColor,SetInput,SetOrientation,SetPosition,c_str,change_model_opacity_to_original,change_model_opacity_to_solid,change_model_opacity_to_transparent,change_model_opacity_to_wire_frame,convert_Pose_A_to_Pose_B,critical,currentIndex,get_model_actor_at_index,index,isChecked,model,model_actor_list_size,renderWindow,row,select,selectedRows,selectionModel,size,to_string,update] noreturn:[Render,SetColor,SetInput,change_model_opacity_to_wire_frame,select]
+on_single_model_radio_button_clicked call:[selectedRows,selectionModel,setCurrentIndex,setSelectionMode,size] noreturn:[setCurrentIndex]
+on_multiple_model_radio_button_clicked call:[setSelectionMode] noreturn:[setSelectionMode]
+on_original_image_radio_button_clicked call:[Render,curr_frame,isChecked,renderWindow,update,update_display_background_to_original_image] noreturn:[Render,update_display_background_to_original_image]
+on_inverted_image_radio_button_clicked call:[Render,curr_frame,isChecked,renderWindow,update,update_display_background_to_inverted_image] noreturn:[Render,update_display_background_to_inverted_image]
+on_edges_image_radio_button_clicked call:[Render,curr_frame,isChecked,renderWindow,update,update_display_background_to_edge_image] noreturn:[Render,update_display_background_to_edge_image]
+on_dilation_image_radio_button_clicked call:[Render,curr_frame,isChecked,renderWindow,update,update_display_background_to_dilation_image] noreturn:[Render,update_display_background_to_dilation_image]
+on_original_model_radio_button_clicked call:[Render,change_model_opacity_to_original,isChecked,renderWindow,row,selectedRows,selectionModel,size,update] noreturn:[Render]
+on_solid_model_radio_button_clicked call:[Render,change_model_opacity_to_solid,isChecked,renderWindow,row,selectedRows,selectionModel,size,update] noreturn:[Render]
+on_transparent_model_radio_button_clicked call:[Render,change_model_opacity_to_transparent,isChecked,renderWindow,row,selectedRows,selectionModel,size,update] noreturn:[Render]
+on_wireframe_model_radio_button_clicked call:[GetPose,Pose,Render,change_model_opacity_to_wire_frame,height,isChecked,renderWindow,row,selectedRows,selectionModel,size,update,width] noreturn:[Render]
+keyPressEvent call:[GetOpacity,GetPose,GetTextProperty,Render,SetOpacity,convert_Pose_A_to_Pose_B,currentIndex,isChecked,isEnabled,key,renderWindow,row,selectedRows,selectionModel,set_model_orientation_at_index,set_model_position_at_index,size,stop,update,warning] noreturn:[Render,SetOpacity,set_model_orientation_at_index,warning]
+VTKEscapeSignal call:[isEnabled,stop,warning] noreturn:[warning]
+on_aperture_spin_box_valueChanged global:[HIGH_THRESH,LOW_THRESH] call:[ApplyToFrame,GetHighThreshold,GetLowThreshold,SaveEdgeSettings,currentIndex,getActiveCostFunction,getDilation,isChecked,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked,row,size,string,to_string,value,value_or] noreturn:[ApplyToFrame,GetHighThreshold,SaveEdgeSettings,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked]
+on_low_threshold_slider_valueChanged global:[APERTURE,HIGH_THRESH] call:[ApplyToFrame,GetAperture,GetHighThreshold,SaveEdgeSettings,currentIndex,getActiveCostFunction,getDilation,isChecked,number,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked,row,setText,size,string,to_string,value,value_or] noreturn:[ApplyToFrame,GetHighThreshold,SaveEdgeSettings,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked]
+on_high_threshold_slider_valueChanged global:[APERTURE,LOW_THRESH] call:[ApplyToFrame,GetAperture,GetLowThreshold,SaveEdgeSettings,currentIndex,getActiveCostFunction,getDilation,isChecked,number,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked,row,setText,size,string,to_string,value,value_or] noreturn:[ApplyToFrame,GetLowThreshold,SaveEdgeSettings,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked]
+on_apply_all_edge_button_clicked call:[ApplyToFrames,SaveEdgeSettings,currentIndex,getActiveCostFunction,getDilation,isChecked,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked,row,string,to_string,value,value_or] noreturn:[ApplyToFrames,SaveEdgeSettings,on_dilation_image_radio_button_clicked,on_edges_image_radio_button_clicked,on_inverted_image_radio_button_clicked,on_original_image_radio_button_clicked]
+on_reset_edge_button_clicked global:[APERTURE,HIGH_THRESH,LOW_THRESH] call:[setValue] noreturn:[setValue]
+on_optimize_button_clicked call:[LaunchOptimizer] noreturn:[LaunchOptimizer]
+on_optimize_all_button_clicked call:[LaunchOptimizer] noreturn:[LaunchOptimizer]
+on_optimize_each_button_clicked call:[LaunchOptimizer] noreturn:[LaunchOptimizer]
+on_optimize_from_button_clicked call:[LaunchOptimizer] noreturn:[LaunchOptimizer]
+on_actionOptimize_Backward_triggered call:[LaunchOptimizer] noreturn:[LaunchOptimizer]
+DisableAll call:[setDisabled,setEnabled] noreturn:[setEnabled]
+EnableAll call:[setDisabled,setEnabled] noreturn:[setDisabled,setEnabled]
+SaveLastPose call:[GetPreviousFrame,GetPreviousModelRows,Point6D,SaveLastPoseToStorage,get_model_orientation_at_index,get_model_position_at_index,isChecked] noreturn:[Point6D,SaveLastPoseToStorage]
+LaunchOptimizer call:[DisableAll,GetFrameCount,GetModelCount,GetPreviousFrame,GetPreviousModelRows,GetTextProperty,Point6D,SetColor,currentIndex,get_model_orientation_at_index,get_model_position_at_index,index,isChecked,model,push_back,reserve,row,selectedRows,selectionModel,setCurrentIndex,size,start] noreturn:[Point6D,push_back,setCurrentIndex]
+updateOrientationSymTrap_MS call:[Render,SavePose,currentIndex,new_orientation,renderWindow,row,selectedRows,selectionModel,set_model_orientation_at_index,set_model_position_at_index,update] noreturn:[Render]
+onUpdateOptimum call:[Point6D,Render,convert_Pose_A_to_Pose_B,isChecked,renderWindow,set_model_orientation_at_index,set_model_position_at_index,size,update] noreturn:[Render,convert_Pose_A_to_Pose_B]
+onOptimizedFrame call:[EnableAll,Point6D,Render,convert_Pose_A_to_Pose_B,critical,currentIndex,index,information,isChecked,model,renderWindow,row,rowCount,selectionModel,setCurrentIndex,set_model_orientation_at_index,set_model_position_at_index,update] noreturn:[Render,convert_Pose_A_to_Pose_B,critical,information,setCurrentIndex]
+onControllerMessage call:[critical,information,warning]
+onUpdateDisplay call:[GetTextProperty,Point6D,Render,SetColor,SetInput,c_str,convert_Pose_B_to_Pose_A,div,get_model_orientation_at_index,get_model_position_at_index,isChecked,renderWindow,setfill,setw,str,to_string,update] noreturn:[Render,convert_Pose_B_to_Pose_A]
+onUpdateDilationBackground call:[Render,isChecked,on_dilation_image_radio_button_clicked,renderWindow,update] noreturn:[Render]
+LoadSettingsBetweenSessions global:[APERTURE,HIGH_THRESH,LOW_THRESH] call:[BuildCostFunctionRegistryEntries,CostFunctionManager,LoadSettings,MarkFirstTimeDone,OptimizerSettings,SaveCostFunctionSettings,SaveEdgeSettings,SaveOptimizerSettings,cost_function_type_from_string,critical,cudaGetDeviceCount,cudaGetDeviceProperties,getCostFunctionClass,setActiveCostFunction,setBoolParameterValue,setDoubleParameterValue,setIntParameterValue,setValue,size,split,toBool,toDouble,toInt,toStdString,toString,value] noreturn:[MarkFirstTimeDone,SaveEdgeSettings,critical,setActiveCostFunction,setBoolParameterValue,setDoubleParameterValue,setIntParameterValue,setValue]
+onSaveSettings call:[BuildCostFunctionRegistryEntries,SaveCostFunctionSettings,SaveOptimizerSettings,UpdateDilationFrames] noreturn:[UpdateDilationFrames]
+BuildCostFunctionRegistryEntries call:[BuildCostFunctionRegistryEntries] noreturn:[BuildCostFunctionRegistryEntries]
+UpdateDilationFrames call:[Render,SetDilatedImage,currentIndex,getDilation,isChecked,on_dilation_image_radio_button_clicked,renderWindow,row,size,update,value_or] noreturn:[Render,SetDilatedImage]
+on_actionAmbiguous_Pose_Processing_triggered call:[GetPose,GetSelectedModels,Render,SavePose,SetOrientation,SetPosition,critical,model,renderWindow,row,rowCount,selectedRows,selectionModel,size,tibial_pose_selector,update] noreturn:[Render,SavePose]

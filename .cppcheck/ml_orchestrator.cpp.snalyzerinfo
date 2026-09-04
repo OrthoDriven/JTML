@@ -1,0 +1,3 @@
+Frame
+SegmentFrame call:[GetInvertedImage,GetOriginalImage,SetDilatedImage,SetDistanceMap,SetEdgeImage,copyTo,empty,segment_op,setCurvatureHeatmaps] noreturn:[segment_op,setCurvatureHeatmaps]
+EstimateFrame call:[estimate_op,save_pose] noreturn:[estimate_op,save_pose]

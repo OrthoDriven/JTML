@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="16307033174986139734">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/compute/objective_spec.cpp" functionName="getDilation" lineNumber="5" column="20"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="optional"/>
+    <functioncall functionName="visit"/>
+  </FileInfo>
+</analyzerinfo>

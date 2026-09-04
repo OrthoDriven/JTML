@@ -53,7 +53,6 @@ public:
     vtkSmartPointer<vtkSTLReader> get_stl_reader();
     vtkSmartPointer<vtkDataSetMapper> get_image_mapper();
     vtkSmartPointer<vtkTextActor> get_actor_text();
-    vtkSmartPointer<vtkImageImport> get_importer();
 
     void update_display_background(cv::Mat desiredBackground);
     void set_importer_output_to_background();
@@ -71,7 +70,6 @@ public:
     std::vector<vtkSmartPointer<vtkActor>> get_model_actor_list();
     void set_3d_model_color(int index, double RGB[3]);
     void load_models(QStringList cad_files, QStringList cad_models);
-    bool are_models_loaded_correctly(int index);
     bool are_models_loaded_incorrectly(int index);
     void change_model_opacity_to_original(int index);
     void change_model_opacity_to_wire_frame(int index);
@@ -88,14 +86,8 @@ public:
     std::string print_location_and_orientation_of_model_at_index(int index);
     void set_actor_text(std::string desired_text);
     void set_actor_text_color_to_model_color_at_index(int index);
-    void render_scene();
-    void display_actors_in_renderer();
     int get_number_of_model_actors();
 
-    void set_render_window_and_display();
-    void make_image_invisible();
-    void make_model_invisible_and_nonpickable_at_index(int index);
-    void make_model_visible_and_pickable_at_index(int index);
     void make_all_models_invisible();
 
     // Changing Background Functions
@@ -117,7 +109,6 @@ public:
     void load_render_window(vtkSmartPointer<vtkRenderWindow> in);
 
     std::shared_ptr<std::vector<Model>> get_loaded_models();
-    void print_render_window();
     void make_actor_text_invisible();
     void make_actor_text_visible();
 
@@ -125,7 +116,6 @@ public:
         vtkSmartPointer<vtkInteractorStyleTrackballActor> in);
     int model_actor_list_size();
 
-    void print_interactor_information();
     vtkActor* get_model_actor_at_index(int index);
     vtkSmartPointer<vtkRenderWindowInteractor> get_interactor();
 
@@ -149,7 +139,6 @@ public:
         int w,
         int h);
 
-    void print_scene_camera_directions();
 
     bool windowCenterSet();
 

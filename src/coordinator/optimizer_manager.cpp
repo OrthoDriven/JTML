@@ -12,7 +12,6 @@
 #include <thread>
 #include <utility>
 
-#include "compute/batch_outcome.h"
 #include "compute/gpu_heatmaps.cuh"
 #include "compute/gpu_model.cuh"
 #include "compute/pose_matrix.h"
@@ -620,46 +619,6 @@ bool OptimizerManager::Initialize(
         }
     }
 
-    /*Upload distance maps*/
-    for (auto& i : frames_A_) {
-        auto* distance_map = new GPUFrame(
-            width, height, cuda_device_id, i.GetDistanceMap().data);
-        if (distance_map->IsInitializedCorrectly()) {
-            gpu_distance_maps_.push_back(distance_map);
-
-        } else {
-            delete distance_map;
-            error_message = "Error uploading distance map to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    for (auto& i : frames_A_) {
-        /*Owner fix (2026-08-12): curvature heatmaps only exist after an ML
-         * segmentation (Frame::setCurvatureHeatmaps); a study loaded
-         * without segmentation has none, and the upload must not abort the
-         * run. The GPUHeatmap ctor treats num_keypoints <= 0 as a
-         * legitimate no-upload state (initialized, 0 keypoints), keeping
-         * the vector frame-aligned so the cost functions' per-frame at(i)
-         * access stays valid (GetNumKeypoints() == 0 -> the curvature
-         * costs no-op; the distance-map costs are unaffected).*/
-        auto frame_heatmaps = i.getCurvatureHeatmaps();
-        auto* heatmap = new GPUHeatmap(
-            width,
-            height,
-            cuda_device_id,
-            i.GetNumCurvatureKeypoints(),
-            frame_heatmaps.empty() ? nullptr : frame_heatmaps.data());
-        if (heatmap->IsInitializedCorrectly()) {
-            gpu_heatmaps_.push_back(heatmap);
-        } else {
-            delete heatmap;
-            error_message = "Error uploading heatmap to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-
     /*Upload GPU Models*/
     /*Monoplane Calibration*/
     if (!calibration_.biplane_calibration) {
@@ -810,9 +769,6 @@ bool OptimizerManager::Initialize(
         gpu_metrics_,
         &pose_storage_,
         calibration_.biplane_calibration);
-    trunk_manager_.UploadDistanceMap(&gpu_distance_maps_, &gpu_heatmaps_);
-    branch_manager_.UploadDistanceMap(&gpu_distance_maps_, &gpu_heatmaps_);
-    leaf_manager_.UploadDistanceMap(&gpu_distance_maps_, &gpu_heatmaps_);
 
     return succesfull_initialization_;
 };
@@ -1302,12 +1258,6 @@ void OptimizerManager::ResetStageDilation(size_t frame_index, int dilation) {
             cv::Point(-1, -1),
             dilation); /*Reset Dilation In That Image*/
     }
-    emit UpdateDilationBackground();
-    // Plan 012 U2: bump upload epoch for generation identity (C7) — CPU dilate
-    // rewrites shared frames_A_/B_
-    trunk_manager_.BumpUploadEpoch();
-    branch_manager_.BumpUploadEpoch();
-    leaf_manager_.BumpUploadEpoch();
 }
 
 void OptimizerManager::RunDirectStage(
@@ -1595,11 +1545,6 @@ bool RunDirectStageGuarded(::DirectOptimizer& opt, QString* errorOut) {
             errorOut->clear();
         }
         return true;
-    } catch (const gpu_cost_function::CoordinatorBatchAbort& e) {
-        if (errorOut != nullptr) {
-            *errorOut = QString::fromStdString(std::string(e.what()));
-        }
-        return false;
     } catch (const std::invalid_argument& e) {
         if (errorOut != nullptr) {
             *errorOut = QString::fromStdString(

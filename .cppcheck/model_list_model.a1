@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="13265347342646394314">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/view/model_list_model.h:20:9" my-argnr="1" my-argname="parent" file="src/view/model_list_model.cpp" line="12" col="12" value="0"/>
+    <unsafe-usage my-id="include/view/model_list_model.h:21:14" my-argnr="1" my-argname="index" file="src/view/model_list_model.cpp" line="16" col="10" value="0"/>
+    <unsafe-usage my-id="include/view/model_list_model.h:28:22" my-argnr="1" my-argname="new_names" file="src/view/model_list_model.cpp" line="29" col="43" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/view/model_list_model.cpp" functionName="AppendModels" lineNumber="26" column="34"/>
+    <functioncall functionName="Call"/>
+    <functioncall functionName="DisplayRole"/>
+    <functioncall functionName="QModelIndex"/>
+    <functioncall functionName="QString"/>
+    <functioncall functionName="QVariant"/>
+    <functioncall functionName="QVector"/>
+    <functioncall functionName="UniquifyModelNames"/>
+    <functioncall functionName="at"/>
+    <functioncall functionName="beginInsertRows"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="endInsertRows"/>
+    <functioncall functionName="fromStdString"/>
+    <functioncall functionName="isValid"/>
+    <functioncall functionName="pair"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="reserve"/>
+    <functioncall functionName="row"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toStdString"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

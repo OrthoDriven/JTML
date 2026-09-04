@@ -47,6 +47,7 @@ pyyaml = ">=6.0.3,<7"
 rust = ">=1.98.0,<1.99"
 llvm = "21.*"
 lld = ">=21.1.8,<22"
+cppcheck = ">=2.21.0,<3"
 
 [feature.build.dependencies]
 cmake = ">=4.2.3,<5"
@@ -77,6 +78,25 @@ cmd = [
   "-m",
   "./rust/Cargo.toml",
   "--release"
+]
+
+[tasks.cpp-check]
+cmd = [
+    "cppcheck",
+    "--project=.build/compile_commands.json",
+    "--enable=unusedFunction",
+    "--safety",
+    "--library=qt",
+    "--cppcheck-build-dir=.cppcheck",
+    "-i.build",
+    "-i.pixi",
+    "--suppress='unusedFunction:.build/**'",
+    "--suppress='unusedFunction:.pixi/**'",
+    "-D__GNUC__=4",
+    "-D__GNUC_MINOR__=2",
+    "-D__GNUC_PATCHLEVEL__=1",
+    "-D__clang__=1",
+    "--template=gcc"
 ]
 
 [tasks.configure]

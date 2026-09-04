@@ -1,0 +1,13 @@
+compute_mirror_pose call:[acos,cross_product,dot_product,equivalent_axis_angle_rotation,final_pose,getRotations312,matmult3,pow,rotation_matrix,sqrt]
+create_312_transform call:[cos,sin]
+invert_transform
+matmult4
+matmult3
+dot_product
+cross_product
+equivalent_axis_angle_rotation call:[cos,sin]
+rotation_matrix call:[cos,sin]
+getRotations312 call:[asin,atan2] noreturn:[atan2]
+copy_matrix_by_value
+create_vector_of_poses call:[Point6D,acos,begin,copy_matrix_by_value,cross_product,dot_product,end,equivalent_axis_angle_rotation,getRotations312,insert,linspace,matmult3,pow,printf,push_back,rotation_matrix,size,sqrt,to_string] noreturn:[copy_matrix_by_value,push_back]
+linspace call:[push_back] noreturn:[push_back]

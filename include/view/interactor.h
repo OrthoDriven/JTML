@@ -54,13 +54,6 @@ public:
         viewer_ = viewer;
     }
 
-    // Picked Function
-    bool ActivePick() {
-        if (this->InteractionProp == NULL) {
-            return false;
-        }
-        return true;
-    }
     bool scene_ready() {
         if (!this->Interactor) {
             return false;

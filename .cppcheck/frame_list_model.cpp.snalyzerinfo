@@ -1,0 +1,3 @@
+rowCount call:[isValid,size]
+data call:[QVariant,at,isValid,row,size] noreturn:[QVariant,at]
+AppendFrame call:[QModelIndex,beginInsertRows,endInsertRows,push_back,size] noreturn:[endInsertRows]

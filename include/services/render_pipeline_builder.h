@@ -170,11 +170,6 @@ void BuildModelActor(
     vtkAlgorithmOutput* readerOutput,
     vtkRenderer* sceneRenderer);
 
-/*⑤ Actor pose apply: SetPosition + SetOrientation from a Point6D (the QML
- * updatePose/RebuildModels pose write; the widgets' separate per-index
- * position/orientation setters keep their call-site semantics).*/
-void ApplyActorPose(vtkActor* actor, const Point6D& pose);
-
 } /* namespace render_pipeline */
 } /* namespace jta */
 

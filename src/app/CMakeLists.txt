@@ -11,9 +11,6 @@ option(JTML_BUILD_STUDY2GRID
        "Build Study2Grid utility"
        ON)
 
-option(JTML_BUILD_EXPERIMENTAL
-       "Build experimental QML frontend"
-       ON)
 
 # Study2Grid: self-contained tool, relocated verbatim into app/Study2Grid.
 if(JTML_BUILD_STUDY2GRID)
@@ -23,9 +20,6 @@ endif()
 # 005 U1: QML+VTK spike (go/no-go gate for the experimental QML front-end).
 # Scratch target, isolated in its own directory scope (directory-scoped VTK
 # re-find for GUISupportQtQuick; the widgets app's link line is untouched).
-if(JTML_BUILD_EXPERIMENTAL)
-    add_subdirectory(experimental)
-endif()
 
 # Principal GUI executable (composition root).
 add_executable(${PROJECT_NAME}

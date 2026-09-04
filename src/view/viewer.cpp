@@ -107,11 +107,6 @@ vtkSmartPointer<vtkDataSetMapper> Viewer::get_image_mapper() {
 vtkSmartPointer<vtkTextActor> Viewer::get_actor_text() {
     return actor_text_;
 }
-
-vtkSmartPointer<vtkImageImport> Viewer::get_importer() {
-    return importer_;
-}
-
 void Viewer::update_display_background(cv::Mat desiredBackground) {
     // Shared pipeline recipe (006 U4): zero-copy import configuration
     // (spacing/origin/extent/scalar-type/channels/SetImportVoidPointer/
@@ -121,11 +116,6 @@ void Viewer::update_display_background(cv::Mat desiredBackground) {
     // background).
     jta::render_pipeline::RefreshBackgroundImport(importer_, desiredBackground);
 }
-
-void Viewer::make_image_invisible() {
-    actor_image_->SetVisibility(false);
-}
-
 void Viewer::set_loaded_frames(std::vector<Frame>& frames) {
     loaded_frames_ = frames;
 }
@@ -242,11 +232,6 @@ void Viewer::load_models(QStringList cad_files, QStringList cad_models) {
             cad_files[i].toStdString(), cad_models[i].toStdString(), "BLANK"));
     }
 }
-
-bool Viewer::are_models_loaded_correctly(int index) {
-    return loaded_models_->at(index).initialized_correctly_;
-}
-
 bool Viewer::are_models_loaded_incorrectly(int index) {
     return !loaded_models_->at(index).initialized_correctly_;
 }
@@ -336,44 +321,12 @@ void Viewer::set_actor_text_color_to_model_color_at_index(int index) {
     actor_text_->GetTextProperty()->SetColor(
         model_actor_list_[index]->GetProperty()->GetColor());
 }
-
-void Viewer::render_scene() {
-    background_renderer_->Render();
-    scene_renderer_->Render();
-}
-
-void Viewer::display_actors_in_renderer() {
-    background_renderer_->GetActors()->Print(std::cout);
-}
-
-void Viewer::set_render_window_and_display() {
-    render_window_->AddRenderer(background_renderer_);
-    render_window_->SetWindowName("My Window");
-    render_window_->Render();
-
-    vtkSmartPointer<vtkRenderWindowInteractor> interactor =
-        vtkSmartPointer<vtkRenderWindowInteractor>::New();
-    interactor->SetRenderWindow(render_window_);
-    render_window_->Render();
-    interactor->Start();
-}
-
 double* Viewer::get_model_orientation_at_index(int index) {
     return model_actor_list_[index]->GetOrientation();
 }
 
 double* Viewer::get_model_position_at_index(int index) {
     return model_actor_list_[index]->GetPosition();
-}
-
-void Viewer::make_model_invisible_and_nonpickable_at_index(int index) {
-    model_actor_list_[index]->PickableOff();
-    model_actor_list_[index]->VisibilityOff();
-}
-
-void Viewer::make_model_visible_and_pickable_at_index(int index) {
-    model_actor_list_[index]->PickableOn();
-    model_actor_list_[index]->VisibilityOn();
 }
 void Viewer::make_all_models_invisible() {
     for (auto model : model_actor_list_) {
@@ -402,11 +355,6 @@ void Viewer::load_renderers_into_render_window(Calibration cal) {
     focal_dir = (cal.type_ == "UF") ? -1 : 1;
     jta::render_pipeline::SetupSceneCameraFocal(scene_renderer_, focal_dir);
 }
-
-void Viewer::print_render_window() {
-    qvtk_render_window_->Print(std::cout);
-}
-
 void Viewer::make_actor_text_invisible() {
     vtkTextActor::SafeDownCast(actor_text_)->GetTextProperty()->SetOpacity(0.0);
 }
@@ -427,14 +375,6 @@ int Viewer::model_actor_list_size() {
 vtkActor* Viewer::get_model_actor_at_index(int index) {
     return model_actor_list_[index].GetPointer();
 }
-
-void Viewer::print_interactor_information() {
-    render_window_interactor_->Print(std::cout);
-    int num_ren = render_window_interactor_->GetRenderWindow()
-                      ->GetRenderers()
-                      ->GetNumberOfItems();
-}
-
 vtkSmartPointer<vtkRenderWindowInteractor> Viewer::get_interactor() {
     return render_window_interactor_;
 }
@@ -525,15 +465,4 @@ void Viewer::calculate_and_set_camera_aspect_from_calibration(
         }
         std::cout << std::endl;
     }
-}
-
-void Viewer::print_scene_camera_directions() {
-    double fp[3];
-    double vu[3];
-    double pn[3];
-    double pn_img[3];
-    scene_camera_->GetFocalPoint(fp);
-    scene_camera_->GetViewUp(vu);
-    scene_camera_->GetViewPlaneNormal(pn);
-    background_camera_->GetViewPlaneNormal(pn_img);
 }

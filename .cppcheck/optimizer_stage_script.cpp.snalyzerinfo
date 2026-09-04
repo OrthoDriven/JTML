@@ -1,0 +1,27 @@
+Parameter < double >
+Parameter < double >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+Parameter < int >
+Parameter < int >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+Parameter < bool >
+Parameter < bool >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+to_string
+cost_function_type_from_string
+ThrowIfNegative call:[invalid_argument,to_string] noreturn:[invalid_argument]
+ValidateSettings call:[ThrowIfNegative] noreturn:[ThrowIfNegative]
+IsNormalDirective
+BuildStageScript call:[IsNormalDirective,ValidateSettings,invalid_argument,push_back] noreturn:[invalid_argument,push_back]
+CumulativeStageCaps call:[push_back] noreturn:[push_back]
+DeriveStageCostParams call:[getParameterName,getParameterValue,max] noreturn:[getParameterValue]
+ReservedStubGraphNames

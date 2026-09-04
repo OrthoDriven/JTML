@@ -53,18 +53,14 @@ class SessionStateController : public QObject {
 
 public:
     /*Wraps `state` (non-owning; must outlive the controller). The optional
-     * callbacks are wired by the composition roots:
+     * callback is wired by the composition roots:
      *  - run_in_flight: the M7 probe consulted by runInFlight() (default:
      *    no run in flight — the views wire the OptimizerRunController's
-     *    running() when the guard cuts land);
-     *  - clear_seed: the H5/M10b dataset-clear seed drop invoked by
-     *    ResetForDatasetClear (default: no-op — the widgets app has no
-     *    dataset-clear path; AppBridge wires OptimizerBridge::clearSeedPose).
-     * Neither callback is invoked during construction.*/
+     *    running() when the guard cuts land).
+     * Not invoked during construction.*/
     explicit SessionStateController(
         jta::SessionState* state,
         std::function<bool()> run_in_flight = {},
-        std::function<void()> clear_seed = {},
         QObject* parent = nullptr);
 
     /*The one write path. Diffs the four facts (normalized exactly like the
@@ -88,24 +84,10 @@ public:
      * (no emission) when no current-frame/selection change is pending.*/
     void CommitSelection();
 
-    /*Dataset clear (H5/M10b): resets the previous mirrors to -1/empty,
-     * invokes the injected seed-clear (the OptimizerRunController's pending
-     * seed must not leak across datasets), drops any deferred pending
-     * emission, and emits datasetChanged. The CURRENT values (counts,
-     * current frame, selection) are the views' to reset — the QML
-     * ExperimentalSession::ClearDataset wipes them before the call; the
-     * widgets app has no clear path today.*/
-    void ResetForDatasetClear();
-
     /*M7: true while an optimizer run is in flight — the probe for the
      * follow-up menu-guard and study-load-guard cuts. Defaults to false
      * until a composition root injects the run controller probe.*/
     bool runInFlight() const;
-
-    /*---- Reads (thin pass-through to the wrapped state) ------------------*/
-    const jta::SessionState& sessionState() const {
-        return *state_;
-    }
 
 Q_SIGNALS:
     /*Emitted when the frame/model counts changed (dataset facts). Also
@@ -127,7 +109,6 @@ Q_SIGNALS:
 private:
     jta::SessionState* state_ = nullptr;
     std::function<bool()> run_in_flight_;
-    std::function<void()> clear_seed_;
     /*Deferred selectionChanged (M9): set by UpdateSession when the current
      * frame or selection changed, consumed by CommitSelection. The pending
      * previous values are the pre-change selection captured at the sync —

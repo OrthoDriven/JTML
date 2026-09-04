@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="17641249965042738006">
+        <error id="missingReturn" severity="error" msg="Found an exit path from function with non-void return type that has missing return statement" verbose="Found an exit path from function with non-void return type that has missing return statement" cwe="758" file0="src/app/Study2Grid/KPReader.cpp">
+            <location file="src/app/Study2Grid/KPReader.cpp" line="50" column="5"/>
+        </error>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="src/app/Study2Grid/KPReader.h:23:6" my-argnr="1" my-argname="path" file="src/app/Study2Grid/KPReader.cpp" line="27" col="33" value="0"/>
+    <unsafe-usage my-id="src/app/Study2Grid/KPReader.h:23:6" my-argnr="2" my-argname="kp_storage" file="src/app/Study2Grid/KPReader.cpp" line="18" col="5" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/app/Study2Grid/KPReader.cpp" functionName="readKP" lineNumber="16" column="6"/>
+    <functioncall functionName="RotationMatrixZXY"/>
+    <functioncall functionName="XYPoint"/>
+    <functioncall functionName="XYZPoint"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="close"/>
+    <functioncall functionName="getline"/>
+    <functioncall functionName="in"/>
+    <functioncall functionName="is_open"/>
+    <functioncall functionName="open"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="toStdString"/>
+  </FileInfo>
+</analyzerinfo>

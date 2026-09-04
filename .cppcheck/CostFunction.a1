@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="11087859113558399201">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterName" lineNumber="52" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterValue" lineNumber="57" column="21"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="setParameterValue" lineNumber="60" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterType" lineNumber="65" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterName" lineNumber="101" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterValue" lineNumber="106" column="18"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="setParameterValue" lineNumber="109" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterType" lineNumber="114" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterName" lineNumber="147" column="26"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterValue" lineNumber="152" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="setParameterValue" lineNumber="155" column="19"/>
+    <functiondecl file="include/compute/Parameter.h" functionName="getParameterType" lineNumber="160" column="26"/>
+    <functiondecl file="include/compute/CostFunction.h" functionName="to_string" lineNumber="29" column="28"/>
+    <functiondecl file="include/compute/CostFunction.h" functionName="cost_function_type_from_string" lineNumber="40" column="43"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="addParameter" lineNumber="19" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="addParameter" lineNumber="22" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="addParameter" lineNumber="25" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="setDoubleParameterValue" lineNumber="30" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="setIntParameterValue" lineNumber="43" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="setBoolParameterValue" lineNumber="54" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getDoubleParameterValue" lineNumber="69" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getIntParameterValue" lineNumber="82" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getBoolParameterValue" lineNumber="95" column="20"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getDoubleParameters" lineNumber="110" column="46"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getIntParameters" lineNumber="113" column="43"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getBoolParameters" lineNumber="116" column="44"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="getCostFunctionName" lineNumber="121" column="27"/>
+    <functiondecl file="src/compute/CostFunction.cpp" functionName="setCostFunctionName" lineNumber="124" column="20"/>
+    <functioncall functionName="CostFunction"/>
+    <functioncall functionName="Parameter"/>
+    <functioncall functionName="getParameterName"/>
+    <functioncall functionName="getParameterValue"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="setParameterValue"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

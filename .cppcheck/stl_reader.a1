@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="5945029521482567960">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/stl_reader.h:28:12" my-argnr="1" my-argname="path" file="src/services/stl_reader.cpp" line="119" col="30" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/services/stl_reader.cpp" functionName="getStlFileFormat" lineNumber="15" column="12"/>
+    <functiondecl file="src/services/stl_reader.cpp" functionName="readAnySTL" lineNumber="110" column="12"/>
+    <functioncall functionName="ReadOnly"/>
+    <functioncall functionName="atEnd"/>
+    <functioncall functionName="binary"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="close"/>
+    <functioncall functionName="contains"/>
+    <functioncall functionName="data"/>
+    <functioncall functionName="getStlFileFormat"/>
+    <functioncall functionName="getline"/>
+    <functioncall functionName="open"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="qDebug"/>
+    <functioncall functionName="qPrintable"/>
+    <functioncall functionName="read"/>
+    <functioncall functionName="readLine"/>
+    <functioncall functionName="reset"/>
+    <functioncall functionName="seek"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="startsWith"/>
+    <functioncall functionName="stof"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toStdString"/>
+    <functioncall functionName="uint"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

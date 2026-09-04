@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7790062729454962566">
+  <FileInfo check="ctu">
+<function-call call-id="include/domain/sym_trap_functions.h:25:6" call-funcname="cross_product" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="50" col="18" call-argexpr="M_temp" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:25:6" call-funcname="cross_product" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="50" col="18" call-argexpr="z_ax" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:25:6" call-funcname="cross_product" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="50" col="18" call-argexpr="view_normed" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:26:6" call-funcname="dot_product" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="64" col="16" call-argexpr="temp_dot" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0">
+  <path file="src/domain/sym_trap_functions.cpp" line="63" col="22" info="Assignment &apos;temp_dot=0&apos;, assigned value is 0"/>
+</function-call><function-call call-id="include/domain/sym_trap_functions.h:26:6" call-funcname="dot_product" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="64" col="16" call-argexpr="z_ax" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:26:6" call-funcname="dot_product" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="64" col="16" call-argexpr="view_normed" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:21:6" call-funcname="equivalent_axis_angle_rotation" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="75" col="35" call-argexpr="M" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="90" col="20" call-argexpr="xr_dual" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="90" col="20" call-argexpr="yr_dual" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="90" col="20" call-argexpr="zr_dual" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:25:6" call-funcname="cross_product" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="343" col="18" call-argexpr="M_temp" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:25:6" call-funcname="cross_product" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="343" col="18" call-argexpr="z_ax" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:25:6" call-funcname="cross_product" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="343" col="18" call-argexpr="view_normed" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:26:6" call-funcname="dot_product" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="360" col="16" call-argexpr="temp_dot" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0">
+  <path file="src/domain/sym_trap_functions.cpp" line="359" col="22" info="Assignment &apos;temp_dot=0&apos;, assigned value is 0"/>
+</function-call><function-call call-id="include/domain/sym_trap_functions.h:26:6" call-funcname="dot_product" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="360" col="16" call-argexpr="z_ax" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:26:6" call-funcname="dot_product" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="360" col="16" call-argexpr="view_normed" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:21:6" call-funcname="equivalent_axis_angle_rotation" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="386" col="35" call-argexpr="M" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:21:6" call-funcname="equivalent_axis_angle_rotation" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="392" col="35" call-argexpr="M" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="437" col="24" call-argexpr="x_rot" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="437" col="24" call-argexpr="y_rot" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="437" col="24" call-argexpr="z_rot" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:21:6" call-funcname="equivalent_axis_angle_rotation" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="466" col="35" call-argexpr="M" call-argvaluetype="7" call-argvalue="12" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="1" file="src/domain/sym_trap_functions.cpp" line="474" col="24" call-argexpr="x_rot" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="2" file="src/domain/sym_trap_functions.cpp" line="474" col="24" call-argexpr="y_rot" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/sym_trap_functions.h:29:6" call-funcname="getRotations312" call-argnr="3" file="src/domain/sym_trap_functions.cpp" line="474" col="24" call-argexpr="z_rot" call-argvaluetype="4" call-argvalue="0" call-argvalue-ufr="0"/>  </FileInfo>
+  <FileInfo check="Bounds checking">
+    <array-index>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="1" my-argname="CP" file="src/domain/sym_trap_functions.cpp" line="200" col="5" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="2" my-argname="v1" file="src/domain/sym_trap_functions.cpp" line="200" col="13" value="4"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="3" my-argname="v2" file="src/domain/sym_trap_functions.cpp" line="200" col="21" value="8"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:21:6" my-argnr="2" my-argname="m" file="src/domain/sym_trap_functions.cpp" line="213" col="17" value="0"/>
+    </array-index>
+  </FileInfo>
+  <FileInfo check="Null pointer">
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:28:6" my-argnr="1" my-argname="transform" file="src/domain/sym_trap_functions.cpp" line="116" col="5" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="1" my-argname="CP" file="src/domain/sym_trap_functions.cpp" line="200" col="5" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="2" my-argname="v1" file="src/domain/sym_trap_functions.cpp" line="200" col="13" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="3" my-argname="v2" file="src/domain/sym_trap_functions.cpp" line="200" col="21" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:21:6" my-argnr="1" my-argname="rot" file="src/domain/sym_trap_functions.cpp" line="213" col="5" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:21:6" my-argnr="2" my-argname="m" file="src/domain/sym_trap_functions.cpp" line="213" col="17" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:27:6" my-argnr="1" my-argname="R" file="src/domain/sym_trap_functions.cpp" line="239" col="5" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:29:6" my-argnr="4" my-argname="Rot" file="src/domain/sym_trap_functions.cpp" line="253" col="16" value="0"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="2" my-argname="v1" file="src/domain/sym_trap_functions.cpp" line="200" col="13" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:25:6" my-argnr="3" my-argname="v2" file="src/domain/sym_trap_functions.cpp" line="200" col="21" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:21:6" my-argnr="2" my-argname="m" file="src/domain/sym_trap_functions.cpp" line="213" col="17" value="0"/>
+    <unsafe-usage my-id="include/domain/sym_trap_functions.h:29:6" my-argnr="4" my-argname="Rot" file="src/domain/sym_trap_functions.cpp" line="253" col="16" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="compute_mirror_pose" lineNumber="11" column="9"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="create_312_transform" lineNumber="103" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="invert_transform" lineNumber="135" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="matmult4" lineNumber="155" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="matmult3" lineNumber="171" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="dot_product" lineNumber="190" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="cross_product" lineNumber="199" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="equivalent_axis_angle_rotation" lineNumber="205" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="rotation_matrix" lineNumber="226" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="getRotations312" lineNumber="252" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="copy_matrix_by_value" lineNumber="266" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="create_vector_of_poses" lineNumber="276" column="6"/>
+    <functiondecl file="src/domain/sym_trap_functions.cpp" functionName="linspace" lineNumber="512" column="21"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="acos"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="asin"/>
+    <functioncall functionName="atan2"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="copy_matrix_by_value"/>
+    <functioncall functionName="cos"/>
+    <functioncall functionName="cross_product"/>
+    <functioncall functionName="dot_product"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="equivalent_axis_angle_rotation"/>
+    <functioncall functionName="getRotations312"/>
+    <functioncall functionName="insert"/>
+    <functioncall functionName="linspace"/>
+    <functioncall functionName="matmult3"/>
+    <functioncall functionName="pow"/>
+    <functioncall functionName="printf"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="rotation_matrix"/>
+    <functioncall functionName="sin"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="sqrt"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="6481361532161135439">
+  <FileInfo check="ctu">
+<function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="1" file="src/domain/data_structures_6D.cpp" line="147" col="22" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="2" file="src/domain/data_structures_6D.cpp" line="147" col="22" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="3" file="src/domain/data_structures_6D.cpp" line="147" col="22" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="4" file="src/domain/data_structures_6D.cpp" line="147" col="22" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="5" file="src/domain/data_structures_6D.cpp" line="147" col="22" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="6" file="src/domain/data_structures_6D.cpp" line="147" col="22" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="1" file="src/domain/data_structures_6D.cpp" line="148" col="21" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="2" file="src/domain/data_structures_6D.cpp" line="148" col="21" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="3" file="src/domain/data_structures_6D.cpp" line="148" col="21" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="4" file="src/domain/data_structures_6D.cpp" line="148" col="21" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="5" file="src/domain/data_structures_6D.cpp" line="148" col="21" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/><function-call call-id="include/domain/data_structures_6D.h:28:5" call-funcname="Point6D" call-argnr="6" file="src/domain/data_structures_6D.cpp" line="148" col="21" call-argexpr="0" call-argvaluetype="0" call-argvalue="0" call-argvalue-ufr="0"/>  </FileInfo>
+  <FileInfo check="Class">
+<class name="Point6D" file="include/domain/data_structures_6D.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;USE_RUST_DIRECT=1;USING_CPP_COST=1;__PIC__=1;NDEBUG=1" line="27" col="1" hash="269242871223013815"/>
+<class name="HyperBox6D" file="include/domain/data_structures_6D.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;USE_RUST_DIRECT=1;USING_CPP_COST=1;__PIC__=1;NDEBUG=1" line="60" col="1" hash="12821513666030530083"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="GetDistanceFrom" lineNumber="42" column="17"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="new_point" lineNumber="52" column="35"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="to_array" lineNumber="63" column="32"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="GetLargestDirection" lineNumber="67" column="20"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="GetDirection" lineNumber="89" column="17"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="UpdateDirection" lineNumber="114" column="15"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="SetSides" lineNumber="155" column="18"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="GetSides" lineNumber="163" column="21"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="containsPoint" lineNumber="167" column="18"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="SetCenter" lineNumber="185" column="18"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="GetCenter" lineNumber="189" column="21"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="TrisectSide" lineNumber="193" column="18"/>
+    <functiondecl file="src/domain/data_structures_6D.cpp" functionName="PrintCenter" lineNumber="220" column="18"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="at"/>
+    <functioncall functionName="make_unique"/>
+    <functioncall functionName="max_element"/>
+    <functioncall functionName="sqrt"/>
+    <functioncall functionName="unique_ptr"/>
+  </FileInfo>
+</analyzerinfo>

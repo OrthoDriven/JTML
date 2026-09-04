@@ -74,48 +74,4 @@ void OptimizerRunControllerCore::refreshProgress(
     progress_ =
         cumulative > 0 ? std::min(1.0, calls / double(cumulative)) : 0.0;
 }
-
-/*---- Seed lifecycle (M10a) ----*/
-
-void OptimizerRunControllerCore::setSeedPose(
-    double x,
-    double y,
-    double z,
-    double xa,
-    double ya,
-    double za,
-    int frame,
-    int model) {
-    seed_pose_ = Point6D(x, y, z, xa, ya, za);
-    seed_frame_ = frame;
-    seed_model_ = model;
-    has_seed_pose_ = true;
-}
-
-OptimizerRunControllerCore::AppliedSeed
-OptimizerRunControllerCore::takeSeedForRun(
-    int current_frame,
-    int primary_model_index,
-    int model_count) {
-    AppliedSeed result;
-    if (!has_seed_pose_) {
-        return result;
-    }
-    /*One-shot + stale guards (OptimizerBridge.cpp:276-291 preserved): the
-     * seed applies only when the run's frame is still the seeded frame and
-     * the seeded model is still the primary selection; any other state drops
-     * the seed silently.*/
-    if (current_frame != seed_frame_ || primary_model_index != seed_model_ ||
-        seed_model_ < 0 || seed_model_ >= model_count) {
-        clearSeedPose();
-        return result;
-    }
-    result.applied = true;
-    result.pose = seed_pose_;
-    result.frame = seed_frame_;
-    result.model = seed_model_;
-    has_seed_pose_ = false;
-    return result;
-}
-
 }  // namespace jta

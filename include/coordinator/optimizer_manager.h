@@ -219,8 +219,6 @@ private:
     std::vector<GPUDilatedFrame*> gpu_dilated_frames_trunk_A_;
     std::vector<GPUDilatedFrame*> gpu_dilated_frames_branch_A_;
     std::vector<GPUDilatedFrame*> gpu_dilated_frames_leaf_A_;
-    std::vector<GPUFrame*> gpu_distance_maps_;
-    std::vector<GPUHeatmap*> gpu_heatmaps_;
     /*Camera B (Biplane only)*/
     std::vector<GPUIntensityFrame*> gpu_intensity_frames_trunk_B_;
     std::vector<GPUIntensityFrame*> gpu_intensity_frames_branch_B_;

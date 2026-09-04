@@ -1,0 +1,3 @@
+rowCount call:[isValid,size]
+data call:[QVariant,at,isValid,row,size] noreturn:[QVariant,at]
+AppendModels call:[QModelIndex,UniquifyModelNames,beginInsertRows,empty,endInsertRows,fromStdString,push_back,reserve,size,toStdString] noreturn:[endInsertRows,push_back]

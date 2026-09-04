@@ -216,9 +216,3 @@ void HyperBox6D::TrisectSide(Direction trisect_side) {
         sides_.xa * sides_.xa + sides_.ya * sides_.ya +
         sides_.za * sides_.za); /*L2 Norm*/
 }
-
-void HyperBox6D::PrintCenter() {
-    std::cout << "\nHyperBox Center: [\t" << center_.x << ",\t" << center_.y
-              << ",\t" << center_.z << ",\t" << center_.xa << ",\t"
-              << center_.ya << ",\t" << center_.za << "]";
-}

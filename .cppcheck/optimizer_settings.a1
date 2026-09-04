@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="14649197455659069746">
+  <FileInfo check="Class">
+<class name="OptimizerSettings" file="include/services/optimizer_settings.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="16" col="1" hash="7010712678110179220"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="OptimizerSettings"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="array"/>
+  </FileInfo>
+</analyzerinfo>

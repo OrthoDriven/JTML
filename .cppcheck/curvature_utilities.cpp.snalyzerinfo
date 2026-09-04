@@ -1,0 +1,15 @@
+extract_contour_points call:[findContours] noreturn:[findContours]
+calculate_curvature_along_contour call:[delete,menger_curvature,pick_three_points,size] noreturn:[menger_curvature]
+menger_curvature call:[abs,norm]
+pick_three_points call:[size]
+generate_curvature_heatmaps call:[Mat,back,calculate_curvature_along_contour,calculate_derivative,calculate_mean,calculate_std,delete,draw_contours,empty,extract_contour_points,flip,gaussian_convolution,heatmap_at_point,imwrite,positive_inflection_points,push_back,size,threshold,to_string]
+calculate_mean
+calculate_std call:[calculate_mean,pow,sqrt] noreturn:[pow,sqrt]
+draw_contours call:[Mat,drawContours,imwrite]
+array_at_idx
+dot
+gaussian_convolution call:[arr_sum,array_at_idx,dot,exp,gaussianKernel,sqrt] noreturn:[arr_sum,exp]
+arr_sum
+calculate_derivative call:[array_at_idx] noreturn:[array_at_idx]
+positive_inflection_points call:[array_at_idx,push_back] noreturn:[push_back]
+heatmap_at_point call:[Mat,Scalar,distanceTransform]

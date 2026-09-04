@@ -118,10 +118,6 @@ public:
 
     /* U1: explicit EvaluationContext overloads — primary design. */
 
-    JTML_DLL double CurvatureHeatmapMetric(
-        GPUImage* projected_image,
-        GPUHeatmap* gpu_heatmap);
-
     JTML_DLL void AllocateCurvatureHausdorfScore(int num_keypoints);
 
     /* U12 Stage 2: bind non-owning bank metadata and an optional execution

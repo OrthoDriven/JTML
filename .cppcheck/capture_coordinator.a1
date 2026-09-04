@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="18071939469387251936">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/compute/capture_coordinator.cpp" functionName="registerProducer" lineNumber="7" column="26"/>
+    <functiondecl file="src/compute/capture_coordinator.cpp" functionName="tryAcquireExclusive" lineNumber="24" column="26"/>
+    <functiondecl file="src/compute/capture_coordinator.cpp" functionName="release" lineNumber="56" column="26"/>
+    <functiondecl file="src/compute/capture_coordinator.cpp" functionName="isOwner" lineNumber="71" column="26"/>
+    <functiondecl file="src/compute/capture_coordinator.cpp" functionName="parkedCount" lineNumber="75" column="33"/>
+    <functioncall functionName="CaptureCoordinator"/>
+    <functioncall functionName="assign"/>
+    <functioncall functionName="function"/>
+    <functioncall functionName="get_id"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="try_lock_for"/>
+    <functioncall functionName="unlock"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

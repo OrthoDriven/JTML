@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="4592746635428957210">
+  <FileInfo check="ctu">
+<function-call call-id="include/compute/curvature_utilities.h:45:7" call-funcname="dot" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="230" col="24" call-argexpr="arr_subset" call-argvaluetype="7" call-argvalue="36" call-argvalue-ufr="0"/><function-call call-id="include/compute/curvature_utilities.h:45:7" call-funcname="dot" call-argnr="2" file="src/compute/curvature_utilities.cpp" line="230" col="24" call-argexpr="kernel" call-argvaluetype="7" call-argvalue="36" call-argvalue-ufr="0"/><function-call call-id="include/compute/curvature_utilities.h:47:7" call-funcname="arr_sum" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="230" col="57" call-argexpr="kernel" call-argvaluetype="7" call-argvalue="36" call-argvalue-ufr="0"/><function-call call-id="include/compute/curvature_utilities.h:41:7" call-funcname="calculate_mean" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="165" col="18" my-id="include/compute/curvature_utilities.h:42:7" my-argnr="1"/>
+<function-call call-id="include/compute/curvature_utilities.h:44:7" call-funcname="array_at_idx" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="220" col="13" my-id="include/compute/curvature_utilities.h:46:6" my-argnr="1"/>
+<function-call call-id="include/compute/curvature_utilities.h:44:7" call-funcname="array_at_idx" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="248" col="13" my-id="include/compute/curvature_utilities.h:48:6" my-argnr="1"/>
+<function-call call-id="include/compute/curvature_utilities.h:44:7" call-funcname="array_at_idx" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="257" col="24" my-id="include/compute/curvature_utilities.h:50:1" my-argnr="1"/>
+<function-call call-id="include/compute/curvature_utilities.h:44:7" call-funcname="array_at_idx" call-argnr="1" file="src/compute/curvature_utilities.cpp" line="256" col="14" my-id="include/compute/curvature_utilities.h:50:1" my-argnr="2"/>
+  </FileInfo>
+  <FileInfo check="Null pointer">
+    <unsafe-usage my-id="include/compute/curvature_utilities.h:20:6" my-argnr="2" my-argname="contour" file="src/compute/curvature_utilities.cpp" line="17" col="28" value="0"/>
+    <unsafe-usage my-id="include/compute/curvature_utilities.h:43:6" my-argnr="1" my-argname="contour" file="src/compute/curvature_utilities.cpp" line="176" col="28" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="extract_contour_points" lineNumber="13" column="6"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="calculate_curvature_along_contour" lineNumber="19" column="6"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="menger_curvature" lineNumber="39" column="7"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="pick_three_points" lineNumber="54" column="6"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="generate_curvature_heatmaps" lineNumber="77" column="22"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="calculate_mean" lineNumber="157" column="7"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="calculate_std" lineNumber="164" column="7"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="draw_contours" lineNumber="173" column="6"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="array_at_idx" lineNumber="181" column="7"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="dot" lineNumber="191" column="7"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="gaussian_convolution" lineNumber="200" column="6"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="arr_sum" lineNumber="234" column="7"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="calculate_derivative" lineNumber="241" column="6"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="positive_inflection_points" lineNumber="252" column="1"/>
+    <functiondecl file="src/compute/curvature_utilities.cpp" functionName="heatmap_at_point" lineNumber="264" column="9"/>
+    <functioncall functionName="CHAIN_APPROX_NONE"/>
+    <functioncall functionName="CV_8UC1"/>
+    <functioncall functionName="DIST_L1"/>
+    <functioncall functionName="Mat"/>
+    <functioncall functionName="Point"/>
+    <functioncall functionName="Point_"/>
+    <functioncall functionName="RETR_EXTERNAL"/>
+    <functioncall functionName="Scalar"/>
+    <functioncall functionName="THRESH_BINARY"/>
+    <functioncall functionName="Vec"/>
+    <functioncall functionName="abs"/>
+    <functioncall functionName="arr_sum"/>
+    <functioncall functionName="array_at_idx"/>
+    <functioncall functionName="at"/>
+    <functioncall functionName="back"/>
+    <functioncall functionName="calculate_curvature_along_contour"/>
+    <functioncall functionName="calculate_derivative"/>
+    <functioncall functionName="calculate_mean"/>
+    <functioncall functionName="calculate_std"/>
+    <functioncall functionName="distanceTransform"/>
+    <functioncall functionName="dot"/>
+    <functioncall functionName="drawContours"/>
+    <functioncall functionName="draw_contours"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="exp"/>
+    <functioncall functionName="extract_contour_points"/>
+    <functioncall functionName="findContours"/>
+    <functioncall functionName="flip"/>
+    <functioncall functionName="gaussian_convolution"/>
+    <functioncall functionName="heatmap_at_point"/>
+    <functioncall functionName="imwrite"/>
+    <functioncall functionName="menger_curvature"/>
+    <functioncall functionName="norm"/>
+    <functioncall functionName="pick_three_points"/>
+    <functioncall functionName="positive_inflection_points"/>
+    <functioncall functionName="pow"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="sqrt"/>
+    <functioncall functionName="threshold"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="uchar"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

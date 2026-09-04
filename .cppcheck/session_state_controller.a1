@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8362039670299716807">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="src/coordinator/session_state_controller.cpp:20:18" my-argnr="1" my-argname="rows" file="src/coordinator/session_state_controller.cpp" line="22" col="18" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/coordinator/session_state_controller.h" functionName="sessionState" lineNumber="106" column="30"/>
+    <functiondecl file="src/coordinator/session_state_controller.cpp" functionName="NormalizeFrame" lineNumber="16" column="5"/>
+    <functiondecl file="src/coordinator/session_state_controller.cpp" functionName="NormalizeRows" lineNumber="20" column="18"/>
+    <functiondecl file="src/coordinator/session_state_controller.cpp" functionName="UpdateSession" lineNumber="44" column="30"/>
+    <functiondecl file="src/coordinator/session_state_controller.cpp" functionName="CommitSelection" lineNumber="90" column="30"/>
+    <functiondecl file="src/coordinator/session_state_controller.cpp" functionName="ResetForDatasetClear" lineNumber="115" column="30"/>
+    <functiondecl file="src/coordinator/session_state_controller.cpp" functionName="runInFlight" lineNumber="132" column="30"/>
+    <functioncall functionName="Call"/>
+    <functioncall functionName="GetCurrentFrame"/>
+    <functioncall functionName="GetFrameCount"/>
+    <functioncall functionName="GetModelCount"/>
+    <functioncall functionName="GetPrimaryModelIndex"/>
+    <functioncall functionName="GetSelectedModels"/>
+    <functioncall functionName="NormalizeFrame"/>
+    <functioncall functionName="NormalizeRows"/>
+    <functioncall functionName="QObject"/>
+    <functioncall functionName="SessionStateController"/>
+    <functioncall functionName="SetCurrentFrame"/>
+    <functioncall functionName="SetFrameCount"/>
+    <functioncall functionName="SetModelCount"/>
+    <functioncall functionName="SetPreviousFrame"/>
+    <functioncall functionName="SetPreviousModelRows"/>
+    <functioncall functionName="SetSelectedModels"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="datasetChanged"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="function"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="reserve"/>
+    <functioncall functionName="selectionChanged"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="sort"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

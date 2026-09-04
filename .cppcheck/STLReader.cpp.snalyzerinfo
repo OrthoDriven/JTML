@@ -1,0 +1,2 @@
+getStlFileFormat call:[atEnd,close,contains,data,file,fileInfo,in,open,qDebug,qPrintable,read,readLine,reset,seek,size,sizeof,startsWith,uint]
+readAnySTL call:[c_str,clear,file,getStlFileFormat,getline,push_back,read,size,sizeof,ss,stl_file,stof,toStdString] noreturn:[push_back,read]

@@ -1,0 +1,3 @@
+Model
+Model call:[LoadVerticesAndNormals,New,SetFileName,c_str]
+LoadVerticesAndNormals call:[fromStdString,readAnySTL] noreturn:[readAnySTL]

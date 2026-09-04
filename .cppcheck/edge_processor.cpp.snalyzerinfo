@@ -1,0 +1,5 @@
+Frame
+ResolveDilation
+ApplyToFrameInternal call:[SetDilatedImage,SetEdgeImage] noreturn:[SetDilatedImage]
+ApplyToFrame call:[ApplyToFrameInternal,ResolveDilation] noreturn:[ApplyToFrameInternal]
+ApplyToFrames call:[ApplyToFrameInternal,ResolveDilation] noreturn:[ApplyToFrameInternal]

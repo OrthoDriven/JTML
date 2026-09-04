@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="7056963028321374242">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Call"/>
+    <functioncall functionName="Controls"/>
+    <functioncall functionName="QDialog"/>
+    <functioncall functionName="QGraphicsPixmapItem"/>
+    <functioncall functionName="QGraphicsView"/>
+    <functioncall functionName="QPixmap"/>
+    <functioncall functionName="WindowFlags"/>
+    <functioncall functionName="addItem"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="override"/>
+    <functioncall functionName="setAutoFillBackground"/>
+    <functioncall functionName="setFixedSize"/>
+    <functioncall functionName="setFrameStyle"/>
+    <functioncall functionName="setGeometry"/>
+    <functioncall functionName="setParent"/>
+    <functioncall functionName="setScene"/>
+    <functioncall functionName="setSceneRect"/>
+    <functioncall functionName="setValue"/>
+    <functioncall functionName="setupUi"/>
+    <functioncall functionName="verticalScrollBar"/>
+    <functioncall functionName="viewport"/>
+  </FileInfo>
+</analyzerinfo>

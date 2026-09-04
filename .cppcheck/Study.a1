@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8379922974857334677">
+  <FileInfo check="Class">
+<class name="Study" file="src/app/Study2Grid/Study.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="38" col="1" hash="15477699123294026803"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="CV_8UC1"/>
+    <functioncall functionName="QFileInfo"/>
+    <functioncall functionName="QList"/>
+    <functioncall functionName="QString"/>
+    <functioncall functionName="Study"/>
+    <functioncall functionName="baseName"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="create_directory"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="exists"/>
+    <functioncall functionName="fromStdString"/>
+    <functioncall functionName="imread"/>
+    <functioncall functionName="isFile"/>
+    <functioncall functionName="length"/>
+    <functioncall functionName="message"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="read_directory_for_directories"/>
+    <functioncall functionName="read_directory_for_jtak"/>
+    <functioncall functionName="read_directory_for_jts"/>
+    <functioncall functionName="read_directory_for_stl"/>
+    <functioncall functionName="read_directory_for_tif"/>
+    <functioncall functionName="read_directory_for_txt"/>
+    <functioncall functionName="remove_all"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="split"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toInt"/>
+    <functioncall functionName="toStdString"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

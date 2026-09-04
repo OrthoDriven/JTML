@@ -34,12 +34,10 @@ std::vector<int> NormalizeRows(const std::vector<int>& rows, int model_count) {
 SessionStateController::SessionStateController(
     jta::SessionState* state,
     std::function<bool()> run_in_flight,
-    std::function<void()> clear_seed,
     QObject* parent) :
     QObject(parent),
     state_(state),
-    run_in_flight_(std::move(run_in_flight)),
-    clear_seed_(std::move(clear_seed)) {}
+    run_in_flight_(std::move(run_in_flight)) {}
 
 void SessionStateController::UpdateSession(
     int frame_count,
@@ -111,24 +109,6 @@ void SessionStateController::CommitSelection() {
         previous_frame,
         previous_rows);
 }
-
-void SessionStateController::ResetForDatasetClear() {
-    /*Cross-dataset hygiene (H5/M10b): the mirrors must never name the wiped
-     * dataset (a bogus save-last-pose write), and the optimizer's pending
-     * seed must not leak into the next dataset's runs.*/
-    state_->SetPreviousFrame(-1);
-    state_->SetPreviousModelRows({});
-    if (clear_seed_) {
-        clear_seed_();
-    }
-    /*Drop any deferred selection emission — the pre-change capture names
-     * the wiped dataset.*/
-    pending_selection_change_ = false;
-    pending_previous_frame_ = -1;
-    pending_previous_rows_.clear();
-    emit datasetChanged();
-}
-
 bool SessionStateController::runInFlight() const {
     return run_in_flight_ ? run_in_flight_() : false;
 }

@@ -1,0 +1,2 @@
+Study
+Study call:[QFileInfo,baseName,begin,create_directory,erase,exists,fromStdString,imread,info_kin,info_kp,info_stl,info_text_1,isFile,length,message,push_back,read_directory_for_directories,read_directory_for_jtak,read_directory_for_jts,read_directory_for_stl,read_directory_for_tif,read_directory_for_txt,remove_all,size,split,toInt,toStdString] noreturn:[push_back,split]

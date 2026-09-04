@@ -34,7 +34,6 @@ add_library(jtml_compute SHARED
     pose_matrix.cpp
     registration_metric.cu
     render_engine.cu
-    capture_coordinator.cpp
     distance_map_metric.cu
     fast_implant_dilation_metric.cu
     gpu_heatmaps.cu
@@ -46,13 +45,7 @@ add_library(jtml_compute SHARED
     # --- cost functions (ex-JTA_Cost_Functions) ---
     CostFunction.cpp
     CostFunctionManager.cpp
-    DD_NEW_POLE_CONSTRAINT.cpp
     DIRECT_DILATION.cpp
-    DIRECT_DILATION_POLE_CONSTRAINT.cpp
-    DIRECT_DILATION_SAME_Z.cpp
-    DIRECT_DILATION_T1.cpp
-    DIRECT_MAHFOUZ.cpp
-    sym_trap_function.cpp
     objective_spec.cpp
     objective_instance.cpp
     ../objectives/direct_dilation.cpp

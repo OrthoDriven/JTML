@@ -135,11 +135,5 @@ void BuildModelActor(
     actor->SetMapper(mapper);
     sceneRenderer->AddActor(actor);
 }
-
-void ApplyActorPose(vtkActor* actor, const Point6D& pose) {
-    actor->SetPosition(pose.x, pose.y, pose.z);
-    actor->SetOrientation(pose.xa, pose.ya, pose.za);
-}
-
 } /* namespace render_pipeline */
 } /* namespace jta */

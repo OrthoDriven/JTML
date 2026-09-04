@@ -134,16 +134,14 @@ double MainScreen::CalculateViewingAngle(int width, int height, bool CameraA) {
 MainScreen::MainScreen(QWidget* parent) :
     QMainWindow(parent),
     /*Plan 006 U6: the shared session-state controller wraps session_state_
-     * (declared before it in the header). The run-in-flight probe (M7) and
-     * the dataset-clear seed drop (H5/M10b) read the run controller via
-     * captured lambdas — invoked only after construction, so the member
-     * init order is safe. The previous-frame/model mirrors default to
-     * -1/empty inside session_state_ (the old previous_frame_index_ = -1
-     * line is gone).*/
+     * (declared before it in the header). The run-in-flight probe (M7) reads
+     * the run controller via a captured lambda — invoked only after
+     * construction, so the member init order is safe. The previous-frame/
+     * model mirrors default to -1/empty inside session_state_ (the old
+     * previous_frame_index_ = -1 line is gone).*/
     session_state_controller_(
         &session_state_,
-        [this] { return optimizer_run_controller_.running(); },
-        [this] { optimizer_run_controller_.clearSeedPose(); }),
+        [this] { return optimizer_run_controller_.running(); }),
     /*Plan 006 U7: the shared study-load controller wraps session_controller_
      * (declared before it in the header) and consults the session-state
      * controller's M7 run-in-flight probe at each load (L17 — the widgets'
@@ -1326,38 +1324,6 @@ void MainScreen::on_actionCopy_Previous_Pose_triggered() {
     ui.qvtk_cpv->renderWindow()->Render();
 }
 
-// For passing current pose into sym_trap window
-Point6D MainScreen::copy_current_pose() {
-    // Selection Check (guard decision owned by the pure pose_copy seam,
-    // plan 004 U4)
-    jta::pose_copy::SelectionGuard guard = jta::pose_copy::CheckSelection(
-        ui.image_list_widget->currentIndex().row(),
-        static_cast<int>(
-            ui.model_list_widget->selectionModel()->selectedRows().size()),
-        ui.multiple_model_radio_button->isChecked());
-    if (guard == jta::pose_copy::SelectionGuard::NoFrameOrModel) {
-        QMessageBox::critical(
-            this,
-            "Error!",
-            "Select Model and Load Frames First!",
-            QMessageBox::Ok);
-        return Point6D();
-    }
-
-    if (guard == jta::pose_copy::SelectionGuard::MultiModelMode) {
-        QMessageBox::critical(
-            this,
-            "Error!",
-            "Must Be in Single Model Selection Mode to Load Kinematics!",
-            QMessageBox::Ok);
-        return Point6D();
-    }
-    Point6D pose = model_locations_.GetPose(
-        ui.image_list_widget->currentIndex().row(),
-        session_state_.GetPrimaryModelIndex());
-    return pose;
-}
-
 /*Copy Next Pose*/
 
 void MainScreen::on_actionCopy_Next_Pose_triggered() {
@@ -1518,12 +1484,6 @@ void MainScreen::on_actionLoad_Kinematics_triggered() {
     }
 }
 
-// Start Symtrap Optimizer
-void MainScreen::optimizer_launch_slot() {
-    if (!sym_trap_running) {
-        LaunchOptimizer(OptimizerRunController::Directive::SymTrap);
-    }
-}
 
 /*Stop Optimizer*/
 void MainScreen::on_actionStop_Optimizer_triggered() {
@@ -3321,10 +3281,6 @@ void MainScreen::on_image_list_widget_itemSelectionChanged() {
     ui.qvtk_widget->renderWindow()->Render();
     ui.qvtk_cpv->update();
     ui.qvtk_cpv->renderWindow()->Render();
-}
-
-QModelIndexList MainScreen::selected_model_indices() {
-    return ui.model_list_widget->selectionModel()->selectedRows();
 }
 
 /*Model Widget*/

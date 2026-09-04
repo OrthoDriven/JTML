@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="3754611256909845701">
+  <FileInfo check="CheckUnusedFunctions">
+    <functioncall functionName="Call"/>
+    <functioncall functionName="QDialog"/>
+    <functioncall functionName="QVBoxLayout"/>
+    <functioncall functionName="QmlSettingsDialog"/>
+    <functioncall functionName="addWidget"/>
+    <functioncall functionName="loadFromModule"/>
+    <functioncall functionName="resize"/>
+    <functioncall functionName="setContentsMargins"/>
+    <functioncall functionName="setResizeMode"/>
+    <functioncall functionName="setWindowTitle"/>
+  </FileInfo>
+</analyzerinfo>

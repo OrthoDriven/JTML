@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="13303834561692120367">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/domain/optimize_intent_controller.h:55:19" my-argnr="1" my-argname="in" file="src/domain/optimize_intent_controller.cpp" line="15" col="9" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/optimize_intent_controller.cpp" functionName="Evaluate" lineNumber="10" column="60"/>
+    <functiondecl file="src/domain/optimize_intent_controller.cpp" functionName="CanOptimize" lineNumber="38" column="32"/>
+    <functioncall functionName="Evaluate"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="front"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

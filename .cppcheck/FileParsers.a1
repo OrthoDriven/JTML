@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="17723167238901555203">
+  <FileInfo check="Class">
+<class name="path_leaf_string_directories" file="src/app/Study2Grid/FileParsers.cpp" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="14" col="1" hash="13165343544874037549"/>
+<class name="path_leaf_string_tif" file="src/app/Study2Grid/FileParsers.cpp" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="39" col="1" hash="3663920630719613936"/>
+<class name="path_leaf_string_jts" file="src/app/Study2Grid/FileParsers.cpp" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="67" col="1" hash="5822792572750217839"/>
+<class name="path_leaf_string_jtak" file="src/app/Study2Grid/FileParsers.cpp" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="89" col="1" hash="14652449706298334431"/>
+<class name="path_leaf_string_stl" file="src/app/Study2Grid/FileParsers.cpp" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="111" col="1" hash="16155764167710129978"/>
+<class name="path_leaf_string_txt" file="src/app/Study2Grid/FileParsers.cpp" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_WIDGETS_LIB=1;__PIC__=1;NDEBUG=1;__PIC__=1" line="133" col="1" hash="11504259275046809580"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="src/app/Study2Grid/FileParsers.cpp:15:17" my-argnr="1" my-argname="entry" file="src/app/Study2Grid/FileParsers.cpp" line="17" col="33" value="0"/>
+    <unsafe-usage my-id="src/app/Study2Grid/FileParsers.cpp:40:17" my-argnr="1" my-argname="entry" file="src/app/Study2Grid/FileParsers.cpp" line="42" col="33" value="0"/>
+    <unsafe-usage my-id="src/app/Study2Grid/FileParsers.cpp:68:17" my-argnr="1" my-argname="entry" file="src/app/Study2Grid/FileParsers.cpp" line="70" col="33" value="0"/>
+    <unsafe-usage my-id="src/app/Study2Grid/FileParsers.cpp:90:17" my-argnr="1" my-argname="entry" file="src/app/Study2Grid/FileParsers.cpp" line="92" col="33" value="0"/>
+    <unsafe-usage my-id="src/app/Study2Grid/FileParsers.cpp:112:17" my-argnr="1" my-argname="entry" file="src/app/Study2Grid/FileParsers.cpp" line="114" col="33" value="0"/>
+    <unsafe-usage my-id="src/app/Study2Grid/FileParsers.cpp:134:17" my-argnr="1" my-argname="entry" file="src/app/Study2Grid/FileParsers.cpp" line="136" col="33" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="read_directory_for_directories" lineNumber="25" column="6"/>
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="alphabetic_compare" lineNumber="52" column="6"/>
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="read_directory_for_tif" lineNumber="55" column="6"/>
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="read_directory_for_jts" lineNumber="78" column="6"/>
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="read_directory_for_jtak" lineNumber="100" column="6"/>
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="read_directory_for_stl" lineNumber="122" column="6"/>
+    <functiondecl file="src/app/Study2Grid/FileParsers.cpp" functionName="read_directory_for_txt" lineNumber="144" column="6"/>
+    <functioncall functionName="alphabetic_compare"/>
+    <functioncall functionName="back_inserter"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="extension"/>
+    <functioncall functionName="path"/>
+    <functioncall functionName="remove_if"/>
+    <functioncall functionName="sort"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="transform"/>
+  </FileInfo>
+</analyzerinfo>

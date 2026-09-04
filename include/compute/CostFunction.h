@@ -83,9 +83,8 @@ public:
     JTML_DLL std::vector<Parameter<int>> getIntParameters();
     JTML_DLL std::vector<Parameter<bool>> getBoolParameters();
 
-    /*Get/Set Cost Function Name*/
+    /*Get Cost Function Name*/
     JTML_DLL std::string getCostFunctionName();
-    JTML_DLL void setCostFunctionName(std::string cost_function_name);
 
 private:
     /*Containers for Parameters*/

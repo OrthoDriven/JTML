@@ -93,7 +93,6 @@ CostFunctionManager& CostFunctionManager::operator=(
     pose_storage_ = other.pose_storage_;
 
     current_frame_index_ = other.current_frame_index_;
-    upload_epoch_ = other.upload_epoch_;
     biplane_mode_ = other.biplane_mode_;
 
     /*
@@ -143,65 +142,10 @@ void CostFunctionManager::UploadData(
     biplane_mode_ = biplane_mode;
 };
 
-void CostFunctionManager::UploadDistanceMap(
-    std::vector<gpu_cost_function::GPUFrame*>* gpu_distance_maps,
-    std::vector<gpu_cost_function::GPUHeatmap*>* gpu_heatmaps
-
-) {
-    gpu_distance_maps_ = gpu_distance_maps;
-    gpu_heatmaps_ = gpu_heatmaps;
-};
-
 /*Set Active Cost Function*/
 void CostFunctionManager::setActiveCostFunction(
     jta_cost_function::CostFunctionType cf_type) {
     active_cost_function_ = cf_type;
-};
-
-/*Update Cost Function Values from Saved Session*/
-bool CostFunctionManager::updateCostFunctionParameterValues(
-    CostFunctionType cost_function_type,
-    std::string parameter_name,
-    double value) {
-    for (auto i :
-         available_cost_functions_[cost_function_type].getDoubleParameters()) {
-        if (i.getParameterName() == parameter_name) {
-            i.setParameterValue(value);
-            return true;
-        }
-    }
-    /*Unsuccessful*/
-    return false;
-};
-bool CostFunctionManager::updateCostFunctionParameterValues(
-    CostFunctionType cost_function_type,
-    std::string parameter_name,
-    int value) {
-    /*Check Active Cost Function Name Exists*/
-    for (auto i :
-         available_cost_functions_[cost_function_type].getIntParameters()) {
-        if (i.getParameterName() == parameter_name) {
-            i.setParameterValue(value);
-            return true;
-        }
-    }
-    /*Unsuccessful*/
-    return false;
-};
-bool CostFunctionManager::updateCostFunctionParameterValues(
-    CostFunctionType cost_function_type,
-    std::string parameter_name,
-    bool value) {
-    /*Check Active Cost Function Name Exists*/
-    for (auto i :
-         available_cost_functions_[cost_function_type].getBoolParameters()) {
-        if (i.getParameterName() == parameter_name) {
-            i.setParameterValue(value);
-            return true;
-        }
-    }
-    /*Unsuccessful*/
-    return false;
 };
 
 /*Return Available Cost Functions*/
@@ -231,18 +175,6 @@ void CostFunctionManager::setCurrentFrameIndex(
     unsigned int current_frame_index) {
     current_frame_index_ = current_frame_index;
 };
-
-unsigned int CostFunctionManager::getCurrentFrameIndex() const {
-    return current_frame_index_;
-}
-
-void CostFunctionManager::BumpUploadEpoch() {
-    ++upload_epoch_;
-}
-
-std::uint64_t CostFunctionManager::getUploadEpoch() const {
-    return upload_epoch_;
-}
 
 /*Call Active Cost Function*/
 double CostFunctionManager::callActiveCostFunction() {

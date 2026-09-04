@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="10969660637592585487">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/view/frame_list_model.h:24:9" my-argnr="1" my-argname="parent" file="src/view/frame_list_model.cpp" line="7" col="12" value="0"/>
+    <unsafe-usage my-id="include/view/frame_list_model.h:25:14" my-argnr="1" my-argname="index" file="src/view/frame_list_model.cpp" line="11" col="10" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/view/frame_list_model.cpp" functionName="AppendFrame" lineNumber="21" column="22"/>
+    <functioncall functionName="Call"/>
+    <functioncall functionName="DisplayRole"/>
+    <functioncall functionName="QModelIndex"/>
+    <functioncall functionName="QString"/>
+    <functioncall functionName="QVariant"/>
+    <functioncall functionName="at"/>
+    <functioncall functionName="beginInsertRows"/>
+    <functioncall functionName="endInsertRows"/>
+    <functioncall functionName="isValid"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="row"/>
+    <functioncall functionName="size"/>
+  </FileInfo>
+</analyzerinfo>

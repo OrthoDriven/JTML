@@ -1,0 +1,5 @@
+registerProducer call:[move,push_back,size] noreturn:[push_back]
+tryAcquireExclusive call:[assign,get_id,size,try_lock_for,unlock]
+release call:[assign,get_id,size,unlock] noreturn:[unlock]
+isOwner call:[get_id] noreturn:[get_id]
+parkedCount

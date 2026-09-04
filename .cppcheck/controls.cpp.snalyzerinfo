@@ -1,0 +1,2 @@
+Controls call:[QGraphicsPixmapItem,QGraphicsView,QPixmap,addItem,clear,setAutoFillBackground,setFixedSize,setFrameStyle,setGeometry,setParent,setScene,setSceneRect,setValue,setupUi,verticalScrollBar,viewport] noreturn:[addItem]
+Controls

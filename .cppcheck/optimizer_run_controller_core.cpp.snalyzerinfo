@@ -1,0 +1,20 @@
+state
+running
+canStart
+onRunStarted
+requestStop
+onInitializeFailed
+onOptimizerError
+onTerminalFrame
+epoch
+stageText
+costCalls
+currentMinimum
+progress
+clearSeedPose
+hasSeedPose
+BuildGateInput
+EvaluateGate call:[BuildGateInput,Evaluate]
+StageLabel call:[max,to_string] noreturn:[to_string]
+refreshProgress call:[StageLabel,double,min]
+setSeedPose call:[Point6D]

@@ -95,18 +95,6 @@ public:
         int leaf_budget = 0;
         bool enable_leaf = false;
     };
-
-    /*The outcome of takeSeedForRun: the pending seed popped for the run
-     * (one-shot). The shell applies it to the storage (snapshotting first
-     * for the M10a restore) and maps the scene write. `applied == false`
-     * means no seed or a stale one (dropped silently).*/
-    struct AppliedSeed {
-        bool applied = false;
-        Point6D pose;
-        int frame = -1;
-        int model = -1;
-    };
-
     /*---- Gate (H2) --------------------------------------------------------
      * The Input is assembled with previous == current regardless of the
      * session mirrors (exactly as OptimizerBridge did: buildGateInput sets
@@ -180,36 +168,6 @@ public:
     double progress() const {
         return progress_;
     }
-
-    /*---- Seed lifecycle (M10a) --------------------------------------------*/
-    /*One-shot starting-pose seed (R8 — the ML estimate seeds the optimizer).
-     * The seed is estimated for (frame, model); run() takes it AFTER the
-     * gate so a rejected run never consumes it (the shell applies it before
-     * Initialize so the estimate wins over the SaveLastPose mirror).*/
-    void setSeedPose(
-        double x,
-        double y,
-        double z,
-        double xa,
-        double ya,
-        double za,
-        int frame,
-        int model);
-    void clearSeedPose() {
-        has_seed_pose_ = false;
-    }
-    bool hasSeedPose() const {
-        return has_seed_pose_;
-    }
-    /*Pop the pending seed for a run at (current_frame, primary_model_index)
-     * with model_count models. Stale guards preserved (OptimizerBridge.cpp:
-     * 276-291): the seed applies only when the run's frame is still the
-     * seeded frame and the seeded model is still the primary selection;
-     * otherwise it is dropped silently — a stale-frame estimate must never
-     * override a different frame's pose.*/
-    AppliedSeed
-    takeSeedForRun(int current_frame, int primary_model_index, int model_count);
-
 private:
     RunState state_ = RunState::Idle;
     int epoch_ = 0;
@@ -217,10 +175,6 @@ private:
     int cost_calls_ = 0;
     double current_minimum_ = 0.0;
     double progress_ = 0.0;
-    bool has_seed_pose_ = false;
-    Point6D seed_pose_;
-    int seed_frame_ = -1;
-    int seed_model_ = -1;
 };
 
 }  // namespace jta

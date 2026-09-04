@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8319358552118639097">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/coordinator/optimizer_run_controller_core.h:115:44" my-argnr="1" my-argname="in" file="src/coordinator/optimizer_run_controller_core.cpp" line="19" col="31" value="0"/>
+    <unsafe-usage my-id="include/coordinator/optimizer_run_controller_core.h:168:24" my-argnr="1" my-argname="b" file="src/coordinator/optimizer_run_controller_core.cpp" line="47" col="9" value="0"/>
+    <unsafe-usage my-id="include/coordinator/optimizer_run_controller_core.h:169:10" my-argnr="1" my-argname="b" file="src/coordinator/optimizer_run_controller_core.cpp" line="70" col="28" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="state" lineNumber="119" column="14"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="running" lineNumber="123" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="canStart" lineNumber="128" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="onRunStarted" lineNumber="134" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="requestStop" lineNumber="138" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="onInitializeFailed" lineNumber="143" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="onOptimizerError" lineNumber="146" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="onTerminalFrame" lineNumber="152" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="epoch" lineNumber="159" column="9"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="stageText" lineNumber="170" column="17"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="costCalls" lineNumber="173" column="9"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="currentMinimum" lineNumber="176" column="12"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="progress" lineNumber="180" column="12"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="clearSeedPose" lineNumber="198" column="10"/>
+    <functiondecl file="include/coordinator/optimizer_run_controller_core.h" functionName="hasSeedPose" lineNumber="201" column="10"/>
+    <functiondecl file="src/coordinator/optimizer_run_controller_core.cpp" functionName="BuildGateInput" lineNumber="16" column="61"/>
+    <functiondecl file="src/coordinator/optimizer_run_controller_core.cpp" functionName="EvaluateGate" lineNumber="33" column="68"/>
+    <functiondecl file="src/coordinator/optimizer_run_controller_core.cpp" functionName="StageLabel" lineNumber="43" column="41"/>
+    <functiondecl file="src/coordinator/optimizer_run_controller_core.cpp" functionName="refreshProgress" lineNumber="64" column="34"/>
+    <functiondecl file="src/coordinator/optimizer_run_controller_core.cpp" functionName="setSeedPose" lineNumber="80" column="34"/>
+    <functioncall functionName="BuildGateInput"/>
+    <functioncall functionName="Evaluate"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="StageLabel"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="max"/>
+    <functioncall functionName="min"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="10053599238426803599">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="src/app/Study2Grid/STLReader.h:28:1" my-argnr="1" my-argname="path" file="src/app/Study2Grid/STLReader.cpp" line="115" col="30" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/app/Study2Grid/STLReader.cpp" functionName="getStlFileFormat" lineNumber="15" column="12"/>
+    <functiondecl file="src/app/Study2Grid/STLReader.cpp" functionName="readAnySTL" lineNumber="109" column="1"/>
+    <functioncall functionName="ReadOnly"/>
+    <functioncall functionName="atEnd"/>
+    <functioncall functionName="binary"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="close"/>
+    <functioncall functionName="contains"/>
+    <functioncall functionName="data"/>
+    <functioncall functionName="getStlFileFormat"/>
+    <functioncall functionName="getline"/>
+    <functioncall functionName="open"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="qDebug"/>
+    <functioncall functionName="qPrintable"/>
+    <functioncall functionName="read"/>
+    <functioncall functionName="readLine"/>
+    <functioncall functionName="reset"/>
+    <functioncall functionName="seek"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="startsWith"/>
+    <functioncall functionName="stof"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="toStdString"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

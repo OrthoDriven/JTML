@@ -140,33 +140,6 @@ StageScript BuildStageScript(
  * empty and costCalls stays 0 (the U6 sym-trap pin).*/
 std::vector<unsigned int> CumulativeStageCaps(const StageScript& script);
 
-/*A named run graph: registered C++ data (the listCostFunctions pattern).*/
-struct StageGraph {
-    std::string name;
-    StageScript stages;
-};
-
-/*All registered graphs. v1 = "jtml-production":
- *   [{Trunk,  (35)^6,              20000, 1, cfm 0},
- *    {Branch, (15,15,25,25,25,25), 5000,  2, cfm 1},
- *    {Leaf,   (3,3,15,3,3,3),      5000,  1, cfm 2}]
- * — the run shape today's Optimize() executes, built from the same
- * settings_constants.h constants the loop consumes. Engine runtime dilation is
- * 6/4/1 (baseline.json's dilation_px {6,3,1} is the known-stale docs-claim,
- * reconciled by the U5 probe data in the hygiene pass).*/
-std::vector<StageGraph> ListStageGraphs();
-
-/*Lookup by name — fails fast with a clear std::invalid_argument for unknown
- * names and for the reserved stub names (data-only future kinds, R6).*/
-const StageGraph& StageGraphByName(const std::string& name);
-
-/*Reserved stub graph names — future kinds recorded as data-only, NOT
- * exercised: the polish stage (R5), the ML initializer prefix (origin
- * R15/R16), and the flood-direct-jta shape (the lineage 3-branch / 50k +
- * 15k×3 + 50k config with the (5,5,20,5,5,5) leaf). Requesting one fails fast
- * until a follow-up plan registers it.*/
-const std::vector<std::string>& ReservedStubGraphNames();
-
 }  // namespace jta
 
 #endif /* OPTIMIZER_STAGE_SCRIPT_H */

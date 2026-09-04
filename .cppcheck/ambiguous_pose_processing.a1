@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="11336520859805244088">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/domain/ambiguous_pose_processing.h:28:9" my-argnr="2" my-argname="tibia_pose" file="src/domain/ambiguous_pose_processing.cpp" line="12" col="9" value="0"/>
+    <unsafe-usage my-id="include/domain/ambiguous_pose_processing.h:38:8" my-argnr="1" my-argname="femur_pose" file="src/domain/ambiguous_pose_processing.cpp" line="30" col="9" value="0"/>
+    <unsafe-usage my-id="include/domain/ambiguous_pose_processing.h:38:8" my-argnr="2" my-argname="tibia_pose" file="src/domain/ambiguous_pose_processing.cpp" line="31" col="35" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/ambiguous_pose_processing.cpp" functionName="tibial_pose_selector" lineNumber="10" column="9"/>
+    <functiondecl file="src/domain/ambiguous_pose_processing.cpp" functionName="varus_valgus_calculation" lineNumber="25" column="8"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="abs"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="asin"/>
+    <functioncall functionName="compute_mirror_pose"/>
+    <functioncall functionName="create_312_transform"/>
+    <functioncall functionName="invert_transform"/>
+    <functioncall functionName="matmult4"/>
+    <functioncall functionName="varus_valgus_calculation"/>
+  </FileInfo>
+</analyzerinfo>

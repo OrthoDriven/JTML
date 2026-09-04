@@ -4,9 +4,16 @@
 
 # JTML — Agent Working Guide
 
-JTML is a Qt6 (qt6-main/wayland 6.11.^) + VTK 9.7.^ built against Qt6 + CUDA 13.^ + OpenCV C++20 desktop app for 2D-3D knee-implant
-registration (DIRECT global optimizer over a GPU cost function). This file captures the
-conventions a coding agent needs to work here without re-deriving them.
+JTML is a Qt6 (qt6-main/wayland 6.11.^) + VTK 9.7.^ built against Qt6 + CUDA 13.^ + OpenCV
+C++20 desktop app for 2D-3D knee-implant registration (DIRECT global optimizer over a GPU
+cost function). This file captures the conventions a coding agent needs to work here
+without re-deriving them.
+
+# IMPORTANT
+
+Everything in `src/app/experimental/` is purely experimental. Nothing here should be taken
+as indicative of anything other than an interesting afternoon trying out QML. None of the
+.h/.cpp files here are relevant in any way whatsoever.
 
 ## Build & environment (pixi)
 

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="8018461524060597927">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/ml_orchestrator.h:123:21" my-argnr="1" my-argname="frame" file="src/services/ml_orchestrator.cpp" line="31" col="32" value="0"/>
+    <unsafe-usage my-id="include/services/ml_orchestrator.h:123:21" my-argnr="7" my-argname="segment_op" file="src/services/ml_orchestrator.cpp" line="31" col="21" value="0"/>
+    <unsafe-usage my-id="include/services/ml_orchestrator.h:138:23" my-argnr="4" my-argname="estimate_op" file="src/services/ml_orchestrator.cpp" line="75" col="24" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/services/ml_orchestrator.cpp" functionName="SegmentFrame" lineNumber="18" column="33"/>
+    <functiondecl file="src/services/ml_orchestrator.cpp" functionName="EstimateFrame" lineNumber="67" column="35"/>
+    <functioncall functionName="GetInvertedImage"/>
+    <functioncall functionName="GetOriginalImage"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Mat"/>
+    <functioncall functionName="Point"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="Point_"/>
+    <functioncall functionName="SetDilatedImage"/>
+    <functioncall functionName="SetDistanceMap"/>
+    <functioncall functionName="SetEdgeImage"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="copyTo"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="setCurvatureHeatmaps"/>
+    <functioncall functionName="uchar"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

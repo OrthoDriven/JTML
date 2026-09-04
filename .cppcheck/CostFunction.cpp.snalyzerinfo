@@ -1,0 +1,37 @@
+Parameter < double >
+Parameter < double >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+Parameter < int >
+Parameter < int >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+Parameter < bool >
+Parameter < bool >
+getParameterName
+getParameterValue
+setParameterValue
+getParameterType
+to_string
+cost_function_type_from_string
+CostFunction
+CostFunction
+CostFunction
+addParameter call:[push_back] noreturn:[push_back]
+addParameter call:[push_back] noreturn:[push_back]
+addParameter call:[push_back] noreturn:[push_back]
+setDoubleParameterValue call:[getParameterName,setParameterValue,size]
+setIntParameterValue call:[getParameterName,setParameterValue,size]
+setBoolParameterValue call:[getParameterName,setParameterValue,size]
+getDoubleParameterValue call:[getParameterName,getParameterValue,size]
+getIntParameterValue call:[getParameterName,getParameterValue,size]
+getBoolParameterValue call:[getParameterName,getParameterValue,size]
+getDoubleParameters
+getIntParameters
+getBoolParameters
+getCostFunctionName
+setCostFunctionName

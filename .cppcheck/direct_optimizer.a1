@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="10026041827875932325">
+  <FileInfo check="Class">
+<class name="DirectOptimizer" file="include/domain/direct_optimizer.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;USE_RUST_DIRECT=1;USING_CPP_COST=1;__PIC__=1;NDEBUG=1" line="28" col="1" hash="10031345196362903553"/>
+<class name="DirectOptimizer::Options" file="include/domain/direct_optimizer.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;USE_RUST_DIRECT=1;USING_CPP_COST=1;__PIC__=1;NDEBUG=1" line="61" col="5" hash="12713396889271130431"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:110:15" my-argnr="1" my-argname="lhs" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="110" col="57" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:331:15" my-argnr="1" my-argname="lhs" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="331" col="51" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:397:15" my-argnr="1" my-argname="lhs" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="397" col="51" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:268:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="705" col="23" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:269:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="710" col="23" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:270:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="715" col="22" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:271:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="720" col="23" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:272:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="725" col="22" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:273:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="730" col="23" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:305:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="807" col="15" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:346:3" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="876" col="23" value="0"/>
+    <unsafe-usage my-id=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h:350:8" my-argnr="1" my-argname="other" file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" line="893" col="16" value="0"/>
+    <unsafe-usage my-id="src/domain/direct_optimizer.cpp:25:6" my-argnr="1" my-argname="opts" file="src/domain/direct_optimizer.cpp" line="26" col="9" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="swap" lineNumber="110" column="15"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="swap" lineNumber="331" column="15"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="swap" lineNumber="397" column="15"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="data" lineNumber="573" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="size" lineNumber="578" column="23"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="length" lineNumber="583" column="23"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="empty" lineNumber="588" column="16"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="at" lineNumber="600" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="front" lineNumber="608" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="back" lineNumber="614" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="begin" lineNumber="734" column="39"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="end" lineNumber="742" column="39"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="swap" lineNumber="749" column="16"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="in_place" lineNumber="834" column="16"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="swap" lineNumber="843" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="from_raw" lineNumber="849" column="16"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="into_raw" lineNumber="856" column="12"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="empty" lineNumber="908" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="data" lineNumber="913" column="12"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="at" lineNumber="925" column="18"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="front" lineNumber="933" column="18"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="back" lineNumber="939" column="18"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="at" lineNumber="952" column="12"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="front" lineNumber="960" column="12"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="back" lineNumber="966" column="12"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="reserve" lineNumber="972" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="push_back" lineNumber="977" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="push_back" lineNumber="982" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="emplace_back" lineNumber="988" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="clear" lineNumber="998" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="begin" lineNumber="1003" column="35"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="end" lineNumber="1008" column="35"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="begin" lineNumber="1013" column="41"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="end" lineNumber="1018" column="41"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="cbegin" lineNumber="1023" column="41"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="cend" lineNumber="1028" column="41"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="swap" lineNumber="1033" column="14"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="do_size_of" lineNumber="1065" column="3"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="do_size_of" lineNumber="1071" column="3"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="size_of" lineNumber="1077" column="7"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="do_align_of" lineNumber="1083" column="3"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="do_align_of" lineNumber="1089" column="3"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="align_of" lineNumber="1095" column="7"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="size_of" lineNumber="1101" column="13"/>
+    <functiondecl file=".build/rust/optimizer-rs/corrosion_generated/cxxbridge/optimizer-rs_bridge/include/rust/cxx.h" functionName="align_of" lineNumber="1106" column="13"/>
+    <functiondecl file="include/domain/cost.h" functionName="evaluate" lineNumber="49" column="26"/>
+    <functiondecl file="include/domain/cost.h" functionName="evaluate_batch" lineNumber="56" column="37"/>
+    <functiondecl file="include/domain/cost.h" functionName="IsBound" lineNumber="80" column="10"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="UnitCenter" lineNumber="15" column="9"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="ValidateOptions" lineNumber="25" column="6"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="Run" lineNumber="118" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="GetCostFunctionCalls" lineNumber="162" column="31"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="GetOptimumLocation" lineNumber="166" column="26"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="GetOptimumValue" lineNumber="170" column="25"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="Stop" lineNumber="174" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="SetCallOffset" lineNumber="178" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="SetIterationCallback" lineNumber="182" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="SetImprovementCallback" lineNumber="186" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="SetBatchCost" lineNumber="190" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="ConvexHull" lineNumber="194" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="TrisectPotentiallyOptimal" lineNumber="244" column="23"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="GetNonFiniteCount" lineNumber="420" column="31"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="EvaluateCostFunction" lineNumber="424" column="40"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="DenormalizeRange" lineNumber="475" column="26"/>
+    <functiondecl file="src/domain/direct_optimizer.cpp" functionName="DenormalizeFromCenter" lineNumber="485" column="26"/>
+    <functioncall functionName="A"/>
+    <functioncall functionName="AddHyperBox"/>
+    <functioncall functionName="Args"/>
+    <functioncall functionName="Box"/>
+    <functioncall functionName="ConvexHull"/>
+    <functioncall functionName="DBL_MAX"/>
+    <functioncall functionName="DeleteHyperBoxes"/>
+    <functioncall functionName="DenormalizeFromCenter"/>
+    <functioncall functionName="DenormalizeRange"/>
+    <functioncall functionName="DirectDataStorage"/>
+    <functioncall functionName="DirectOptimizer"/>
+    <functioncall functionName="Error"/>
+    <functioncall functionName="EvaluateCostFunction"/>
+    <functioncall functionName="Fields"/>
+    <functioncall functionName="Fn"/>
+    <functioncall functionName="GetCenter"/>
+    <functioncall functionName="GetDirection"/>
+    <functioncall functionName="GetLargestDirection"/>
+    <functioncall functionName="GetMinimumHyperbox"/>
+    <functioncall functionName="GetMinimumHyperboxValue"/>
+    <functioncall functionName="GetNumberColumns"/>
+    <functioncall functionName="GetSides"/>
+    <functioncall functionName="GetSizeStoredInColumn"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="IsRelocatable"/>
+    <functioncall functionName="Opaque"/>
+    <functioncall functionName="Options"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="Ret"/>
+    <functioncall functionName="SetCenter"/>
+    <functioncall functionName="Signature"/>
+    <functioncall functionName="Slice"/>
+    <functioncall functionName="Str"/>
+    <functioncall functionName="String"/>
+    <functioncall functionName="T"/>
+    <functioncall functionName="TrisectPotentiallyOptimal"/>
+    <functioncall functionName="TrisectSide"/>
+    <functioncall functionName="Ts"/>
+    <functioncall functionName="UnitCenter"/>
+    <functioncall functionName="UpdateDirection"/>
+    <functioncall functionName="ValidateOptions"/>
+    <functioncall functionName="Vec"/>
+    <functioncall functionName="add_const"/>
+    <functioncall functionName="align"/>
+    <functioncall functionName="align_of"/>
+    <functioncall functionName="alloc"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="assert"/>
+    <functioncall functionName="back_inserter"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="cbegin"/>
+    <functioncall functionName="cend"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="conditional"/>
+    <functioncall functionName="contiguous_iterator_tag"/>
+    <functioncall functionName="copy"/>
+    <functioncall functionName="copy_assignable_if"/>
+    <functioncall functionName="data"/>
+    <functioncall functionName="dealloc"/>
+    <functioncall functionName="decay_t"/>
+    <functioncall functionName="detect"/>
+    <functioncall functionName="detect_IsRelocatable"/>
+    <functioncall functionName="distance"/>
+    <functioncall functionName="do_align_of"/>
+    <functioncall functionName="do_size_of"/>
+    <functioncall functionName="drop"/>
+    <functioncall functionName="emplace_back"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="evaluate"/>
+    <functioncall functionName="forward"/>
+    <functioncall functionName="from_raw"/>
+    <functioncall functionName="function"/>
+    <functioncall functionName="has_value"/>
+    <functioncall functionName="initializer_list"/>
+    <functioncall functionName="invalid_argument"/>
+    <functioncall functionName="is_base_of"/>
+    <functioncall functionName="is_complete"/>
+    <functioncall functionName="is_const"/>
+    <functioncall functionName="is_detected"/>
+    <functioncall functionName="is_same"/>
+    <functioncall functionName="isfinite"/>
+    <functioncall functionName="iterator"/>
+    <functioncall functionName="move"/>
+    <functioncall functionName="nullopt"/>
+    <functioncall functionName="numeric_limits"/>
+    <functioncall functionName="optional"/>
+    <functioncall functionName="out_of_range"/>
+    <functioncall functionName="override"/>
+    <functioncall functionName="panic"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="quiet_NaN"/>
+    <functioncall functionName="remove_const"/>
+    <functioncall functionName="reserve"/>
+    <functioncall functionName="reserve_total"/>
+    <functioncall functionName="set_len"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="size_of"/>
+    <functioncall functionName="sliceInit"/>
+    <functioncall functionName="sliceLen"/>
+    <functioncall functionName="slicePtr"/>
+    <functioncall functionName="swap"/>
+    <functioncall functionName="truncate"/>
+    <functioncall functionName="unique_ptr"/>
+    <functioncall functionName="variant"/>
+    <functioncall functionName="vector"/>
+    <functioncall functionName="visit"/>
+    <functioncall functionName="void_t"/>
+  </FileInfo>
+</analyzerinfo>

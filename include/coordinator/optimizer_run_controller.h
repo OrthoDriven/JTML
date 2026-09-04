@@ -115,14 +115,8 @@ public:
     void stop();
 
     /*---- State + progress reads (QML surface) -----------------------------*/
-    RunState runState() const {
-        return core_.state();
-    }
     bool running() const {
         return core_.running();
-    }
-    bool canRun() const {
-        return core_.canStart();
     }
     QString stageText() const {
         return QString::fromStdString(core_.stageText());
@@ -136,40 +130,6 @@ public:
     double progress() const {
         return core_.progress();
     }
-
-    /*---- Seed lifecycle (M10a) --------------------------------------------*/
-    /*One-shot ML-estimate starting-pose seed, estimated for (frame, model)
-     * (the widgets equivalent: the estimate slots' direct SavePose into the
-     * storage). start() applies it AFTER the gate (a rejected run never
-     * consumes it) and before Initialize; on Initialize failure the storage
-     * snapshot is restored and seedRestored is emitted.*/
-    void setSeedPose(
-        double x,
-        double y,
-        double z,
-        double xa,
-        double ya,
-        double za,
-        int frame,
-        int model) {
-        core_.setSeedPose(x, y, z, xa, ya, za, frame, model);
-    }
-    void clearSeedPose() {
-        core_.clearSeedPose();
-    }
-    bool hasSeedPose() const {
-        return core_.hasSeedPose();
-    }
-    /*Apply the pending seed to `storage` outside a run (the QML bridge's
-     * headless-testable applySeedPose delegate): one-shot + stale guards;
-     * emits seedApplied(frame, model) when applied (the view maps the scene
-     * write).*/
-    void applySeedPose(
-        LocationStorage* storage,
-        int current_frame,
-        int primary_model_index,
-        int model_count);
-
 Q_SIGNALS:
     void runStateChanged();
     void progressChanged();
@@ -217,11 +177,6 @@ Q_SIGNALS:
         double xa,
         double ya,
         double za);
-    /*The pending seed was applied to the storage (view maps its scene).*/
-    void seedApplied(int frame, int model);
-    /*An Initialize failure restored the pre-seed storage snapshot (M10a —
-     * the estimate is not silently kept; the view re-syncs its scene).*/
-    void seedRestored(int frame, int model);
     /*App -> manager reverse bind (connected with Qt::DirectConnection to the
      * driver manager's onStopOptimizer slot in start()); stop() emits it.
      * Not meant for views.*/

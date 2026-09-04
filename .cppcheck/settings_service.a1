@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="15969461626095343915">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/settings_service.h:87:10" my-argnr="1" my-argname="settings" file="src/services/settings_service.cpp" line="130" col="41" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/services/settings_service.cpp" functionName="OrganizationName" lineNumber="26" column="26"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="ApplicationName" lineNumber="30" column="26"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="IsFirstTime" lineNumber="35" column="23"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="LoadSettings" lineNumber="39" column="46"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="MarkFirstTimeDone" lineNumber="111" column="23"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="SaveCostFunctionSettings" lineNumber="117" column="23"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="SaveOptimizerSettings" lineNumber="126" column="23"/>
+    <functiondecl file="src/services/settings_service.cpp" functionName="SaveEdgeSettings" lineNumber="161" column="23"/>
+    <functioncall functionName="ApplicationName"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="IsFirstTime"/>
+    <functioncall functionName="NativeFormat"/>
+    <functioncall functionName="OptimizerSettings"/>
+    <functioncall functionName="OrganizationName"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="QSettings"/>
+    <functioncall functionName="QString"/>
+    <functioncall functionName="SettingsService"/>
+    <functioncall functionName="allKeys"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="beginGroup"/>
+    <functioncall functionName="childGroups"/>
+    <functioncall functionName="endGroup"/>
+    <functioncall functionName="fromUtf8"/>
+    <functioncall functionName="isEmpty"/>
+    <functioncall functionName="number"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="reserve"/>
+    <functioncall functionName="setValue"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="toBool"/>
+    <functioncall functionName="toDouble"/>
+    <functioncall functionName="toInt"/>
+    <functioncall functionName="value"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

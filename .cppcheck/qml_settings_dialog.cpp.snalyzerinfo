@@ -1,0 +1,1 @@
+QmlSettingsDialog call:[QQuickWidget,QVBoxLayout,addWidget,loadFromModule,resize,setContentsMargins,setResizeMode,setWindowTitle] noreturn:[addWidget]

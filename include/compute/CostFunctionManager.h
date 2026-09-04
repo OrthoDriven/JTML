@@ -60,18 +60,6 @@ public:
     JTML_DLL void setActiveCostFunction(CostFunctionType cf_type);
 
     /*Update Cost Function Values from Saved Session*/
-    JTML_DLL bool updateCostFunctionParameterValues(
-        CostFunctionType cost_function_type,
-        std::string parameter_name,
-        double value);
-    JTML_DLL bool updateCostFunctionParameterValues(
-        CostFunctionType cost_function_type,
-        std::string parameter_name,
-        int value);
-    JTML_DLL bool updateCostFunctionParameterValues(
-        CostFunctionType cost_function_type,
-        std::string parameter_name,
-        bool value);
 
     /*Call Initialization for Active Cost Function*/
     JTML_DLL bool InitializeActiveCostFunction(std::string& error_message);
@@ -98,9 +86,6 @@ public:
 
     /*Set Current Frame Index*/
     JTML_DLL void setCurrentFrameIndex(unsigned int current_frame_index);
-    JTML_DLL unsigned int getCurrentFrameIndex() const;
-    JTML_DLL void BumpUploadEpoch();
-    JTML_DLL std::uint64_t getUploadEpoch() const;
 
     /*Stage accessor — plan 008 U2 second documented wizard-region exception:
     minimal getStage() makes the stage-guard pin observable (stage_ is dead
@@ -125,10 +110,6 @@ public:
         PoseMatrix* pose_storage,
         bool biplane_mode);
 
-    JTML_DLL void UploadDistanceMap(
-        std::vector<gpu_cost_function::GPUFrame*>* gpu_distance_maps,
-        std::vector<gpu_cost_function::GPUHeatmap*>* gpu_heatmaps);
-
     JTML_DLL ObjectiveSpec objective_spec;
 
 private:
@@ -140,13 +121,7 @@ private:
     /*Active Cost Function*/
     CostFunctionType active_cost_function_;
 
-#include "DD_NEW_POLE_CONSTRAINTCustomVariables.h"
 #include "DIRECT_DILATIONCustomVariables.h"
-#include "DIRECT_DILATION_POLE_CONSTRAINTCustomVariables.h"
-#include "DIRECT_DILATION_SAME_ZCustomVariables.h"
-#include "DIRECT_DILATION_T1CustomVariables.h"
-#include "DIRECT_MAHFOUZCustomVariables.h"
-#include "sym_trap_functionCustomVariables.h"
 
     /*Stage Enum*/
     Stage stage_;
@@ -175,39 +150,15 @@ private:
     float* prin_dist_;
     /*Current Frame Index (0 based)*/
     unsigned int current_frame_index_ = 0;
-    /* Plan 012 U2: upload epoch bumped when dilated/distance/comparison data
-     * are rewritten in place (C7) */
-    std::uint64_t upload_epoch_ = 0;
     std::unique_ptr<ObjectiveInstance> active_objective_instance_;
     /*Pose Matrix*/
     PoseMatrix* pose_storage_;
 
     /*Biplane Mode?*/
     bool biplane_mode_;
-
-    double costFunctionsym_trap_function();
-    double costFunctionDD_NEW_POLE_CONSTRAINT();
-    double costFunctionDIRECT_DILATION_POLE_CONSTRAINT();
-    double costFunctionDIRECT_DILATION_SAME_Z();
-    double costFunctionDIRECT_DILATION_T1();
     double costFunctionDIRECT_DILATION();
-    double costFunctionDIRECT_MAHFOUZ();
-
-    bool initializesym_trap_function(std::string& error_message);
-    bool initializeDD_NEW_POLE_CONSTRAINT(std::string& error_message);
-    bool initializeDIRECT_DILATION_POLE_CONSTRAINT(std::string& error_message);
-    bool initializeDIRECT_DILATION_SAME_Z(std::string& error_message);
-    bool initializeDIRECT_DILATION_T1(std::string& error_message);
     bool initializeDIRECT_DILATION(std::string& error_message);
-    bool initializeDIRECT_MAHFOUZ(std::string& error_message);
-
-    bool destructsym_trap_function(std::string& error_message);
-    bool destructDD_NEW_POLE_CONSTRAINT(std::string& error_message);
-    bool destructDIRECT_DILATION_POLE_CONSTRAINT(std::string& error_message);
-    bool destructDIRECT_DILATION_SAME_Z(std::string& error_message);
-    bool destructDIRECT_DILATION_T1(std::string& error_message);
     bool destructDIRECT_DILATION(std::string& error_message);
-    bool destructDIRECT_MAHFOUZ(std::string& error_message);
 };
 }  // namespace jta_cost_function
 

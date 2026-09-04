@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="9771927115273456779">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/model_list_builder.cpp" functionName="UniquifyModelNames" lineNumber="10" column="44"/>
+    <functiondecl file="src/domain/model_list_builder.cpp" functionName="AllSameSize" lineNumber="52" column="24"/>
+    <functioncall functionName="pair"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="to_string"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

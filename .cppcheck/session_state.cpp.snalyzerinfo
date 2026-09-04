@@ -1,0 +1,15 @@
+SetModelCount call:[back,empty,push_back,swap] noreturn:[push_back,swap]
+GetModelCount
+SetSelectedModels call:[begin,end,push_back,sort,swap] noreturn:[push_back,swap]
+GetSelectedModels
+GetPrimaryModelIndex call:[empty,front] noreturn:[front]
+IsSingleSelection call:[size]
+SetCurrentFrame
+GetCurrentFrame
+SetFrameCount
+GetFrameCount
+SetPreviousFrame
+GetPreviousFrame
+SetPreviousModelRows call:[begin,end,push_back,sort,swap] noreturn:[push_back,swap]
+GetPreviousModelRows
+HasPreviousSelection call:[empty] noreturn:[empty]

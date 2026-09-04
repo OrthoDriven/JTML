@@ -1,0 +1,9 @@
+SettingsService
+OrganizationName call:[fromUtf8,sizeof] noreturn:[fromUtf8]
+ApplicationName global:[VER_FIRST_NUM,VER_LAST_NUM,VER_MIDDLE_NUM] call:[fromUtf8,number,sizeof] noreturn:[number]
+IsFirstTime call:[childGroups,size]
+LoadSettings call:[EdgeSettings,IsFirstTime,OptimizerSettings,Point6D,allKeys,beginGroup,endGroup,push_back,reserve,size,toBool,toDouble,toInt,value] noreturn:[push_back]
+MarkFirstTimeDone call:[beginGroup,endGroup,setValue] noreturn:[endGroup]
+SaveCostFunctionSettings call:[beginGroup,endGroup,setValue] noreturn:[endGroup,setValue]
+SaveOptimizerSettings call:[beginGroup,endGroup,setValue] noreturn:[endGroup]
+SaveEdgeSettings call:[beginGroup,endGroup,setValue] noreturn:[endGroup]

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="3361124608385891912">
+  <FileInfo check="ctu">
+<function-call call-id="src/domain/pose_file_io.cpp:52:6" call-funcname="TokenizeLine" call-argnr="2" file="src/domain/pose_file_io.cpp" line="170" col="25" call-argexpr="probe" call-argvaluetype="7" call-argvalue="144" call-argvalue-ufr="0"/><function-call call-id="src/domain/pose_file_io.cpp:52:6" call-funcname="TokenizeLine" call-argnr="2" file="src/domain/pose_file_io.cpp" line="179" col="22" call-argexpr="tokens" call-argvaluetype="7" call-argvalue="144" call-argvalue-ufr="0"/><function-call call-id="src/domain/pose_file_io.cpp:99:9" call-funcname="ColumnsToPoint" call-argnr="1" file="src/domain/pose_file_io.cpp" line="187" col="29" call-argexpr="tokens" call-argvaluetype="7" call-argvalue="144" call-argvalue-ufr="0"/><function-call call-id="src/domain/pose_file_io.cpp:52:6" call-funcname="TokenizeLine" call-argnr="2" file="src/domain/pose_file_io.cpp" line="226" col="26" call-argexpr="tokens" call-argvaluetype="7" call-argvalue="144" call-argvalue-ufr="0"/><function-call call-id="src/domain/pose_file_io.cpp:99:9" call-funcname="ColumnsToPoint" call-argnr="1" file="src/domain/pose_file_io.cpp" line="236" col="41" call-argexpr="tokens" call-argvaluetype="7" call-argvalue="144" call-argvalue-ufr="0"/>  </FileInfo>
+  <FileInfo check="Bounds checking">
+    <array-index>
+    <unsafe-usage my-id="src/domain/pose_file_io.cpp:99:9" my-argnr="1" my-argname="t" file="src/domain/pose_file_io.cpp" line="100" col="26" value="0"/>
+    </array-index>
+  </FileInfo>
+  <FileInfo check="Null pointer">
+    <unsafe-usage my-id="src/domain/pose_file_io.cpp:99:9" my-argnr="1" my-argname="t" file="src/domain/pose_file_io.cpp" line="100" col="26" value="0"/>
+  </FileInfo>
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="src/domain/pose_file_io.cpp:52:6" my-argnr="1" my-argname="line" file="src/domain/pose_file_io.cpp" line="58" col="22" value="0"/>
+    <unsafe-usage my-id="src/domain/pose_file_io.cpp:99:9" my-argnr="1" my-argname="t" file="src/domain/pose_file_io.cpp" line="100" col="26" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="WriteRow" lineNumber="19" column="6"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="TokenizeLine" lineNumber="52" column="6"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="ColumnsToPoint" lineNumber="99" column="9"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="ReadLines" lineNumber="111" column="26"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="WritePose" lineNumber="132" column="6"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="ReadPose" lineNumber="150" column="12"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="WriteKinematics" lineNumber="195" column="6"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="ReadKinematics" lineNumber="207" column="12"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="WritePoseFile" lineNumber="248" column="6"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="ReadPoseFile" lineNumber="253" column="12"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="WriteKinematicsFile" lineNumber="261" column="6"/>
+    <functiondecl file="src/domain/pose_file_io.cpp" functionName="ReadKinematicsFile" lineNumber="268" column="12"/>
+    <functioncall functionName="ColumnsToPoint"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="ReadKinematics"/>
+    <functioncall functionName="ReadLines"/>
+    <functioncall functionName="ReadPose"/>
+    <functioncall functionName="TokenizeLine"/>
+    <functioncall functionName="WriteKinematics"/>
+    <functioncall functionName="WritePose"/>
+    <functioncall functionName="WriteRow"/>
+    <functioncall functionName="any_of"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="back"/>
+    <functioncall functionName="begin"/>
+    <functioncall functionName="clear"/>
+    <functioncall functionName="empty"/>
+    <functioncall functionName="end"/>
+    <functioncall functionName="erase"/>
+    <functioncall functionName="find"/>
+    <functioncall functionName="front"/>
+    <functioncall functionName="getline"/>
+    <functioncall functionName="has_value"/>
+    <functioncall functionName="isspace"/>
+    <functioncall functionName="optional"/>
+    <functioncall functionName="pop_back"/>
+    <functioncall functionName="push_back"/>
+    <functioncall functionName="setprecision"/>
+    <functioncall functionName="size"/>
+    <functioncall functionName="stod"/>
+    <functioncall functionName="string"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

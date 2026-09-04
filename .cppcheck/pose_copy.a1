@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="3766091327218019027">
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/domain/pose_copy.cpp" functionName="CheckSelection" lineNumber="9" column="16"/>
+    <functiondecl file="src/domain/pose_copy.cpp" functionName="PreviousPose" lineNumber="26" column="10"/>
+    <functiondecl file="src/domain/pose_copy.cpp" functionName="NextPose" lineNumber="40" column="10"/>
+  </FileInfo>
+</analyzerinfo>

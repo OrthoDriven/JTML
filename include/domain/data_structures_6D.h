@@ -78,8 +78,6 @@ struct HyperBox6D  // Stores HyperCube Info
 
     /*Divide a Side in Three*/
     void TrisectSide(Direction trisect_side);
-
-    void PrintCenter();
 };
 
 #endif /*DATA_STRUCTURES_6D_H*/

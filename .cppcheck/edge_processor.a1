@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="14458153789276972859">
+  <FileInfo check="Uninitialized variables">
+    <unsafe-usage my-id="include/services/edge_processor.h:71:17" my-argnr="1" my-argname="params" file="src/services/edge_processor.cpp" line="34" col="9" value="0"/>
+    <unsafe-usage my-id="include/services/edge_processor.h:71:17" my-argnr="3" my-argname="frame" file="src/services/edge_processor.cpp" line="33" col="5" value="0"/>
+    <unsafe-usage my-id="include/services/edge_processor.h:66:17" my-argnr="1" my-argname="params" file="src/services/edge_processor.cpp" line="51" col="25" value="0"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/services/edge_processor.cpp" functionName="ResolveDilation" lineNumber="15" column="20"/>
+    <functiondecl file="src/services/edge_processor.cpp" functionName="ApplyToFrameInternal" lineNumber="29" column="21"/>
+    <functiondecl file="src/services/edge_processor.cpp" functionName="ApplyToFrame" lineNumber="38" column="21"/>
+    <functiondecl file="src/services/edge_processor.cpp" functionName="ApplyToFrames" lineNumber="47" column="21"/>
+    <functioncall functionName="ApplyToFrameInternal"/>
+    <functioncall functionName="HyperBox6D"/>
+    <functioncall functionName="Mat"/>
+    <functioncall functionName="Point"/>
+    <functioncall functionName="Point6D"/>
+    <functioncall functionName="Point_"/>
+    <functioncall functionName="ResolveDilation"/>
+    <functioncall functionName="SetDilatedImage"/>
+    <functioncall functionName="SetEdgeImage"/>
+    <functioncall functionName="array"/>
+    <functioncall functionName="uchar"/>
+    <functioncall functionName="vector"/>
+  </FileInfo>
+</analyzerinfo>

@@ -1,0 +1,8 @@
+sessionState
+NormalizeFrame call:[return]
+NormalizeRows call:[begin,end,push_back,reserve,size,sort] noreturn:[push_back]
+SessionStateController
+UpdateSession call:[GetCurrentFrame,GetFrameCount,GetModelCount,GetSelectedModels,NormalizeFrame,NormalizeRows,SetCurrentFrame,SetFrameCount,SetModelCount,SetSelectedModels,datasetChanged] noreturn:[SetModelCount,SetSelectedModels,datasetChanged]
+CommitSelection call:[GetCurrentFrame,GetPrimaryModelIndex,GetSelectedModels,SetPreviousFrame,SetPreviousModelRows,clear,selectionChanged] noreturn:[selectionChanged]
+ResetForDatasetClear call:[SetPreviousFrame,SetPreviousModelRows,clear,clear_seed_,datasetChanged] noreturn:[clear_seed_,datasetChanged]
+runInFlight call:[run_in_flight_]

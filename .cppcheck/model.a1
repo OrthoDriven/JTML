@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<analyzerinfo hash="2486647262467326157">
+  <FileInfo check="Class">
+<class name="Model" file="include/services/model.h" configuration="__GNUC__=4;__GNUC_MINOR__=2;__GNUC_PATCHLEVEL__=1;__clang__=1;FMT_SHARED=1;GLAD_API_CALL_EXPORT=1;PROTOBUF_USE_DLLS=1;QT_CORE_LIB=1;QT_GUI_LIB=1;QT_NO_DEBUG=1;QT_OPENGLWIDGETS_LIB=1;QT_OPENGL_LIB=1;QT_WIDGETS_LIB=1;SCN_DISABLE_FAST_FLOAT=0;SCN_DISABLE_REGEX=0;SCN_REGEX_BACKEND=0;USE_C10D_GLOO=1;USE_C10D_NCCL=1;USE_DISTRIBUTED=1;USE_RPC=1;USE_TENSORPIPE=1;kiss_fft_scalar=double;__PIC__=1;NDEBUG=1;__PIC__=1" line="24" col="1" hash="12169821157340102916"/>
+  </FileInfo>
+  <FileInfo check="CheckUnusedFunctions">
+    <functiondecl file="src/services/model.cpp" functionName="LoadVerticesAndNormals" lineNumber="33" column="31"/>
+    <functioncall functionName="LoadVerticesAndNormals"/>
+    <functioncall functionName="Model"/>
+    <functioncall functionName="New"/>
+    <functioncall functionName="SetFileName"/>
+    <functioncall functionName="c_str"/>
+    <functioncall functionName="fromStdString"/>
+    <functioncall functionName="readAnySTL"/>
+    <functioncall functionName="vector"/>
+    <functioncall functionName="vtkSTLReader"/>
+    <functioncall functionName="vtkSmartPointer"/>
+  </FileInfo>
+</analyzerinfo>
