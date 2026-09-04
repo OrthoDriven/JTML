@@ -28,6 +28,7 @@
 #include "compute/curvature_utilities.h"
 #include "domain/data_structures_6D.h"
 /*Custom Calibration Struct (Used in CUDA GPU METRICS)*/
+#include "compute/objective_spec.h"
 #include "services/calibration.h"
 #include "view/settings_impl.h"
 
@@ -96,13 +97,9 @@
 #include "coordinator/session_state_controller.h"
 
 /*Optimizer Settings Control Window*/
-#include "../../src/view/qml/qml_settings_dialog.h"
 #include "view/settings_control.h"
 /*App-State Service (plan U7, R8/E11)*/
 #include "domain/session_state.h"
-
-/*DRR Settings Control Window*/
-#include "drr_tool.h"
 
 /* Symmetry Trap Analysis Window*/
 
@@ -113,8 +110,8 @@
 #include "compute/camera_calibration.h"
 
 /*machine_learning_tools*/
+#include "../../src/view/qml/qml_settings_dialog.h"
 #include "compute/machine_learning_tools.h"
-
 /*Segmentation controller (plan 004 U8 / R12): owns the per-frame segment +
  * implant-estimate ops (GPU/torch). The view owns the per-frame loops, the
  * progress, processEvents, and the render interleave; the controller exposes
@@ -456,8 +453,6 @@ public Q_SLOTS:
     void on_actionStop_Optimizer_triggered();
 
     void on_actionOptimizer_Settings_triggered();
-
-    void on_actionDRR_Settings_triggered();
 
     void on_actionReset_View_triggered();
 

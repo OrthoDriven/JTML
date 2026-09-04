@@ -19,11 +19,10 @@
  * biplane / tiered-dilation / polish), R6 (v1 ships jtml-production; stubs
  * allowed).
  *
- * The dedicated TU exists because the direct-compile test pattern
- * (docs/solutions/conventions/jtml-testability-and-cmake-conventions-2026-08-07.md)
- * must compile these pure functions WITHOUT pulling optimizer_manager.cpp's
- * Qt/CUDA surface (placement per the run's angle 04 R2-2). Qt/GPU-free except
- * for the services OptimizerSettings parameter (Qt meta-type header only).*/
+ * The dedicated TU exists because the direct-compile test pattern (see
+ * test/CMakeLists.txt) must compile these pure functions WITHOUT pulling
+ * optimizer_manager.cpp's Qt/CUDA surface. Qt/GPU-free except for the
+ * services OptimizerSettings parameter (Qt meta-type header only).*/
 
 #ifndef OPTIMIZER_STAGE_SCRIPT_H
 #define OPTIMIZER_STAGE_SCRIPT_H

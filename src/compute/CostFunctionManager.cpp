@@ -5,51 +5,26 @@
 #include "CostFunctionManager.h"
 
 #include <limits>
-/******************************************************************************/
-/******************************************************************************/
-/******************************** BEGIN WARNING *******************************/
-/******************************************************************************/
-/*************************DO NOT EDIT ANYTING IN THIS FILE ********************/
-/******************************************************************************/
-/******************************************************************************/
 
 namespace jta_cost_function {
 /*Constructor/Destructor*/
-CostFunctionManager::CostFunctionManager(Stage stage) {
+CostFunctionManager::CostFunctionManager(Stage stage) :
+    stage_(stage),
+    gpu_metrics_(nullptr),
+    gpu_edge_frames_A_(nullptr),
+    gpu_dilated_frames_A_(nullptr),
+    gpu_intensity_frames_A_(nullptr),
+    gpu_edge_frames_B_(nullptr),
+    gpu_dilated_frames_B_(nullptr),
+    gpu_intensity_frames_B_(nullptr),
+    gpu_principal_model_(nullptr),
+    gpu_non_principal_models_(nullptr),
+    pose_storage_(nullptr) {
     /*Load the listed cost functions to the vector of available cost functions*/
     listCostFunctions();
 
-    /*Set Active Cost Function as the Default (DIRECT_DILATION)*/
     setActiveCostFunction(CostFunctionType::DirectDilation);
 
-    /*Storage for Data (images, poses ,etc.) set to null*/
-    /*Pointer to Vector of GPU Frame Pointers*/
-    /*Camera A*/
-    gpu_edge_frames_A_ = 0;
-    gpu_dilated_frames_A_ = 0;
-    gpu_intensity_frames_A_ = 0;
-    /*Camera B*/
-    gpu_edge_frames_B_ = 0;
-    gpu_dilated_frames_B_ = 0;
-    gpu_intensity_frames_B_ = 0;
-    /*Pointer to Vector of principal GPU Model Pointer*/
-    gpu_principal_model_ = 0;
-    /*Pointer to Vector of non-principal GPU Model Pointers*/
-    gpu_non_principal_models_ = 0;
-
-    /*GPU Metrics Initialize*/
-    gpu_metrics_ = 0;
-
-    /*Pose Storage Initialize*/
-    pose_storage_ = 0;
-
-    /*Initialize stage*/
-    stage_ = stage;
-    /*Plan 008 U2 — first documented wizard-region exception: the original guard
-    was a tautology (`||` — no Stage value equals all three members, so every
-    manager collapsed to Trunk). `&&` forces Trunk only for invalid values.
-    cfm_index (the StageScript) is the future stage source of truth; stage_ is
-    constructor state kept for the getStage() accessor pin.*/
     if (stage_ != Stage::Trunk && stage_ != Stage::Branch &&
         stage_ != Stage::Leaf) {
         stage_ = Stage::Trunk;
@@ -60,44 +35,76 @@ CostFunctionManager::CostFunctionManager(Stage stage) {
 
     ///*Pose Storage*/
 };
-CostFunctionManager::CostFunctionManager() {
-    /*Load the listed cost functions to the vector of available cost functions*/
+CostFunctionManager::CostFunctionManager() :
+    stage_(Stage::Trunk),
+    gpu_metrics_(nullptr),
+    gpu_edge_frames_A_(nullptr),
+    gpu_dilated_frames_A_(nullptr),
+    gpu_intensity_frames_A_(nullptr),
+    gpu_edge_frames_B_(nullptr),
+    gpu_dilated_frames_B_(nullptr),
+    gpu_intensity_frames_B_(nullptr),
+    gpu_principal_model_(nullptr),
+    gpu_non_principal_models_(nullptr),
+    current_frame_index_(0),
+    pose_storage_(nullptr),
+    biplane_mode_(false) {
     listCostFunctions();
 
-    /*Set Active Cost Function as the Default (DIRECT_DILATION)*/
     setActiveCostFunction(CostFunctionType::DirectDilation);
-
-    /*Storage for Data (images, poses ,etc.) set to null*/
-    /*Pointer to Vector of GPU Frame Pointers*/
-    /*Camera A*/
-    gpu_edge_frames_A_ = 0;
-    gpu_dilated_frames_A_ = 0;
-    gpu_intensity_frames_A_ = 0;
-    /*Camera B*/
-    gpu_edge_frames_B_ = 0;
-    gpu_dilated_frames_B_ = 0;
-    gpu_intensity_frames_B_ = 0;
-    /*Pointer to Vector of principal GPU Model Pointer*/
-    gpu_principal_model_ = 0;
-    /*Pointer to Vector of non-principal GPU Model Pointers*/
-    gpu_non_principal_models_ = 0;
-
-    /*GPU Metrics Initialize*/
-    gpu_metrics_ = 0;
-
-    /*Pose Storage Initialize*/
-    pose_storage_ = 0;
-
-    /*Initialize stage*/
-    stage_ = Stage::Trunk;
-
-    /*Current Frame Index (0 based)*/
-    current_frame_index_ = 0;
-
-    /*Biplane Mode*/
-    biplane_mode_ = false;
 };
-CostFunctionManager::~CostFunctionManager() {};
+CostFunctionManager::~CostFunctionManager() = default;
+
+CostFunctionManager::CostFunctionManager(const CostFunctionManager& other) :
+    CostFunctionManager() {
+    *this = other;
+}
+
+CostFunctionManager& CostFunctionManager::operator=(
+    const CostFunctionManager& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    /* Configuration */
+    available_cost_functions_ = other.available_cost_functions_;
+    active_cost_function_ = other.active_cost_function_;
+    objective_spec = other.objective_spec;
+    stage_ = other.stage_;
+
+    /* Bound runtime resources */
+    gpu_metrics_ = other.gpu_metrics_;
+
+    gpu_edge_frames_A_ = other.gpu_edge_frames_A_;
+    gpu_dilated_frames_A_ = other.gpu_dilated_frames_A_;
+    gpu_intensity_frames_A_ = other.gpu_intensity_frames_A_;
+
+    gpu_edge_frames_B_ = other.gpu_edge_frames_B_;
+    gpu_dilated_frames_B_ = other.gpu_dilated_frames_B_;
+    gpu_intensity_frames_B_ = other.gpu_intensity_frames_B_;
+
+    gpu_distance_maps_ = other.gpu_distance_maps_;
+    gpu_heatmaps_ = other.gpu_heatmaps_;
+
+    gpu_principal_model_ = other.gpu_principal_model_;
+    gpu_non_principal_models_ = other.gpu_non_principal_models_;
+
+    prin_dist_ = other.prin_dist_;
+    pose_storage_ = other.pose_storage_;
+
+    current_frame_index_ = other.current_frame_index_;
+    upload_epoch_ = other.upload_epoch_;
+    biplane_mode_ = other.biplane_mode_;
+
+    /*
+     * ObjectiveInstance is bound/executable runtime state.
+     * Never copy it. InitializeActiveCostFunction() constructs a fresh
+     * instance after the copied manager is prepared for a run.
+     */
+    active_objective_instance_.reset();
+
+    return *this;
+}
 
 /*Upload Data (Images,Poses etc.)*/
 void CostFunctionManager::UploadData(
@@ -241,19 +248,14 @@ std::uint64_t CostFunctionManager::getUploadEpoch() const {
 double CostFunctionManager::callActiveCostFunction() {
     switch (active_cost_function_) {
     case CostFunctionType::DirectDilation:
+        // Virtual
+        // return active_objective_instance_->evaluate(
+        //     gpu_principal_model_->GetCurrentPrimaryCameraPose());
+        // Non-Virtual
+        // return static_cast<DirectDilationObjective*>(
+        //            active_objective_instance_.get())
+        //     ->evaluate(gpu_principal_model_->GetCurrentPrimaryCameraPose());
         return costFunctionDIRECT_DILATION();
-    case CostFunctionType::SymmetryTrap:
-        return costFunctionsym_trap_function();
-    case CostFunctionType::DirectDilationNewPoleConstraint:
-        return costFunctionDD_NEW_POLE_CONSTRAINT();
-    case CostFunctionType::DirectDilationOldPoleConstraint:
-        return costFunctionDIRECT_DILATION_POLE_CONSTRAINT();
-    case CostFunctionType::DirectDilationConstrainZ:
-        return costFunctionDIRECT_DILATION_SAME_Z();
-    case CostFunctionType::DirectDilationOldT1:
-        return costFunctionDIRECT_DILATION_T1();
-    case CostFunctionType::DirectDilationMahfouzVariant:
-        return costFunctionDIRECT_MAHFOUZ();
     }
 };
 /*Call Stage Initializer for Active Cost Function*/
@@ -261,19 +263,17 @@ bool CostFunctionManager::InitializeActiveCostFunction(
     std::string& error_message) {
     switch (active_cost_function_) {
     case CostFunctionType::DirectDilation:
+        // active_objective_instance_ =
+        // std::make_unique<DirectDilationObjective>(
+        //     std::get<DirectDilationSpec>(objective_spec),
+        //     gpu_principal_model_,
+        //     gpu_dilated_frames_A_->at(current_frame_index_),
+        //     gpu_metrics_,
+        //     biplane_mode_ ? gpu_dilated_frames_B_->at(current_frame_index_)
+        //                   : nullptr);
+
+        // return active_objective_instance_->initialize(error_message);
         return initializeDIRECT_DILATION(error_message);
-    case CostFunctionType::SymmetryTrap:
-        return initializesym_trap_function(error_message);
-    case CostFunctionType::DirectDilationNewPoleConstraint:
-        return initializeDD_NEW_POLE_CONSTRAINT(error_message);
-    case CostFunctionType::DirectDilationOldPoleConstraint:
-        return initializeDIRECT_DILATION_POLE_CONSTRAINT(error_message);
-    case CostFunctionType::DirectDilationConstrainZ:
-        return initializeDIRECT_DILATION_SAME_Z(error_message);
-    case CostFunctionType::DirectDilationOldT1:
-        return initializeDIRECT_DILATION_T1(error_message);
-    case CostFunctionType::DirectDilationMahfouzVariant:
-        return initializeDIRECT_MAHFOUZ(error_message);
     }
 };
 /*Call Stage Destructor for Active Cost Function*/
@@ -281,110 +281,18 @@ bool CostFunctionManager::DestructActiveCostFunction(
     std::string& error_message) {
     switch (active_cost_function_) {
     case CostFunctionType::DirectDilation:
+        // active_objective_instance_.reset();
+        // return true;
         return destructDIRECT_DILATION(error_message);
-    case CostFunctionType::SymmetryTrap:
-        return destructsym_trap_function(error_message);
-    case CostFunctionType::DirectDilationNewPoleConstraint:
-        return destructDD_NEW_POLE_CONSTRAINT(error_message);
-    case CostFunctionType::DirectDilationOldPoleConstraint:
-        return destructDIRECT_DILATION_POLE_CONSTRAINT(error_message);
-    case CostFunctionType::DirectDilationConstrainZ:
-        return destructDIRECT_DILATION_SAME_Z(error_message);
-    case CostFunctionType::DirectDilationOldT1:
-        return destructDIRECT_DILATION_T1(error_message);
-    case CostFunctionType::DirectDilationMahfouzVariant:
-        return destructDIRECT_MAHFOUZ(error_message);
     }
 };
 
 /*List Cost Functions*/
 void CostFunctionManager::listCostFunctions() {
-    /*DEFAULT COST FUNCTION*/
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: sym_trap_function*/
-    /*Parameters: */
-    CostFunction instance_sym_trap_function = CostFunction("sym_trap_function");
-    instance_sym_trap_function.addParameter(Parameter<int>("Dilation", 3));
-    instance_sym_trap_function.addParameter(
-        Parameter<double>("PoleWeight", 75));
-    instance_sym_trap_function.addParameter(Parameter<double>("VVWeight", 500));
-
-    available_cost_functions_[CostFunctionType::SymmetryTrap] =
-        instance_sym_trap_function;
-    /*End Cost Function Listing*/
-
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: DD_NEW_POLE_CONSTRAINT*/
-    /*Parameters: */
-    CostFunction instance_DD_NEW_POLE_CONSTRAINT =
-        CostFunction("DD_NEW_POLE_CONSTRAINT");
-    instance_DD_NEW_POLE_CONSTRAINT.addParameter(Parameter<int>("Dilation", 3));
-    instance_DD_NEW_POLE_CONSTRAINT.addParameter(
-        Parameter<double>("PoleWeight", 75));
-    instance_DD_NEW_POLE_CONSTRAINT.addParameter(
-        Parameter<bool>("X_TRANS", false));
-    instance_DD_NEW_POLE_CONSTRAINT.addParameter(
-        Parameter<bool>("Y_TRANS", false));
-    instance_DD_NEW_POLE_CONSTRAINT.addParameter(
-        Parameter<bool>("Z_TRANS", false));
-    available_cost_functions_
-        [CostFunctionType::DirectDilationNewPoleConstraint] =
-            (instance_DD_NEW_POLE_CONSTRAINT);
-    /*End Cost Function Listing*/
-
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: DIRECT_DILATION_POLE_CONSTRAINT*/
-    /*Parameters: */
-    CostFunction instance_DIRECT_DILATION_POLE_CONSTRAINT =
-        CostFunction("DIRECT_DILATION_POLE_CONSTRAINT");
-    instance_DIRECT_DILATION_POLE_CONSTRAINT.addParameter(
-        Parameter<double>("PoleWeight", 1));
-    instance_DIRECT_DILATION_POLE_CONSTRAINT.addParameter(
-        Parameter<int>("Dilation", 6));
-    available_cost_functions_
-        [CostFunctionType::DirectDilationOldPoleConstraint] =
-            (instance_DIRECT_DILATION_POLE_CONSTRAINT);
-    /*End Cost Function Listing*/
-
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: DIRECT_DILATION_SAME_Z*/
-    /*Parameters: */
-    CostFunction instance_DIRECT_DILATION_SAME_Z =
-        CostFunction("DIRECT_DILATION_SAME_Z");
-    instance_DIRECT_DILATION_SAME_Z.addParameter(
-        Parameter<double>("Z_Weight", 1));
-    instance_DIRECT_DILATION_SAME_Z.addParameter(Parameter<int>("Dilation", 6));
-    available_cost_functions_[CostFunctionType::DirectDilationConstrainZ] =
-        (instance_DIRECT_DILATION_SAME_Z);
-    /*End Cost Function Listing*/
-
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: DIRECT_DILATION_T1*/
-    /*Parameters: */
-    CostFunction instance_DIRECT_DILATION_T1 =
-        CostFunction("DIRECT_DILATION_T1");
-    instance_DIRECT_DILATION_T1.addParameter(Parameter<int>("Dilation", 6));
-    available_cost_functions_[CostFunctionType::DirectDilationOldT1] =
-        (instance_DIRECT_DILATION_T1);
-    /*End Cost Function Listing*/
-
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: DIRECT_DILATION*/
-    /*Parameters: */
     CostFunction instance_direct_dilation = CostFunction("DIRECT_DILATION");
     instance_direct_dilation.addParameter(Parameter<int>("Dilation", 6));
     available_cost_functions_[CostFunctionType::DirectDilation] =
         (instance_direct_dilation);
-    /*End Cost Function Listing*/
-
-    /*Begin Cost Function Listing*/
-    /*Cost Function Name: DIRECT_MAHFOUZ*/
-    /*Parameters: */
-    CostFunction instance_direct_mahfouz = CostFunction("DIRECT_MAHFOUZ");
-    instance_direct_mahfouz.addParameter(
-        Parameter<bool>("Black_Silhouette", true));
-    available_cost_functions_[CostFunctionType::DirectDilationMahfouzVariant] =
-        (instance_direct_mahfouz);
-    /*End Cost Function Listing*/
 }
+
 }  // namespace jta_cost_function

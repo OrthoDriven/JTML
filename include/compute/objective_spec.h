@@ -1,6 +1,7 @@
 #ifndef OBJECTIVE_SPEC_H_
 #define OBJECTIVE_SPEC_H_
 
+#include <optional>
 #include <variant>
 
 namespace jta_cost_function {
@@ -50,6 +51,8 @@ using ObjectiveSpec = std::variant<
     DirectDilationOldT1Spec,
     DirectDilationMahfouzVariantSpec>;
 
+// objective_spec.h
+std::optional<int> getDilation(const ObjectiveSpec& spec);
 }  // namespace jta_cost_function
 
 #endif  // OBJECTIVE_SPEC_H_

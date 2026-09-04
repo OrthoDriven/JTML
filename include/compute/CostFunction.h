@@ -18,14 +18,7 @@ namespace jta_cost_function {
 
 #include <string_view>
 
-#define COST_FUNCTION_TYPE_LIST(X)     \
-    X(DirectDilation)                  \
-    X(SymmetryTrap)                    \
-    X(DirectDilationNewPoleConstraint) \
-    X(DirectDilationOldPoleConstraint) \
-    X(DirectDilationConstrainZ)        \
-    X(DirectDilationOldT1)             \
-    X(DirectDilationMahfouzVariant)
+#define COST_FUNCTION_TYPE_LIST(X) X(DirectDilation)
 
 enum class CostFunctionType : unsigned char {
 #define X(name) name,
@@ -61,7 +54,7 @@ class CostFunction {
 public:
     /*Constructor*/
     JTML_DLL CostFunction();
-    JTML_DLL CostFunction(std::string cost_function_name);
+    CostFunction(std::string cost_function_name);
     JTML_DLL ~CostFunction();
 
     /*Add Parameter (w/ Default Value)*/

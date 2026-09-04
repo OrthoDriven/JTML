@@ -1778,15 +1778,10 @@ void MainScreen::segmentHelperFunction(
         };
     QList<int> failed_frames;
     for (int i = 0; i < ui.image_list_widget->model()->rowCount(); i++) {
-        int dilation_val = 0;
-        trunk_manager_.getActiveCostFunctionClass()->getIntParameterValue(
-            "Dilation", dilation_val);
-        /*Per-frame segment (plan 006 U8 / R12): the shared orchestrator
-         * owns the segment op -> inverted copy -> post-processing chain
-         * (edge/dilated/distance/curvature); the view keeps the dilation
-         * sourcing and the progress/render interleave. A failure breaks
-         * the loop (the frame is left untouched) and surfaces ONE message
-         * below instead of completing silently (review fix P2-3).*/
+        int dilation_val =
+            jta_cost_function::getDilation(trunk_manager_.objective_spec)
+                .value_or(0);
+
         const jta::MlSegmentStatus status = ml_orchestrator_.SegmentFrame(
             loaded_frames[i],
             ui.aperture_spin_box->value(),
@@ -2344,23 +2339,6 @@ void MainScreen::on_actionOptimizer_Settings_triggered() {
     }
 }
 
-/*Symmetry Trap Window*/
-
-/*DRR Settings Window*/
-void MainScreen::on_actionDRR_Settings_triggered() {
-    /*CHeck if Loaded Models Yet*/
-    QModelIndexList selected =
-        ui.model_list_widget->selectionModel()->selectedRows();
-    if (selected.size() > 0) {
-        /*Open DRR Window*/
-        DRRTool drt(
-            loaded_models[selected[0].row()],
-            calibration_file_.camera_A_principal_,
-            model_actor_list[selected[0].row()]->GetPosition()[2]);
-        drt.exec();
-    }
-}
-
 /*PREPROCESSOR BUTTONS*/
 /*Load Calibration Button*/
 void MainScreen::on_load_calibration_button_clicked() {
@@ -2526,22 +2504,9 @@ void MainScreen::on_load_calibration_button_clicked() {
 
 /*Load Image Button*/
 void MainScreen::on_load_image_button_clicked() {
-    /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
-     * Values for Viewing Purposes*/
-    int dilation_val = 0;
-    std::vector<jta_cost_function::Parameter<int>> active_int_params =
-        trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-    for (int i = 0; i < active_int_params.size(); i++) {
-        if (active_int_params[i].getParameterName() == "Dilation") {
-            dilation_val = (trunk_manager_.getActiveCostFunctionClass())
-                               ->getIntParameters()
-                               .at(i)
-                               .getParameterValue();
-        }
-    }
-    if (dilation_val < 0) {
-        dilation_val = 0;
-    }
+    int dilation_val =
+        jta_cost_function::getDilation(trunk_manager_.objective_spec)
+            .value_or(0);
 
     /*Check to See if Calibration Loaded*/
     if (calibrated_for_monoplane_viewport_ == false &&
@@ -3912,23 +3877,9 @@ void MainScreen::on_aperture_spin_box_valueChanged() {
                     .GetHighThreshold();
         }
 
-        /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
-         * Values for Viewing Purposes*/
-        int dilation_val = 0;
-        std::vector<jta_cost_function::Parameter<int>> active_int_params =
-            trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < active_int_params.size(); i++) {
-            if (active_int_params[i].getParameterName() == "Dilation") {
-                dilation_val = trunk_manager_.getActiveCostFunctionClass()
-                                   ->getIntParameters()
-                                   .at(i)
-                                   .getParameterValue();
-            }
-        }
-        /*The dilation-constant decision (raw-value clamp + the DIRECT_MAHFOUZ
-         * override) lives in the processor (plan 004 U5); the view passes the
-         * raw "Dilation" int-parameter value and the active cost function's
-         * name. The camera-dependent application target stays view-side.*/
+        int dilation_val =
+            jta_cost_function::getDilation(trunk_manager_.objective_spec)
+                .value_or(0);
         jta::EdgeProcessingParams edge_params{
             ui.aperture_spin_box->value(),
             low_val,
@@ -4005,21 +3956,10 @@ void MainScreen::on_low_threshold_slider_valueChanged() {
 
         /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
          * Values for Viewing Purposes*/
-        int dilation_val = 0;
-        std::vector<jta_cost_function::Parameter<int>> active_int_params =
-            trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < active_int_params.size(); i++) {
-            if (active_int_params[i].getParameterName() == "Dilation") {
-                dilation_val = trunk_manager_.getActiveCostFunctionClass()
-                                   ->getIntParameters()
-                                   .at(i)
-                                   .getParameterValue();
-            }
-        }
-        /*The dilation-constant decision (raw-value clamp + the DIRECT_MAHFOUZ
-         * override) lives in the processor (plan 004 U5); the view passes the
-         * raw "Dilation" int-parameter value and the active cost function's
-         * name. The camera-dependent application target stays view-side.*/
+        int dilation_val =
+            jta_cost_function::getDilation(trunk_manager_.objective_spec)
+                .value_or(0);
+
         jta::EdgeProcessingParams edge_params{
             aperture,
             ui.low_threshold_slider->value(),
@@ -4095,21 +4035,10 @@ void MainScreen::on_high_threshold_slider_valueChanged() {
 
         /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
          * Values for Viewing Purposes*/
-        int dilation_val = 0;
-        std::vector<jta_cost_function::Parameter<int>> active_int_params =
-            trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-        for (int i = 0; i < active_int_params.size(); i++) {
-            if (active_int_params[i].getParameterName() == "Dilation") {
-                dilation_val = trunk_manager_.getActiveCostFunctionClass()
-                                   ->getIntParameters()
-                                   .at(i)
-                                   .getParameterValue();
-            }
-        }
-        /*The dilation-constant decision (raw-value clamp + the DIRECT_MAHFOUZ
-         * override) lives in the processor (plan 004 U5); the view passes the
-         * raw "Dilation" int-parameter value and the active cost function's
-         * name. The camera-dependent application target stays view-side.*/
+        int dilation_val =
+            jta_cost_function::getDilation(trunk_manager_.objective_spec)
+                .value_or(0);
+
         jta::EdgeProcessingParams edge_params{
             aperture,
             low_val,
@@ -4160,21 +4089,10 @@ void MainScreen::on_high_threshold_slider_valueChanged() {
 void MainScreen::on_apply_all_edge_button_clicked() {
     /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
      * Values for Viewing Purposes*/
-    int dilation_val = 0;
-    std::vector<jta_cost_function::Parameter<int>> active_int_params =
-        trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-    for (int i = 0; i < active_int_params.size(); i++) {
-        if (active_int_params[i].getParameterName() == "Dilation") {
-            dilation_val = trunk_manager_.getActiveCostFunctionClass()
-                               ->getIntParameters()
-                               .at(i)
-                               .getParameterValue();
-        }
-    }
-    /*The dilation-constant decision (raw-value clamp + the DIRECT_MAHFOUZ
-     * override) lives in the processor (plan 004 U5); the view passes the raw
-     * "Dilation" int-parameter value and the active cost function's name. The
-     * A/B target sets stay view-side.*/
+    int dilation_val =
+        jta_cost_function::getDilation(trunk_manager_.objective_spec)
+            .value_or(0);
+
     jta::EdgeProcessingParams edge_params{
         ui.aperture_spin_box->value(),
         ui.low_threshold_slider->value(),
@@ -4220,8 +4138,6 @@ void MainScreen::on_reset_edge_button_clicked() {
     ui.high_threshold_slider->setValue(HIGH_THRESH);
 }
 
-/*Optimize Buttons*/
-/*Optimize Buttons*/
 void MainScreen::on_optimize_button_clicked() {
     LaunchOptimizer(OptimizerRunController::Directive::Single);
 }
@@ -4324,37 +4240,15 @@ void MainScreen::SaveLastPose() {
         model_locations_);
 }
 
-/*Optimization Function: Packages Off The Optimization process in
-a new thread*/
-/*Launch Optimizer — plan 006 U5: the drive sequence lives in the shared
- * OptimizerRunController (SaveLastPose mirror -> gate -> seed -> fresh
- * manager + thread -> finished bound before Initialize -> the 7 binds ->
- * Initialize by value -> thread start, incl. the Initialize-failure quirk);
- * this view builds the request (capturing the save-last-pose + gate pieces
- * BEFORE the directive reset — M11) and maps the controller relays onto
- * the widgets.*/
 void MainScreen::LaunchOptimizer(OptimizerRunController::Directive directive) {
-    /*Sym-Trap flag (view-side presentation state; the run itself still goes
-     * through the controller). iter_count is 0 for every directive — the
-     * old code left it indeterminate for Sym_Trap (dead path), initialized
-     * here for sanitizer-cleanliness.*/
     int iter_count = 0;
     if (directive == OptimizerRunController::Directive::SymTrap) {
         sym_trap_running = true;
     }
 
-    /*Build the request BEFORE the directive reset (M11): the launch's
-     * SaveLastPose mirror + gate see the user's pre-reset mirrors exactly
-     * like the old LaunchOptimizer order (SaveLastPose :4137 -> gate ->
-     * reset -> thread start).*/
     OptimizerRunRequest req;
     req.directive = directive;
 
-    /*SaveLastPose mirror (mainscreen.cpp:4137, widgets canonical row of
-     * the U3 call-site table: previous selection, previous frame, viewer
-     * source, convert iff camera B checked). The mirrors live in the
-     * shared session state (plan 006 U6) — == current in steady state,
-     * exactly like the old previous_model_indices_ reads.*/
     req.save_frame = session_state_.GetPreviousFrame();
     req.save_rows = session_state_.GetPreviousModelRows();
     req.save_pose_source = [this](int row) {
@@ -4401,12 +4295,6 @@ void MainScreen::LaunchOptimizer(OptimizerRunController::Directive directive) {
     req.launch.leaf_manager = leaf_manager_;
     req.launch.iter_count = iter_count;
 
-    /*View-side directive reset (M11, two-phase contract): the All/Each
-     * index-0 selection reset happens BEFORE the controller's Start() so
-     * the selection handler's guards behave identically (currently
-     * optimizing is still false; the reset's SyncSessionState + SaveLastPose
-     * fire exactly as before — the launch's own mirror above already
-     * captured the pre-reset state).*/
     if (directive == OptimizerRunController::Directive::Each ||
         directive == OptimizerRunController::Directive::All) {
         ui.image_list_widget->selectionModel()->setCurrentIndex(
@@ -4414,10 +4302,6 @@ void MainScreen::LaunchOptimizer(OptimizerRunController::Directive directive) {
             QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
     }
 
-    /*The shared drive sequence. Gate rejections + the Initialize-failure
-     * quirk surface through the controller's message channel (the view's
-     * box mapper); the view-side disable runs only when the run actually
-     * starts.*/
     if (!optimizer_run_controller_.start(req)) {
         return;
     }
@@ -4960,25 +4844,9 @@ Constant*/
 void MainScreen::UpdateDilationFrames() {
     /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
      * Values for Viewing Purposes*/
-    int dilation_val = 0;
-    std::vector<jta_cost_function::Parameter<int>> active_int_params =
-        trunk_manager_.getActiveCostFunctionClass()->getIntParameters();
-    for (int i = 0; i < active_int_params.size(); i++) {
-        if (active_int_params[i].getParameterName() == "Dilation") {
-            dilation_val = trunk_manager_.getActiveCostFunctionClass()
-                               ->getIntParameters()
-                               .at(i)
-                               .getParameterValue();
-        }
-    }
-    if (dilation_val < 0) {
-        dilation_val = 0;
-    }
-    /*Mahfouz Case*/
-    if (trunk_manager_.getActiveCostFunction() ==
-        CostFunctionType::DirectDilationMahfouzVariant) {
-        dilation_val = 3;
-    }
+    int dilation_val =
+        jta_cost_function::getDilation(trunk_manager_.objective_spec)
+            .value_or(3);
 
     /*Apply Dilation to All Images*/
     for (int i = 0; i < loaded_frames.size(); i++) {

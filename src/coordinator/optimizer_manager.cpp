@@ -1009,6 +1009,22 @@ void OptimizerManager::Optimize() {
             /**************TRUNK SPEC (cfm 0)**********************/
             case jta::StageKind::Trunk: {
                 /*Call Trunk Initializer (unconditional — verbatim)*/
+                if (std::holds_alternative<
+                        jta_cost_function::DirectDilationSpec>(
+                        stage_manager->objective_spec)) {
+                    const auto& spec =
+                        std::get<jta_cost_function::DirectDilationSpec>(
+                            stage_manager->objective_spec);
+
+                    std::cout << "ObjectiveSpec dilation: " << spec.dilation
+                              << '\n';
+                }
+
+                int legacy_dilation = -1;
+                stage_manager->getActiveCostFunctionClass()
+                    ->getIntParameterValue("Dilation", legacy_dilation);
+
+                std::cout << "Legacy dilation: " << legacy_dilation << '\n';
                 if (!stage_manager->InitializeActiveCostFunction(
                         error_message)) {
                     emit OptimizerError(QString::fromStdString(error_message));
@@ -1022,11 +1038,6 @@ void OptimizerManager::Optimize() {
                  * Unnecessary)*/
                 ResetStageDilation(frame_index, trunk_params.dilation);
 
-                /*Run the trunk stage of DIRECT bound to the real GPU cost
-                 * (budget_ was just reset to trunk_budget and
-                 * cost_function_calls_ to 0 above; RunDirectStage uses the
-                 * cumulative call-offset and drives the live UpdateDisplay /
-                 * UpdateOptimum signals).*/
                 if (!error_occurrred_) {
                     RunDirectStage(spec.range, *stage_manager);
                 }
@@ -1044,6 +1055,23 @@ void OptimizerManager::Optimize() {
                 /*Construct Branch Manager Initialization — the GROUP init +
                  * dilate + emit fires exactly once per frame (the group-once
                  * dilation pin).*/
+
+                if (std::holds_alternative<
+                        jta_cost_function::DirectDilationSpec>(
+                        stage_manager->objective_spec)) {
+                    const auto& spec =
+                        std::get<jta_cost_function::DirectDilationSpec>(
+                            stage_manager->objective_spec);
+
+                    std::cout << "ObjectiveSpec dilation: " << spec.dilation
+                              << '\n';
+                }
+
+                int legacy_dilation = -1;
+                stage_manager->getActiveCostFunctionClass()
+                    ->getIntParameterValue("Dilation", legacy_dilation);
+
+                std::cout << "Legacy dilation: " << legacy_dilation << '\n';
                 if (optimizer_settings_.enable_branch_ &&
                     optimizer_settings_.number_branches > 0 &&
                     !error_occurrred_) {
@@ -1093,6 +1121,22 @@ void OptimizerManager::Optimize() {
             }
             /**************LEAF SPEC (cfm 2)***********************/
             case jta::StageKind::Leaf: {
+                if (std::holds_alternative<
+                        jta_cost_function::DirectDilationSpec>(
+                        stage_manager->objective_spec)) {
+                    const auto& spec =
+                        std::get<jta_cost_function::DirectDilationSpec>(
+                            stage_manager->objective_spec);
+
+                    std::cout << "ObjectiveSpec dilation: " << spec.dilation
+                              << '\n';
+                }
+
+                int legacy_dilation = -1;
+                stage_manager->getActiveCostFunctionClass()
+                    ->getIntParameterValue("Dilation", legacy_dilation);
+
+                std::cout << "Legacy dilation: " << legacy_dilation << '\n';
                 /*Construct Leaf Initialization*/
                 if (optimizer_settings_.enable_leaf_ && !error_occurrred_) {
                     if (!stage_manager->InitializeActiveCostFunction(
@@ -1570,19 +1614,6 @@ std::function<double(const Point6D&)> jta::BuildGpuCostAdapter(
     gpu_cost_function::GPUModel* principal_model,
     Calibration calibration,
     jta_cost_function::CostFunctionManager& stage_manager) {
-    /*Plan 008 U9 (Cut B): the shared GPU cost adapter — the pre-Cut-B
-     * RunDirectStage injected-cost lambda body (and the oracle twin's body,
-     * its monoplane specialization), transcribed verbatim: set the
-     * already-physical pose on the principal model (biplane: camera-A-to-B
-     * conversion), then score the stage's ACTIVE cost function. Calibration
-     * is carried BY VALUE (monoplane default — the future biplane consumer
-     * needs no signature change). Three consumers converge on this function:
-     * the production runner (OptimizerManager::RunDirectStage), the Tier-2
-     * oracle (test/oracle/oracle_test.cpp), and the z-profile probe's cost
-     * path. The caller owns `principal_model` and `stage_manager`; both must
-     * outlive the returned std::function (the DirectOptimizer runs
-     * synchronously inside RunDirectStage, so the reference capture is
-     * safe — identical to the pre-Cut-B lambda's capture).*/
     return [principal_model, calibration, &stage_manager](
                const Point6D& physical) mutable -> double {
         Pose pose(

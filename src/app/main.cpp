@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
         "settings-impl",
         "Settings UI implementation: widgets or qml.",
         "implementation",
-        "qml");
+        "widgets");
 
     parser.addOption(settings_impl_option);
     parser.process(app);

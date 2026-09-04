@@ -121,14 +121,6 @@ bool GPUModel::RenderPrimaryCamera(Pose model_pose) {
     return cudaSuccess == primary_cam_render_engine_->Render(model_pose);
 }
 
-bool GPUModel::RenderPrimaryCamera_RotationMatrix(
-    RotationMatrix model_pose_matrix) {
-    if (initialized_correctly_) {
-        primary_cam_render_engine_->SetRotationMatrix(model_pose_matrix);
-        return cudaSuccess == primary_cam_render_engine_->Render();
-    }
-    return false;
-}
 void GPUModel::RenderPrimaryCameraAndWriteImage(
     Pose model_pose,
     std::string img_name) {
@@ -143,32 +135,6 @@ bool GPUModel::RenderSecondaryCamera(Pose model_pose) {
 
     return cudaSuccess == secondary_cam_render_engine_->Render(model_pose);
 }
-
-/*Render DRR to cache function (returns true if worked correctly)
-Primary is used in monoplane and biplane, Secondary only used in biplane*/
-bool GPUModel::RenderDRRPrimaryCamera(
-    Pose model_pose,
-    float lower_bound,
-    float upper_bound) {
-    if (initialized_correctly_) {
-        primary_cam_render_engine_->SetPose(model_pose);
-        return cudaSuccess ==
-            primary_cam_render_engine_->RenderDRR(lower_bound, upper_bound);
-    }
-    return false;
-};
-
-bool GPUModel::RenderDRRSecondaryCamera(
-    Pose model_pose,
-    float lower_bound,
-    float upper_bound) {
-    if (initialized_correctly_ && biplane_mode_) {
-        secondary_cam_render_engine_->SetPose(model_pose);
-        return cudaSuccess ==
-            secondary_cam_render_engine_->RenderDRR(lower_bound, upper_bound);
-    }
-    return false;
-};
 
 /*Get pointer to rendered image on GPU
 Primary is used in monoplane and biplane, Secondary only used in biplane*/

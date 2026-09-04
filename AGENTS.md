@@ -4,7 +4,7 @@
 
 # JTML — Agent Working Guide
 
-JTML is a Qt6 (qt6-main/wayland 6.7.2) + VTK 9.3 built against Qt6 + CUDA 12.4 + OpenCV C++20 desktop app for 2D-3D knee-implant
+JTML is a Qt6 (qt6-main/wayland 6.11.^) + VTK 9.7.^ built against Qt6 + CUDA 13.^ + OpenCV C++20 desktop app for 2D-3D knee-implant
 registration (DIRECT global optimizer over a GPU cost function). This file captures the
 conventions a coding agent needs to work here without re-deriving them.
 
@@ -14,7 +14,7 @@ Everything build-related is handled by pixi tasks — never invoke cmake/make/nv
 
 - `pixi run configure` — cmake configure (pulls deps; builds VTK once via `vtk_installer.sh`)
 - `pixi run build` — build all targets (incl. the GUI + tests)
-- `pixi run test` — run the **headless** test suite via `ctest -L headless --timeout 600`
+- `pixi run test` — headless suite runner (`ctest -L headless --timeout 600`). NOTE (2026-08-28): the suite is not currently built or run — see Test suite below.
 - `pixi run run` — launch the GUI app
 - `pixi add <pkg>` / `pixi run tidy` / `pixi run format` — deps / clang-tidy / clang-format
 
@@ -27,27 +27,28 @@ Add any new C++ test framework/tool to `pixi.toml` (the lockfile is `pixi.lock`)
   logical change. `jj new` starts the next change after `describe`.
 - `jj st` to see the working-copy change; `jj log --no-graph` to read history.
 
-## Test suite
+## Test suite (STATUS 2026-08-28: not built, not run, mostly legacy)
 
-Layout under `test/`, all registered in `test/CMakeLists.txt`:
-- `test/unit/` — **Catch2** logic and fast compute-lifecycle tests (no GUI/display or VTK render):
-  data structures, the pure `DirectOptimizer` (Tier-1 analytic golden), CUDA ownership seams, future persistence.
-- `test/lifecycle/` — **QtTest** for QObject/QThread/QSignalSpy seams (the headless
-  `OptimizerRunController` — fka `OptimizeCoordinator`), run under `QCoreApplication` with zero GPU/display.
-- `test/golden/` — golden-oracle baseline (`baseline.json`, `fem_golden.jts`,
-  `fem_oracle_captured.jtak`, `calibration.txt`).
-- `test/oracle/` — GPU-labeled oracles: Tier-2 appearance, bit-identity (Tier-1 is
-  analytic). The CUDA-graph evaluation-executor / layered-correctness / throughput
-  oracles were removed 2026-08-28 with the graph stack; `oracle`/`gpu` labels remain
-  for future GPU gates. Never in the headless default.
-- `test/qml/` — **Qt Quick Test** for the view layer (plan 007 U6):
-  `quick_test_main` harness over the REAL `src/app/experimental/*.qml`
-  sources (qrc-aliased, no drift) with injected fake bridges; headless
-  (offscreen + `QT_QUICK_CONTROLS_STYLE=Material`, no VTK). The
-  `jtml.qml_lint` qmllint gate (Qt 6.7.2 binary) runs from `test/`
-  (`test/qml_lint.cmake`).
+The `test/` tree (75 `.cpp` files under `test/unit`, `test/lifecycle`, `test/oracle`,
+`test/qml`) is **not currently built or run** — the existing `.build` registers 0 tests.
+Most of it characterizes the legacy state (CFM ambient execution, coordinator relays, the
+removed CUDA-graph stack — e.g. `test_bank_binding_api.cpp` references deleted APIs and
+will not compile). Do NOT treat it as a safety net, a gate, or a design authority; do not
+"fix the tests" for legacy behavior. New tests are written per new seam as it lands (e.g.
+`ObjectiveInstance` parity via targeted A/B probes).
 
-Conventions:
+Layout (for reference only):
+- `test/unit/` — Catch2 logic tests (mixed: some pin legacy CFM behavior; pure-logic ones
+  like the `StageScript`/`DeriveStageCostParams` transcription pins remain valid as
+  *characterization* of legacy behavior, not as correctness).
+- `test/golden/` — captured data files (`baseline.json`, `fem_golden.jts`,
+  `fem_oracle_captured.jtak`, `calibration.txt`, probe artifacts). Legacy captures.
+- `test/oracle/` — legacy GPU oracle tests (appearance/bit-identity). Not built or run.
+- `test/lifecycle/`, `test/qml/` — QtTest/Qt-Quick-Test seams over the coordinator and QML
+  bridges. Not currently run.
+
+
+Conventions (for new tests):
 - **QtTest for Qt/threading seams; Catch2 for pure math.** Both register via CTest.
 - **Prefer hegel property-based tests for extracted pure logic.** When a piece of pure,
   CUDA/Qt-free logic has invariants worth locking down (length preservation,
@@ -55,7 +56,6 @@ Conventions:
   deterministic Catch2 unit test — PBT complements, never replaces, the deterministic cases.
   See `test/HEGEL-PBT-GUIDE.md` for the authoring patterns, built-in generator survey, and
   how to discover the hegel API.
-- **Default `headless` means no GUI/display dependency, VTK render window, or widget.** Fast compute-only CUDA tests are allowed and may initialize a GPU. Expensive fixture/render/performance gates stay under separate `oracle`/`gpu` labels.
 - **New Qt test target gotcha:** CMake AUTOMOC does not auto-moc an included shared header,
   so add the Q_OBJECT header to the `add_executable(...)` source list (see
   `jtml_test_coordinator` in `test/CMakeLists.txt`).
@@ -64,46 +64,46 @@ Conventions:
 
 ## Where to find information
 
-`docs/` is the knowledge store. Fastest way in: run `ctx_index` over `docs/` once per
-session, then `ctx_search` for focused snippets. It holds plans (`docs/plans/`), handoffs
-(`docs/handoff-*.md`), brainstorms/requirements (`docs/brainstorms/`), and documented
-solutions (`docs/solutions/` — bugs, best practices, and workflow patterns organized by
-category with YAML frontmatter `module`/`tags`/`problem_type`). Search it before
-implementing or debugging in a documented area.
+`docs/` holds historical handoffs (`docs/handoff-*.md`), review records (`docs/reviews/`),
+and the documented-solutions knowledge store (`docs/solutions/` — bugs, best practices,
+and architecture patterns organized by category with YAML frontmatter
+`module`/`tags`/`problem_type`). Search `docs/solutions/` before implementing or debugging
+in a documented area; the current refactor playbook is
+`docs/solutions/architecture-patterns/explicit-inputs-peeling-stateless-objectives.md`.
+The plan/requirements trees (`docs/plans/`, `docs/brainstorms/`) were deleted 2026-08-28 —
+do not chase references to them; they described the superseded additive-layering approach.
+Fastest way over all of `docs/`: run `ctx_index` once per session, then `ctx_search` for
+focused snippets.
 
-## Current work (2026-08-28 — graph stack removed; D2H hot-path)
+## Current work (2026-08-28 — graph stack removed; objectives peel)
 
-- **CUDA graphs / evaluation_context / evaluation_executor / graph_recipe / bank_state** were removed in `cleanup: removing a TON of old, useless files` (2026-08-28). Do not reintroduce them; the host-visible graph executor approach was measured as host-bound (`probe_measurement.md`, `graph_performance_baseline.json: reverted`).
+- **CUDA graphs / evaluation_context / evaluation_executor / graph_recipe / bank_state** were removed in `cleanup: removing a TON of old, useless files` (2026-08-28). Do not reintroduce them; the host-visible graph executor approach was measured as host-bound (`test/golden/probe_measurement.md`, `test/golden/graph_performance_baseline.json: reverted`).
 - **Current hot-path focus:** `docs/jtml_cuda_d2h_hotpath_notes.org` — single-pose DIRECT_DILATION cost: ~16 kernel launches, ~5 D2H copies, 32 bytes payload; priority is D2H sync / launch overhead / kernel fusion before any multi-pose batching.
-- **Historical plans 011/012/013** remain in `docs/plans/` as record but are superseded; `AGENTS.md` no longer points at 012 as active.
+- **Current direction (2026-08-28):** explicit-inputs peeling — `ObjectiveInstance` / `DirectDilationObjective` (`src/objectives/`, `include/compute/objective_instance.hpp`) is the pure `evaluate(pose)` path replacing CFM's wizard-region execution; the run shape is data (`jta::StageScript` via `BuildStageScript`, consumed by the `Optimize()` stage loop). Playbook: `docs/solutions/architecture-patterns/explicit-inputs-peeling-stateless-objectives.md`.
 
-## Prior refactor (testability + MVVM) — landed / historical
+## Architecture (current, brief)
 
-- Plan: `docs/plans/2026-08-07-001-refactor-testability-mvvm-plan.md` (U1..U8, done).
-- Requirements: `docs/brainstorms/2026-08-07-testability-mvvm-refactor-requirements.md`
-  (R1..R16, AE1..AE5 — normative contract for that refactor).
-- Oracle spec: `golden_oracle.org` (two-tier; **Tier-2 is appearance-based**: render the
-  implant at the optimized pose and compare the silhouette to `Labels/`, NOT the raw pose,
-  because DIRECT convergence is noisy). Baselines in `test/golden/baseline.json`.
+- Layered layout: `src/domain` (pure logic, Qt/GPU-free — the Rust-interop
+  surface), `src/services` (QtCore-only services; never references
+  coordinator), `src/coordinator` (QObject orchestration), `src/compute`
+  (GPU/CUDA, the SHARED `jtml_compute`), `src/view` (QWidgets), `src/app`
+  (GUI composition roots + experimental QML bridges). The old `src/core/` dir
+  is gone.
+- `include/domain/direct_optimizer.h` / `src/domain/direct_optimizer.cpp` —
+  pure DIRECT optimizer with an injected `std::function<double(const Point6D&)>`
+  cost. Preserves the cumulative budget (effective 20k/25k/30k across
+  trunk/branch/leaf). Has call-offset + iteration/improvement callbacks. Used
+  by `OptimizerManager::RunDirectStage` via `jta::BuildGpuCostAdapter` (the
+  single production cost path).
+- Run shape is DATA: `jta::StageScript` (`BuildStageScript` /
+  `DeriveStageCostParams` in `optimizer_stage_script.*`) is built once per run
+  in `OptimizerManager::Initialize` and consumed by the `Optimize()` stage
+  loop. The named-graph registry (`ListStageGraphs` / `StageGraphByName`) is
+  test-only — not yet wired into the manager.
 
-Architecture seams introduced so far:
-- `include/domain/direct_optimizer.h` / `src/domain/direct_optimizer.cpp` — pure DIRECT with an
-  injected `std::function<double(const Point6D&)>` cost. **Preserves the cumulative budget**
-  (effective 20k/25k/30k across trunk/branch/leaf). Has call-offset + iteration/improvement
-  callbacks for the production caller.
-- `include/coordinator/optimizer_run_controller.h` / `src/coordinator/optimizer_run_controller.cpp` (fka `optimize_coordinator`) — headless
-  state machine (Idle→Running→Idle) + persistent worker thread, for the GUI to bind to.
-- `include/domain/direct_optimizer.h` / `src/domain/direct_optimizer.cpp` is the pure CPU optimizer used by `OptimizerManager::RunDirectStage` via `BuildGpuCostAdapter` (the single production cost path).
-
-> **003 layered layout:** `src/core`+`include/core` was split into `domain/` (pure
-> logic), `services/` (non-pure headless services), `coordinator/` (QObject
-> orchestration), `compute/` (GPU/CUDA). U3 split the single `jtml_core` lib into
-> `jtml_domain` / `jtml_services` / `jtml_coordinator` STATIC libs; U4 merged the GPU +
-> cost-functions libs into the single SHARED `jtml_compute`; U5 added the STATIC
-> `jtml_view` (QWidgets, QML-swappable) + moved the thin GUI composition root and
-> `Study2Grid` to `src/app`. `jtml_domain` is
-> the Qt/GPU-free Rust-interop surface; `jtml_services`/`jtml_coordinator` are Qt-linked
-> until the deferred purity decouples. The old `src/core/` dir is gone.
+The 2026-08 testability/MVVM refactor introduced the domain/services/ coordinator/view
+layering; its plan and requirements documents were deleted (2026-08-28) as superseded. The
+seams above are what survives; history is in `jj log`.
 
 ## Repo gotchas
 

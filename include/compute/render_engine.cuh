@@ -88,17 +88,6 @@ public:
     /*Create an object that returns the pointer to the opencv Mat object*/
     JTML_DLL cv::Mat GetcvMatImage();
 
-    /*Render DRR (Digitally Reconstructed Radiograph) to GPUImage
-    renderer_output_'s dev_image_ via Kernel calls (CUDA) Lower Bound Variable:
-    All line integrals below this value will be marked as 0 in the intensity
-    display. Upper Bound Variable: All line integrals above this value will be
-    marked as 255 in the intensity display. The remaning line integrals that
-    belong to the interval [lower_bound,upper_bound] will be linearly
-    interpolated and then converted to an uchar (i.e. an int from 0 to 255)
-    using (uchar)(255*(value-lower_bound)/(upper_bound-lower_bound)). Note: 0 <=
-    lower_bound <= upper_bound. */
-    JTML_DLL cudaError_t RenderDRR(float lower_bound, float upper_bound);
-
     /*Get Pointer to Rendererd GPU Image*/
     JTML_DLL GPUImage* GetRenderOutput();
 
@@ -150,18 +139,6 @@ private:
     /*Pointer to Container for the Image and Bounding Box (See GPU Image
      * Class)*/
     GPUImage* renderer_output_;
-
-    /*Device Pointer to Array (Same Size as Image) of Floats that represent
-    values used to compute DRR Each value is the amount of z translation a line
-    from the origin to a pixel spends inside a model. To compute the line
-    integral, simply take the value, divide by the principal distance and then
-    myltiply by the norm of the 3D pixel location (in world coordinates)*/
-    float* dev_z_line_values_;
-
-    /*Device pointer to array of the transformed (rotated and translated) world
-    vertices for the triangles only at the z values. This is used in the DRR
-    render method and has length equal to 3 * the # of triangles.*/
-    float* dev_transf_vertex_zs_;
 
     /*Device pointer to array of booleans indicating if a line to any point in
     transformed triangle is tangent (orthogonal to the normal). This is computed

@@ -24,7 +24,6 @@ set(RESOURCE_DIR ${PROJECT_SOURCE_DIR}/res)
 add_library(jtml_view STATIC
   about.cpp
   controls.cpp
-  drr_tool.cpp
   frame_list_model.cpp
   mainscreen.cpp
   model_list_model.cpp

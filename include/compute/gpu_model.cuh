@@ -16,22 +16,27 @@ class GPUModel {
     /*GPU Model Class:
             Resources:
                     - Two Render Engines (One for the primary camera used in
-       monoplane and biplane mode and one for the secondary camera used only in
-       biplane mode). As of now everything will be done on the same GPU.
+                        monoplane and biplane mode and one for the secondary
+                        camera used only in biplane mode). As of now everything
+                        will be done on the same GPU.
+
                     - Strings for the model name and the type of model
                     - Bool indicating if this is the principal model
                     - Bool indicating if GPU Model was initialized correctly
-       (essentially checking if the two renderers were initialized correctly).
+                        (essentially checking if the two renderers were
+                        initialized correctly).
                     - Bool indicating if monoplane or biplane (automatically
-       done in the constructor). Functions:
+                            done in the constructor). Functions:
                     - RenderPrimaryCamera(Pose model_pose) will output a
-       rendered silhouette of the model into the Render Engine's device image
-       cache (stored with GPU image type) at the pose location.
+                        rendered silhouette of the model into the Render
+                        Engine's device image cache (stored with GPU image type)
+       at the pose location.
                     - GetPrimaryCameraRenderedImagePointer() will return a
-       device pointer (aka pointer on the GPU) to the image.
+                            device pointer (aka pointer on the GPU) to the
+                                                        image.
                             - Biplane versions for the secondary camera of the
-       above two functions also exist and will only run if initialized correctly
-       and in biplane mode.
+                            above two functions also exist and will only run if
+       initialized correctly and in biplane mode.
                     - Write Rendered Image Cache to png file.
                     - Get and Set methods for a variety of variables (see
        below).
@@ -74,24 +79,11 @@ public:
     /*Render to cache function (returns true if worked correctly)
     Primary is used in monoplane and biplane, Secondary only used in biplane*/
     JTML_DLL bool RenderPrimaryCamera(Pose model_pose);
-    JTML_DLL bool RenderPrimaryCamera_RotationMatrix(
-        RotationMatrix model_pose_matrix);
     JTML_DLL bool RenderSecondaryCamera(Pose model_pose);
 
     JTML_DLL void RenderPrimaryCameraAndWriteImage(
         Pose model_pose,
         std::string img_name);
-
-    /*Render DRR to cache function (returns true if worked correctly)
-    Primary is used in monoplane and biplane, Secondary only used in biplane*/
-    JTML_DLL bool RenderDRRPrimaryCamera(
-        Pose model_pose,
-        float lower_bound,
-        float upper_bound);
-    JTML_DLL bool RenderDRRSecondaryCamera(
-        Pose model_pose,
-        float lower_bound,
-        float upper_bound);
 
     /*Get pointer to rendered image on GPU
     Primary is used in monoplane and biplane, Secondary only used in biplane*/

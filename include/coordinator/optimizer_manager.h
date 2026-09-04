@@ -22,9 +22,11 @@ struct GPUMetrics;
 }  // namespace gpu_cost_function
 
 #include "compute/Stage.h"
+#include "compute/objective_instance.hpp"
+#include "compute/objective_spec.h"
 #include "domain/sym_trap_functions.h"
+#include "objectives/direct_dilation.hpp"
 #include "services/calibration.h"
-
 /*QT Threading*/
 #include <qobject.h>
 #include <qthread.h>

@@ -3,20 +3,9 @@
  * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
-/*Plan 008 U7 (Cut A) — the optimizer-container pure surface (see
- * include/coordinator/optimizer_stage_script.h for the schema, the
- * convergence-tradeoff design note, and the R1/R2/R4/R5/R6 trace). Everything
- * here is a verbatim transcription of the manager's running code:
- *  - BuildStageScript: the Optimize() loop's stage shape + enabled-flag gating
- *    (src/coordinator/optimizer_manager.cpp, the trunk/branch/leaf blocks);
- *  - DeriveStageCostParams: the manager's per-manager parameter scan
- *    (dilation / dark-silhouette);
- *  - the registry: the jtml-production graph built from the same
- *    settings_constants.h constants the loop consumes (the lineage tibia
- *    transcription, angle 04 R3-1).*/
-
 #include "coordinator/optimizer_stage_script.h"
 
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 
@@ -60,34 +49,6 @@ void ValidateSettings(const OptimizerSettings& settings) {
 bool IsNormalDirective(const std::string& directive) {
     return directive == "Single" || directive == "All" || directive == "Each" ||
         directive == "From" || directive == "Backward";
-}
-
-/*The v1 graph — jtml-production — the run shape today's Optimize() executes:
- * trunk (35)^6 / 20000 / dil 6 (cfm 0) → 2× branch (15,15,25,25,25,25) / 5000
- * / dil 4 (cfm 1) → leaf (3,3,15,3,3,3) / 5000 / dil 1 (cfm 2). Built from
- * the same settings_constants.h constants the loop consumes; cfm indices
- * 0/1/2 select the trunk/branch/leaf CostFunctionManagers. Engine runtime
- * dilation 6/4/1 (baseline.json's dilation_px {6,3,1} is the known-stale
- * docs-claim, reconciled by the U5 probe data in the hygiene pass).*/
-StageGraph JtmlProductionGraph() {
-    return StageGraph{
-        .name = "jtml-production",
-        .stages = {
-            {.kind = StageKind::Trunk,
-             .range = TRUNK_RANGE,
-             .budget = static_cast<unsigned int>(TRUNK_BUDGET),
-             .repeat = 1u,
-             .cfm_index = 0u},
-            {.kind = StageKind::Branch,
-             .range = BRANCH_RANGE,
-             .budget = static_cast<unsigned int>(BRANCH_BUDGET),
-             .repeat = static_cast<unsigned int>(NUMBER_BRANCHES),
-             .cfm_index = 1u},
-            {.kind = StageKind::Leaf,
-             .range = Z_SEARCH_RANGE,
-             .budget = static_cast<unsigned int>(Z_SEARCH_BUDGET),
-             .repeat = 1u,
-             .cfm_index = 2u}}};
 }
 
 }  // namespace
@@ -204,13 +165,7 @@ StageCostParams DeriveStageCostParams(
             out.dilation = p.getParameterValue();
         }
     }
-    if (out.dilation <= 0) {
-        out.dilation = 0;
-    }
-    if (cost_function_type ==
-        jta_cost_function::CostFunctionType::DirectDilationMahfouzVariant) {
-        out.dilation = 3;
-    }
+    out.dilation = std::max(out.dilation, 0);
 
     for (auto& p : bool_params) {
         const std::string& name = p.getParameterName();
@@ -236,27 +191,6 @@ const std::vector<std::string>& ReservedStubGraphNames() {
         "jtml-flood-direct-jta",
     };
     return names;
-}
-
-std::vector<StageGraph> ListStageGraphs() {
-    return {JtmlProductionGraph()};
-}
-
-const StageGraph& StageGraphByName(const std::string& name) {
-    static const StageGraph production = JtmlProductionGraph();
-    if (name == production.name) {
-        return production;
-    }
-    for (const std::string& stub : ReservedStubGraphNames()) {
-        if (name == stub) {
-            throw std::invalid_argument(
-                "StageGraphByName: '" + name +
-                "' is a reserved stub graph (future kind; data-only, not "
-                "implemented)");
-        }
-    }
-    throw std::invalid_argument(
-        "StageGraphByName: unknown stage graph: '" + name + "'");
 }
 
 }  // namespace jta

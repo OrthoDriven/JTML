@@ -69,32 +69,16 @@ class OptimizerRunDriver {
 public:
     virtual ~OptimizerRunDriver() = default;
 
-    /*The manager QObject whose signals the controller binds. Available
-     * immediately after construction — BEFORE Initialize — so the finished
-     * bind precedes Initialize and a failed Initialize's ghost thread
-     * termination is observed (M6).*/
     virtual QObject* Manager() = 0;
 
-    /*True while the run thread is alive. The controller's Start gate rejects
-     * a re-run while a previous thread is alive (covers the Initialize-
-     * failure ghost, H1/M6).*/
     virtual bool ThreadActive() const = 0;
 
-    /*Mirrors OptimizerManager::Initialize's surface (by-value containers +
-     * plain rows); the adapter forwards untouched.*/
     virtual bool Initialize(
         const OptimizerRunLaunch& launch,
         QString& error_message) = 0;
 
-    /*Thread start (the quirk path starts the thread even when Initialize
-     * failed — the ghost, preserved verbatim).*/
     virtual void Start() = 0;
-    /*Cooperative emergency stop (the manager's onStopOptimizer flips the
-     * worker flag; the run completes through the normal terminal-frame/
-     * finished path).*/
     virtual void Stop() = 0;
-    /*Wait the run thread out (quit + bounded wait; on expiry warn + keep
-     * waiting — never delete a running thread, H3).*/
     virtual void Wait() = 0;
 };
 

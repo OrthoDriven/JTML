@@ -8,6 +8,7 @@
 
 /*Class for Storing Cost Function Info*/
 #include <cstdint>
+#include <memory>
 
 #include "CostFunction.h"
 #include "compute/objective_spec.h"
@@ -23,7 +24,9 @@
 #include "compute/gpu_intensity_frame.cuh"
 #include "compute/gpu_metrics.cuh"
 #include "compute/gpu_model.cuh"
+#include "compute/objective_instance.hpp"
 #include "compute/render_engine.cuh"
+#include "objectives/direct_dilation.hpp"
 
 /*Stage Enum*/
 #include "Stage.h"
@@ -46,7 +49,12 @@ public:
     updateCostFunctionParameterValues(...)*/
     JTML_DLL CostFunctionManager(Stage stage);
     JTML_DLL CostFunctionManager();
-    JTML_DLL ~CostFunctionManager();
+    JTML_DLL CostFunctionManager(const CostFunctionManager& other);
+    JTML_DLL CostFunctionManager& operator=(const CostFunctionManager& other);
+
+    CostFunctionManager(CostFunctionManager&&) noexcept = default;
+    CostFunctionManager& operator=(CostFunctionManager&&) noexcept = default;
+    ~CostFunctionManager();
 
     /*Set Active Cost Function*/
     JTML_DLL void setActiveCostFunction(CostFunctionType cf_type);
@@ -121,28 +129,13 @@ public:
         std::vector<gpu_cost_function::GPUFrame*>* gpu_distance_maps,
         std::vector<gpu_cost_function::GPUHeatmap*>* gpu_heatmaps);
 
-    /******************************************************************************/
-    /***************************PUBLIC DLL FUNCTIONS END
-     * **************************/
-    /******************************************************************************/
+    JTML_DLL ObjectiveSpec objective_spec;
 
 private:
-    /******************************************************************************/
-    /* *******************ESSENTIAL CLASS VARIABLES BEGIN
-     * *************************/
-    /******************************(DO NOT EDIT)
-     * *********************************/
-    /******************************************************************************/
-
-    /*List Cost Functions
-    In this function a cost function that will be loaded to the client and
-    optimizer must be listed by name. The parameters should also be
-    specified.*/
     void listCostFunctions();
 
     /*Vector of Cost Functions*/
     std::map<CostFunctionType, CostFunction> available_cost_functions_;
-    ObjectiveSpec objective_spec_;
 
     /*Active Cost Function*/
     CostFunctionType active_cost_function_;
@@ -185,15 +178,13 @@ private:
     /* Plan 012 U2: upload epoch bumped when dilated/distance/comparison data
      * are rewritten in place (C7) */
     std::uint64_t upload_epoch_ = 0;
-
+    std::unique_ptr<ObjectiveInstance> active_objective_instance_;
     /*Pose Matrix*/
     PoseMatrix* pose_storage_;
 
     /*Biplane Mode?*/
     bool biplane_mode_;
 
-    /*FUNCTIONS THAT INTERACT WITH WIZARD*/
-    /*Cost Function Implementations*/
     double costFunctionsym_trap_function();
     double costFunctionDD_NEW_POLE_CONSTRAINT();
     double costFunctionDIRECT_DILATION_POLE_CONSTRAINT();
@@ -201,7 +192,7 @@ private:
     double costFunctionDIRECT_DILATION_T1();
     double costFunctionDIRECT_DILATION();
     double costFunctionDIRECT_MAHFOUZ();
-    /*Cost Function Initializations*/
+
     bool initializesym_trap_function(std::string& error_message);
     bool initializeDD_NEW_POLE_CONSTRAINT(std::string& error_message);
     bool initializeDIRECT_DILATION_POLE_CONSTRAINT(std::string& error_message);
@@ -209,7 +200,7 @@ private:
     bool initializeDIRECT_DILATION_T1(std::string& error_message);
     bool initializeDIRECT_DILATION(std::string& error_message);
     bool initializeDIRECT_MAHFOUZ(std::string& error_message);
-    /*Cost Function Destructors*/
+
     bool destructsym_trap_function(std::string& error_message);
     bool destructDD_NEW_POLE_CONSTRAINT(std::string& error_message);
     bool destructDIRECT_DILATION_POLE_CONSTRAINT(std::string& error_message);
@@ -217,13 +208,6 @@ private:
     bool destructDIRECT_DILATION_T1(std::string& error_message);
     bool destructDIRECT_DILATION(std::string& error_message);
     bool destructDIRECT_MAHFOUZ(std::string& error_message);
-    /*END FUNCTIONS THAT INTERACT WITH WIZARD*/
-    /******************************** END WARNING
-     * *********************************/
-    /******************************************************************************/
-    /*************************DO NOT EDIT FUNCTIONS ABOVE
-     * *************************/
-    /******************************************************************************/
 };
 }  // namespace jta_cost_function
 

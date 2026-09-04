@@ -198,20 +198,17 @@ RenderEngine::RenderEngine(
     std::cout << "fill_triangle_grid_: " << fill_triangle_grid_ << '\n';
 
     /*Initialize Host Variables*/
-    fragment_fill_ = 0;
+    fragment_fill_ = nullptr;
 
     /*Initialize Private Device Variables*/
-    dev_z_line_values_ = 0;
-    dev_triangles_ = 0;
-    dev_normals_ = 0;
-    dev_backface_ = 0;
-    dev_transf_vertex_zs_ = 0;
-    dev_tangent_triangle_ = 0;
-    dev_projected_triangles_ = 0;
-    dev_projected_triangles_snapped_ = 0;
-    dev_bounding_box_triangles_ = 0;
-    dev_bounding_box_triangles_sizes_ = 0;
-    dev_bounding_box_triangles_sizes_prefix_ = 0;
+    dev_triangles_ = nullptr;
+    dev_normals_ = nullptr;
+    dev_backface_ = nullptr;
+    dev_projected_triangles_ = nullptr;
+    dev_projected_triangles_snapped_ = nullptr;
+    dev_bounding_box_triangles_ = nullptr;
+    dev_bounding_box_triangles_sizes_ = nullptr;
+    dev_bounding_box_triangles_sizes_prefix_ = nullptr;
     dev_bounding_box_ = 0;
     dev_fragment_fill_ = 0;
     dev_stride_prefixes_ = 0;
@@ -229,20 +226,18 @@ RenderEngine::RenderEngine(
     }
 }
 
-RenderEngine::RenderEngine() {
+RenderEngine::RenderEngine() :
+    dev_tangent_triangle_(nullptr), dev_normals_(nullptr) {
     /*Initialize Host Variables*/
-    fragment_fill_ = 0;
+    fragment_fill_ = nullptr;
 
     /*Initialize Private Device Variables*/
-    dev_z_line_values_ = 0;
-    dev_triangles_ = 0;
-    dev_normals_ = 0;
-    dev_backface_ = 0;
-    dev_transf_vertex_zs_ = 0;
-    dev_tangent_triangle_ = 0;
-    dev_projected_triangles_ = 0;
-    dev_projected_triangles_snapped_ = 0;
-    dev_bounding_box_triangles_ = 0;
+
+    dev_backface_ = nullptr;
+
+    dev_projected_triangles_ = nullptr;
+    dev_projected_triangles_snapped_ = nullptr;
+    dev_bounding_box_triangles_ = nullptr;
     dev_bounding_box_triangles_sizes_ = 0;
     dev_bounding_box_triangles_sizes_prefix_ = 0;
     dev_bounding_box_ = 0;
@@ -269,12 +264,9 @@ RenderEngine::~RenderEngine() {
 
 void RenderEngine::FreeCuda() {
     /*Free CUDA*/
-    cudaFree(dev_z_line_values_);
     cudaFree(dev_triangles_);
     cudaFree(dev_normals_);
     cudaFree(dev_backface_);
-    cudaFree(dev_transf_vertex_zs_);
-    cudaFree(dev_tangent_triangle_);
     cudaFree(dev_projected_triangles_);
     cudaFree(dev_projected_triangles_snapped_);
     cudaFree(dev_bounding_box_triangles_);
@@ -320,18 +312,12 @@ RenderEngine::InitializeCUDA(float* triangles, float* normals, int device) {
         (void**)&fragment_fill_, 1 * sizeof(int), cudaHostAllocDefault);
 
     /*Allocate GPU buffers for image, triangles.*/
-    cudaMalloc((void**)&dev_z_line_values_, width_ * height_ * sizeof(float));
 
     cudaMalloc((void**)&dev_triangles_, triangle_count_ * 9 * sizeof(float));
 
     cudaMalloc((void**)&dev_normals_, triangle_count_ * 3 * sizeof(float));
 
     cudaMalloc((void**)&dev_backface_, triangle_count_ * sizeof(bool));
-
-    cudaMalloc(
-        (void**)&dev_transf_vertex_zs_, triangle_count_ * 3 * sizeof(float));
-
-    cudaMalloc((void**)&dev_tangent_triangle_, triangle_count_ * sizeof(bool));
 
     cudaMalloc(
         (void**)&dev_projected_triangles_, triangle_count_ * 6 * sizeof(float));

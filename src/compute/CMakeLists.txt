@@ -33,7 +33,6 @@ add_library(jtml_compute SHARED
     metric_toolbox.cu
     pose_matrix.cpp
     registration_metric.cu
-    render_drr_engine.cu
     render_engine.cu
     capture_coordinator.cpp
     distance_map_metric.cu
@@ -54,6 +53,9 @@ add_library(jtml_compute SHARED
     DIRECT_DILATION_T1.cpp
     DIRECT_MAHFOUZ.cpp
     sym_trap_function.cpp
+    objective_spec.cpp
+    objective_instance.cpp
+    ../objectives/direct_dilation.cpp
     ${HEADER_FILES})
 
 set_target_properties(jtml_compute PROPERTIES
