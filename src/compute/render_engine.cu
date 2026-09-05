@@ -217,8 +217,6 @@ RenderEngine::RenderEngine(
     dev_cub_storage_ = 0;
     cub_storage_bytes_ = 0;
 
-    /*Initialize Renderer Output*/
-    renderer_output_ = 0;
 
     /*Initialize CUDA*/
     if (InitializeCUDA(triangles, normals, device) != cudaSuccess) {
@@ -248,8 +246,6 @@ RenderEngine::RenderEngine() :
     dev_cub_storage_ = 0;
     cub_storage_bytes_ = 0;
 
-    /*Initialize Renderer Output*/
-    renderer_output_ = 0;
 
     /*Default Constructor Never Initialized*/
     initialized_correctly_ = false;
@@ -258,8 +254,6 @@ RenderEngine::RenderEngine() :
 RenderEngine::~RenderEngine() {
     /*Free CUDA*/
     FreeCuda();
-
-    delete renderer_output_;
 }
 
 void RenderEngine::FreeCuda() {
@@ -354,15 +348,13 @@ RenderEngine::InitializeCUDA(float* triangles, float* normals, int device) {
     }
 
     /*Initialize the GPU Image*/
-    renderer_output_ = new GPUImage(width_, height_, device);
+    renderer_output_ = std::make_unique<GPUImage>(width_, height_, device);
     renderer_output_->SetDeviceBoundingBox(dev_bounding_box_);
 
     /*Check for errors*/
     if (!renderer_output_->IsInitializedCorrectly()) {
         initialized_correctly_ = false;
         FreeCuda();
-        delete renderer_output_;
-        renderer_output_ = 0;
         return cudaErrorUnknown;
     }
 
@@ -492,8 +484,8 @@ void RenderEngine::SetRotationMatrix(RotationMatrix model_rotation_matrix) {
     model_rotation_mat_ = model_rotation_matrix;
 }
 
-GPUImage* RenderEngine::GetRenderOutput() {
-    return renderer_output_;
+GPUImage& RenderEngine::GetRenderOutput() {
+    return *renderer_output_;
 }
 
 __global__ void ResetKernel(int* dev_bounding_box, int width, int height) {

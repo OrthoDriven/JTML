@@ -48,12 +48,12 @@ public:
     precomputed). This function is for implants. THIS FUNCTION DOES NOT HAVE AN
     ERROR CHECK*/
     JTML_DLL double FastImplantDilationMetric(
-        GPUImage* rendered_image,
+        GPUImage& rendered_image,
         GPUDilatedFrame* comparison_frame,
         int dilation);
     /* U12 enqueue/complete path. */
     JTML_DLL double FastImplantDilationMetric(
-        GPUImage* rendered_image,
+        GPUImage& rendered_image,
         GPUDilatedFrame* comparison_frame,
         int dilation,
         cudaStream_t stream);
@@ -61,12 +61,12 @@ public:
     Not Using Simulated Annealing Obviously...) The score returned is: This
     function is for implants. THIS FUNCTION DOES NOT HAVE AN ERROR CHECK*/
     JTML_DLL double ImplantMahfouzMetric(
-        GPUImage* rendered_image,
+        GPUImage& rendered_image,
         GPUDilatedFrame* comparison_dilated_frame,
         GPUIntensityFrame* comparison_intensity_frame);
 
     /*Computes Sum of White Pixels in Image*/
-    JTML_DLL int ComputeSumWhitePixels(GPUImage* image, cudaError* error);
+    JTML_DLL int ComputeSumWhitePixels(GPUImage& image, cudaError* error);
 
     /*Edge Detect Rendered Silhouette from GPU Model's GPU Image (Returns true
     if no error) Edge detected version is spit back out to the GPU Image on the

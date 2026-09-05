@@ -12,7 +12,7 @@ GPUFrame::GPUFrame(
     int gpu_device,
     unsigned char* host_image) {
     /*Try Initializing GPU Images First*/
-    gpu_image_ = new GPUImage(width, height, gpu_device, host_image);
+    gpu_image_ = std::make_unique<GPUImage>(width, height, gpu_device, host_image);
 
     /*If Successful*/
     if (gpu_image_->IsInitializedCorrectly()) {
@@ -26,22 +26,20 @@ GPUFrame::GPUFrame(
     }
 };
 void GPUFrame::WriteGPUImage(std::string file_name) {
-    GetGPUImage()->WriteImage(file_name);
+    GetGPUImage().WriteImage(file_name);
 }
 /*Default constructor. Marked as not initialized correctly.*/
 GPUFrame::GPUFrame() {
     height_ = 0;
     width_ = 0;
     initialized_correctly_ = false;
-    gpu_image_ = 0;
 
-    /*GPU Images Will Auto Initialize to Default GPU Image Constructor (which is
-     * basically empty)*/
+    /*GPU image ownership defaults to null (unique_ptr); it is populated only
+     * by the parameterized constructor*/
 };
 
 /*Default Destructor*/
 GPUFrame::~GPUFrame() {
-    delete gpu_image_;
 };
 
 /*Get pointer to the image on the GPU Images */
@@ -50,16 +48,16 @@ unsigned char* GPUFrame::GetDeviceImagePointer() {
 };
 
 /*Get pointer to the actual GPU Image*/
-GPUImage* GPUFrame::GetGPUImage() {
-    return gpu_image_;
+GPUImage& GPUFrame::GetGPUImage() {
+    return *gpu_image_;
 };
 
 /*Get Image Size Parameters*/
-int GPUFrame::GetFrameHeight() {
+int GPUFrame::GetFrameHeight() const {
     return height_;
 };
 
-int GPUFrame::GetFrameWidth() {
+int GPUFrame::GetFrameWidth() const {
     return width_;
 };
 

@@ -1,0 +1,24 @@
+[jobs.check]
+command = [
+  "pixi",
+  "run",
+  "./tools/check-affected-cpp.py",
+  "-B",
+  ".build",
+]
+analyzer = "cpp"
+need_stdout = true
+default_watch = false
+watch = ["src", "include"]
+on_change_strategy = "kill_then_restart"
+
+[jobs.build]
+command = [
+    "cmake", "--build", ".build",
+    "--", "-k", "0",
+]
+analyzer = "cpp"
+need_stdout = true
+default_watch = false
+watch = ["src", "include"]
+on_change_strategy = "kill_then_restart"

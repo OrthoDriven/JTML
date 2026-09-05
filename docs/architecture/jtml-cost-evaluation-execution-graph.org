@@ -61,6 +61,9 @@ The principal model is the model being optimized. Non-principal models are displ
 
 A =GPUModel= owns one primary =RenderEngine= and, in biplane mode, one secondary =RenderEngine=. Each RenderEngine owns persistent model geometry and mutable evaluation buffers.
 
+Since 2026-09-07 (Tier-0 ownership hardening) that ownership is RAII-encoded: both engines
+are =std::unique_ptr= members, construction is exception-safe, and the class is non-copyable
+by construction (see =docs/solutions/architecture-patterns/ownership-hardening-compiler-as-probe-2026-09-07.md=).
 #+begin_example
 GPUModel
 +- primary RenderEngine

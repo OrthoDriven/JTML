@@ -2,6 +2,7 @@
 #define GPU_FRAME_H
 
 /*GPU Image Class*/
+#include <memory>
 #include <string>
 
 #include "compute/gpu_image.cuh"
@@ -41,19 +42,19 @@ public:
     JTML_DLL unsigned char* GetDeviceImagePointer();
 
     /*Get pointer to the actual GPU Image*/
-    JTML_DLL GPUImage* GetGPUImage();
+    JTML_DLL GPUImage& GetGPUImage();
     JTML_DLL void WriteGPUImage(std::string file_name);
 
     /*Get Image Size Parameters*/
-    JTML_DLL int GetFrameHeight();
-    JTML_DLL int GetFrameWidth();
+    JTML_DLL [[nodiscard]] int GetFrameHeight() const;
+    JTML_DLL [[nodiscard]] int GetFrameWidth() const;
 
     /*Get Is Initialized Correctly*/
     JTML_DLL bool IsInitializedCorrectly();
 
 private:
     /*GPU Image*/
-    GPUImage* gpu_image_;
+    std::unique_ptr<GPUImage> gpu_image_;
 
     /*Image Size*/
     int height_;

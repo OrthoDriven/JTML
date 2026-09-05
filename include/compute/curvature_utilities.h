@@ -19,7 +19,7 @@
 
 void extract_contour_points(
     cv::Mat input_edge_image,
-    std::vector<std::vector<cv::Point>>* contour);
+    std::vector<std::vector<cv::Point>>& contour);
 void calculate_curvature_along_contour(
     std::vector<cv::Point_<int>> contour,
     float* curvature);
@@ -40,7 +40,7 @@ void pick_three_points(
 
 float calculate_mean(float* vals, int len);
 float calculate_std(float* vals, int len);
-void draw_contours(std::vector<std::vector<cv::Point_<int>>>* contour);
+void draw_contours(std::vector<std::vector<cv::Point_<int>>>& contour);
 float array_at_idx(float* arr, int idx, int N);
 float dot(float arr1[], float arr2[], int N);
 void gaussian_convolution(float* arr, int N, float sigma, float* result);

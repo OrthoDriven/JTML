@@ -66,4 +66,29 @@ All evidence gathered. Note: no `structured_output` tool is available in this ru
   ],
   "bit_identity_caution": "Deleting edge frames / distance maps / heatmaps does NOT touch any read path (no reader exists), so cost values are bit-unchanged; still verify with a fresh targeted probe (goldens are not a gate). The bundle's per-stage variant ORDER of construction (leaf-dilate -> branch -> trunk, optimizer_manager.cpp:416-580) is an emit/behavior detail of Initialize only — the bundle binder must keep the CPU dilation-image end state 'trunk values' if anything downstream reads frames_A_ dilation images (ResetStageDilation + UpdateDilationBackground do at stage time, so safe)."
 }
+
+---
+
+## Addendum — 2026-09-07 (post Tier-0 ownership hardening)
+
+Status update after the GPU ownership-hardening pass
+(`docs/solutions/architecture-patterns/ownership-hardening-compiler-as-probe-2026-09-07.md`;
+full record in `docs/reviews/2026-09-07-gpu-ownership-hardening/`):
+
+- **Borrowing convention now in force:** raw pointer = optional borrow, reference = required
+  borrow, exclusive owners are `std::unique_ptr`. The "plain structs of raw
+  pointers/references — no new wrapping layer" recommendation above stays valid **as
+  borrows**: the bundle's pointer fields are views into optimizer-owned resources, not
+  owners. Do not convert them to `unique_ptr`; prefer references where null is not
+  meaningful.
+- **Fixed by Tier-0:** the `GPUModel` biplane-constructor leak class — both render engines
+  are now `std::unique_ptr` members, making construction exception-safe; `GPUModel` (like
+  the other GPU frame classes) is non-copyable by construction.
+- **Still open (not fixed by Tier-0):** the OptimizerManager leaks recorded above —
+  `gpu_distance_maps_` / `gpu_heatmaps_` uploaded every run, never read, never freed
+  (findings P1 #1), and the failed-Initialize manager leak. The Tier-0 pass deliberately did
+  not touch them.
+- **Tier-1 remains the named next step:** `cuda_device_buffer<T>` + `cuda_pinned_buffer<T>`
+  RAII types for the CUDA-API-lifetime members (the `(void**)&member` allocation idiom
+  blocks bare `unique_ptr`).
 ```

@@ -491,16 +491,16 @@ namespace gpu_cost_function {
 
 /*Computes DIRECT-JTA Dilation Metric Very Quickly*/
 double GPUMetrics::FastImplantDilationMetric(
-    GPUImage* rendered_image,
+    GPUImage& rendered_image,
     GPUDilatedFrame* comparison_frame,
     int dilation) {
-    const int height = rendered_image->GetFrameHeight();
+    const int height = rendered_image.GetFrameHeight();
 
-    const int width = rendered_image->GetFrameWidth();
+    const int width = rendered_image.GetFrameWidth();
 
-    unsigned char* image = rendered_image->GetDeviceImagePointer();
+    unsigned char* image = rendered_image.GetDeviceImagePointer();
 
-    const int* dev_bounding_box = rendered_image->GetDeviceBoundingBox();
+    const int* dev_bounding_box = rendered_image.GetDeviceBoundingBox();
 
     /*
      * Reset score.

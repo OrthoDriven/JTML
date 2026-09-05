@@ -1,4 +1,6 @@
 /*GPU Metrics Header*/
+#include <math.h>
+
 #include "compute/gpu_metrics.cuh"
 
 /*Cuda*/
@@ -29,15 +31,15 @@ __global__ void ImplantMahfouzMetric_DilateKernelInverseMahfouzScale(
     int i = (blockIdx.y * gridDim.x + blockIdx.x) * blockDim.x + threadIdx.x;
 
     /*Search Direction*/
-    int l = 2 * ((i % 4) / 2) - 1;
-    int r = 2 * (i % 2) - 1;
+    int l = (2 * ((i % 4) / 2)) - 1;
+    int r = (2 * (i % 2)) - 1;
     i = i / 4;
-    i = (i / sub_cropped_width) * width + (i % sub_cropped_width) +
-        sub_bottom_y * width + sub_left_x;
+    i = ((i / sub_cropped_width) * width) + (i % sub_cropped_width) +
+        (sub_bottom_y * width) + sub_left_x;
 
     /*Reused local variables*/
-    int pixel;
-    int location;
+    int pixel = 0;
+    int location = 0;
 
     /* Measures The Reduction from the Dilated Picel Value, based on distance
     away(L2) from edge Needs to Be Multiplied by L2 distance form line and
@@ -45,18 +47,18 @@ __global__ void ImplantMahfouzMetric_DilateKernelInverseMahfouzScale(
     should be scaled by 255/Dilated_Pixel (which should be 99)*/
     float inverse_reduction =
         static_cast<float>(DILATED_PIXEL) / static_cast<float>(sqrt(32.0));
-    float distance_L2;
+    float distance_L2 = NAN;
 
     /*If Correct Width and Height*/
     if (i < width * height) {
         if (dev_image[i] == EDGE_PIXEL) {
             for (int j = 1; j <= 3; j++) {
                 for (int k = 1; k <= 3; k++) {
-                    location = i + l * j * width + r * k;
+                    location = i + (l * j * width) + (r * k);
                     pixel = dev_image[location];
-                    distance_L2 = sqrt(static_cast<float>(k) * k + j * j);
+                    distance_L2 = sqrt((static_cast<float>(k) * k) + (j * j));
                     unsigned char scaled_dilation_value =
-                        (DILATED_PIXEL - distance_L2 * inverse_reduction);
+                        (DILATED_PIXEL - (distance_L2 * inverse_reduction));
                     if (pixel == WHITE_PIXEL || pixel < scaled_dilation_value) {
                         dev_image[location] = scaled_dilation_value;
                     }
@@ -76,15 +78,16 @@ __global__ void ImplantMahfouzMetric_EdgeMahfouzNumeratorKernel(
     int diff_kernel_bottom_y,
     int diff_kernel_cropped_width) {
     /*Global Thread*/
-    int i = (blockIdx.y * gridDim.x + blockIdx.x) * blockDim.x + threadIdx.x;
+    int i =
+        (((blockIdx.y * gridDim.x) + blockIdx.x) * blockDim.x) + threadIdx.x;
 
     /*Convert to Subsize*/
-    i = (i / diff_kernel_cropped_width) * width +
-        (i % diff_kernel_cropped_width) + diff_kernel_bottom_y * width +
+    i = ((i / diff_kernel_cropped_width) * width) +
+        (i % diff_kernel_cropped_width) + (diff_kernel_bottom_y * width) +
         diff_kernel_left_x;
 
     /*Storage Container for Loaded Pixel*/
-    int pixel;
+    int pixel = 0;
 
     /*If Correct Width and Height*/
     if (i < width * height) {
@@ -99,7 +102,7 @@ __global__ void ImplantMahfouzMetric_EdgeMahfouzNumeratorKernel(
 }
 
 __global__ void ImplantMahfouzMetric_EdgeMahfouzDenominatorKernel(
-    unsigned char* dev_image,
+    const unsigned char* dev_image,
     int* result,
     int width,
     int height,
@@ -107,15 +110,16 @@ __global__ void ImplantMahfouzMetric_EdgeMahfouzDenominatorKernel(
     int diff_kernel_bottom_y,
     int diff_kernel_cropped_width) {
     /*Global Thread*/
-    int i = (blockIdx.y * gridDim.x + blockIdx.x) * blockDim.x + threadIdx.x;
+    int i =
+        (((blockIdx.y * gridDim.x) + blockIdx.x) * blockDim.x) + threadIdx.x;
 
     /*Convert to Subsize*/
-    i = (i / diff_kernel_cropped_width) * width +
-        (i % diff_kernel_cropped_width) + diff_kernel_bottom_y * width +
+    i = ((i / diff_kernel_cropped_width) * width) +
+        (i % diff_kernel_cropped_width) + (diff_kernel_bottom_y * width) +
         diff_kernel_left_x;
 
     /*Storage Container for Loaded Pixel*/
-    int pixel;
+    int pixel = 0;
 
     /*If Correct Width and Height*/
     if (i < width * height) {
@@ -129,7 +133,7 @@ __global__ void ImplantMahfouzMetric_EdgeMahfouzDenominatorKernel(
 }
 
 __global__ void ImplantMahfouzMetric_SilhouetteMahfouzNumeratorKernel(
-    unsigned char* dev_image,
+    const unsigned char* dev_image,
     unsigned char* dev_intensity_comparison_image,
     int* result,
     int width,
@@ -138,15 +142,16 @@ __global__ void ImplantMahfouzMetric_SilhouetteMahfouzNumeratorKernel(
     int diff_kernel_bottom_y,
     int diff_kernel_cropped_width) {
     /*Global Thread*/
-    int i = (blockIdx.y * gridDim.x + blockIdx.x) * blockDim.x + threadIdx.x;
+    int i =
+        (((blockIdx.y * gridDim.x) + blockIdx.x) * blockDim.x) + threadIdx.x;
 
     /*Convert to Subsize*/
-    i = (i / diff_kernel_cropped_width) * width +
-        (i % diff_kernel_cropped_width) + diff_kernel_bottom_y * width +
+    i = ((i / diff_kernel_cropped_width) * width) +
+        (i % diff_kernel_cropped_width) + (diff_kernel_bottom_y * width) +
         diff_kernel_left_x;
 
     /*Storage Container for Loaded Pixel*/
-    int pixel;
+    int pixel = 0;
 
     /*If Correct Width and Height*/
     if (i < width * height) {
@@ -158,7 +163,7 @@ __global__ void ImplantMahfouzMetric_SilhouetteMahfouzNumeratorKernel(
 }
 
 __global__ void ImplantMahfouzMetric_IntensityMahfouzDenominatorKernel(
-    unsigned char* dev_image,
+    const unsigned char* dev_image,
     int* result,
     int width,
     int height,
@@ -166,15 +171,16 @@ __global__ void ImplantMahfouzMetric_IntensityMahfouzDenominatorKernel(
     int diff_kernel_bottom_y,
     int diff_kernel_cropped_width) {
     /*Global Thread*/
-    int i = (blockIdx.y * gridDim.x + blockIdx.x) * blockDim.x + threadIdx.x;
+    int i =
+        (((blockIdx.y * gridDim.x) + blockIdx.x) * blockDim.x) + threadIdx.x;
 
     /*Convert to Subsize*/
-    i = (i / diff_kernel_cropped_width) * width +
-        (i % diff_kernel_cropped_width) + diff_kernel_bottom_y * width +
+    i = ((i / diff_kernel_cropped_width) * width) +
+        (i % diff_kernel_cropped_width) + (diff_kernel_bottom_y * width) +
         diff_kernel_left_x;
 
     /*Storage Container for Loaded Pixel*/
-    int pixel;
+    int pixel = 0;
 
     /*If Correct Width and Height*/
     if (i < width * height) {
@@ -206,9 +212,9 @@ __global__ void ImplantMahfouzMetric_EdgeKernel(
     /*Convert thread ID to pixel ID in original image coordinates (zero based,
      * width by height sized)*/
     int correspondingPixelXToThread =
-        sub_left_x - 1 + blockIdx.x * (blockDim.x - 2) + threadIdx.x;
+        sub_left_x - 1 + (blockIdx.x * (blockDim.x - 2)) + threadIdx.x;
     int correspondingPixelYToThread =
-        sub_bottom_y - 1 + blockIdx.y * (blockDim.y - 2) + threadIdx.y;
+        sub_bottom_y - 1 + (blockIdx.y * (blockDim.y - 2)) + threadIdx.y;
 
     /*Make Sure in subCroppedImage (can only overflow above or to right since
     anchored at bottom left). Dilation is included to prevent a line on top
@@ -217,7 +223,7 @@ __global__ void ImplantMahfouzMetric_EdgeKernel(
         correspondingPixelYToThread <= sub_top_y + dilation) {
         int localThreadId = (threadIdx.y * blockDim.x) + threadIdx.x;
         int projectionId =
-            correspondingPixelYToThread * width + correspondingPixelXToThread;
+            (correspondingPixelYToThread * width) + correspondingPixelXToThread;
 
         /*Now load to shared 16 by 16 array the silhouette image surrounding the
          * 14 by 14 block that is being edge detected*/
@@ -253,15 +259,15 @@ namespace gpu_cost_function {
 Using Simulated Annealing Obviously...) The score returned is: This function is
 for implants.*/
 double GPUMetrics::ImplantMahfouzMetric(
-    GPUImage* rendered_image,
+    GPUImage& rendered_image,
     GPUDilatedFrame* comparison_dilated_frame,
     GPUIntensityFrame* comparison_intensity_frame) {
     /*Extract Bounding Box*/
-    int* bounding_box = rendered_image->GetBoundingBox();
+    int* bounding_box = rendered_image.GetBoundingBox();
 
     /*Height and Width*/
-    int height = rendered_image->GetFrameHeight();
-    int width = rendered_image->GetFrameWidth();
+    int height = rendered_image.GetFrameHeight();
+    int width = rendered_image.GetFrameWidth();
 
     /*Reset the Pixel Score*/
     ImplantMahfouzMetric_ResetPixelScoreKernel<<<1, 1>>>(dev_pixel_score_);
@@ -290,7 +296,7 @@ double GPUMetrics::ImplantMahfouzMetric(
     ImplantMahfouzMetric_SilhouetteMahfouzNumeratorKernel<<<
         dim_grid_image_processing_,
         threads_per_block>>>(
-        rendered_image->GetDeviceImagePointer(),
+        rendered_image.GetDeviceImagePointer(),
         comparison_intensity_frame->GetWhiteSilhouetteDeviceImagePointer(),
         dev_pixel_score_,
         width,
@@ -312,7 +318,7 @@ double GPUMetrics::ImplantMahfouzMetric(
     ImplantMahfouzMetric_IntensityMahfouzDenominatorKernel<<<
         dim_grid_image_processing_,
         threads_per_block>>>(
-        rendered_image->GetDeviceImagePointer(),
+        rendered_image.GetDeviceImagePointer(),
         dev_pixel_score_,
         width,
         height,
@@ -324,7 +330,7 @@ double GPUMetrics::ImplantMahfouzMetric(
      * Projected)/(Sum of Pixel Projected) )*/
     cudaMemcpy(
         pixel_score_, dev_pixel_score_, sizeof(int), cudaMemcpyDeviceToHost);
-    if (pixel_score_ != 0) {
+    if (pixel_score_ != nullptr) {
         intensity_score =
             intensity_score / static_cast<double>(pixel_score_[0]);
     } else {
@@ -362,7 +368,7 @@ double GPUMetrics::ImplantMahfouzMetric(
         dim_block_image_processing_,
         dim_block_image_processing_.x * dim_block_image_processing_.y *
             sizeof(unsigned char)>>>(
-        rendered_image->GetDeviceImagePointer(),
+        rendered_image.GetDeviceImagePointer(),
         sub_left_x,
         sub_bottom_y,
         sub_right_x,
@@ -385,7 +391,7 @@ double GPUMetrics::ImplantMahfouzMetric(
     ImplantMahfouzMetric_DilateKernelInverseMahfouzScale<<<
         dim_grid_image_processing_,
         threads_per_block>>>(
-        rendered_image->GetDeviceImagePointer(),
+        rendered_image.GetDeviceImagePointer(),
         width,
         height,
         sub_left_x,
@@ -413,7 +419,7 @@ double GPUMetrics::ImplantMahfouzMetric(
     ImplantMahfouzMetric_EdgeMahfouzNumeratorKernel<<<
         dim_grid_image_processing_,
         threads_per_block>>>(
-        rendered_image->GetDeviceImagePointer(),
+        rendered_image.GetDeviceImagePointer(),
         comparison_dilated_frame->GetDeviceImagePointer(),
         dev_pixel_score_,
         width,
@@ -435,7 +441,7 @@ double GPUMetrics::ImplantMahfouzMetric(
     ImplantMahfouzMetric_EdgeMahfouzDenominatorKernel<<<
         dim_grid_image_processing_,
         threads_per_block>>>(
-        rendered_image->GetDeviceImagePointer(),
+        rendered_image.GetDeviceImagePointer(),
         dev_pixel_score_,
         width,
         height,
@@ -447,11 +453,11 @@ double GPUMetrics::ImplantMahfouzMetric(
      * Projected)/(Sum of Pixel Projected) )*/
     cudaMemcpy(
         pixel_score_, dev_pixel_score_, sizeof(int), cudaMemcpyDeviceToHost);
-    if (pixel_score_ != 0) {
+    if (pixel_score_ != nullptr) {
         contour_score = contour_score / static_cast<double>(pixel_score_[0]);
     } else {
         contour_score = 0;
     }
-    return contour_score * (-2.67) + intensity_score * (-1);
+    return (contour_score * (-2.67)) + (intensity_score * (-1));
 };
 }  // namespace gpu_cost_function

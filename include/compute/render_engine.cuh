@@ -21,6 +21,7 @@
 
 /*Standard Library*/
 #include <iostream>
+#include <memory>
 #include <opencv2/core/mat.hpp>
 
 #include "domain/preprocessor-defs.h"
@@ -89,14 +90,14 @@ public:
     JTML_DLL cv::Mat GetcvMatImage();
 
     /*Get Pointer to Rendererd GPU Image*/
-    JTML_DLL GPUImage* GetRenderOutput();
+    JTML_DLL GPUImage& GetRenderOutput();
 
     /*Is the Render Engine properly initialized?*/
     JTML_DLL bool IsInitializedCorrectly();
-    JTML_DLL std::size_t GetCubStorageBytes() const;
-    JTML_DLL int GetWidth() const;
-    JTML_DLL int GetHeight() const;
-    JTML_DLL int GetTriangleCount() const;
+    JTML_DLL [[nodiscard]] std::size_t GetCubStorageBytes() const;
+    JTML_DLL [[nodiscard]] int GetWidth() const;
+    JTML_DLL [[nodiscard]] int GetHeight() const;
+    JTML_DLL [[nodiscard]] int GetTriangleCount() const;
 
 private:
     /*Host (CPU) Variables*/
@@ -138,7 +139,7 @@ private:
 
     /*Pointer to Container for the Image and Bounding Box (See GPU Image
      * Class)*/
-    GPUImage* renderer_output_;
+    std::unique_ptr<GPUImage> renderer_output_;
 
     /*Device pointer to array of booleans indicating if a line to any point in
     transformed triangle is tangent (orthogonal to the normal). This is computed

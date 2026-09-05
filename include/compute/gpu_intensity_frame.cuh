@@ -3,6 +3,7 @@
 
 /*GPU Frame Class*/
 #include "compute/gpu_frame.cuh"
+#include <memory>
 #include "domain/preprocessor-defs.h"
 
 /*CUDA Custom Registration Namespace (Compiling as DLL)*/
@@ -29,12 +30,12 @@ public:
     Dark Silhouette True returns a pointer to the Inverted Image*/
     JTML_DLL unsigned char* GetWhiteSilhouetteDeviceImagePointer();
 
-    /*Get pointer to the actual GPU Image*/
+    /*Get pointer to the inverted GPU Image (null if this frame was default-constructed)*/
     JTML_DLL GPUImage* GetInvertedGPUImage();
 
 private:
     /*GPU Image for Inverted Intensity Image*/
-    GPUImage* gpu_inverted_image_;
+    std::unique_ptr<GPUImage> gpu_inverted_image_;
 
     /*Model Silhouette Black? (Or in Case or Alpha Value, Model Makes Image
      * Darker?)*/

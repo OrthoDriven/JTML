@@ -24,7 +24,7 @@ GPUModel::GPUModel(
     biplane_mode_ = false;
 
     /*Initialize Primary Cam Render Engine*/
-    primary_cam_render_engine_ = new RenderEngine(
+    primary_cam_render_engine_ = std::make_unique<RenderEngine>(
         width,
         height,
         device_primary_cam,
@@ -33,7 +33,6 @@ GPUModel::GPUModel(
         normals,
         triangle_count,
         camera_calibration_primary_cam);
-    secondary_cam_render_engine_ = 0;
 
     /*Check to see if Render Engine Initialized Correctly*/
     if (primary_cam_render_engine_->IsInitializedCorrectly()) {
@@ -66,7 +65,7 @@ GPUModel::GPUModel(
     biplane_mode_ = true;
 
     /*Initialize Primary Cam Render Engine*/
-    primary_cam_render_engine_ = new RenderEngine(
+    primary_cam_render_engine_ = std::make_unique<RenderEngine>(
         width,
         height,
         device_primary_cam,
@@ -77,7 +76,7 @@ GPUModel::GPUModel(
         camera_calibration_primary_cam);
 
     /*Initialize Secondary Cam Render Engine*/
-    secondary_cam_render_engine_ = new RenderEngine(
+    secondary_cam_render_engine_ = std::make_unique<RenderEngine>(
         width,
         height,
         device_secondary_cam,
@@ -99,16 +98,12 @@ GPUModel::GPUModel(
 /*Default Constructor and Destructor*/
 GPUModel::GPUModel() {
     /*The Default constructor should really never be called*/
-    primary_cam_render_engine_ = 0;
-    secondary_cam_render_engine_ = 0;
     initialized_correctly_ = false;
 };
 
 GPUModel::~GPUModel() {
     /*Render engines' destructors should safely run even if they did not
-     * initialize correctly*/
-    delete primary_cam_render_engine_;
-    delete secondary_cam_render_engine_;
+     * initialize correctly (automatic via unique_ptr members)*/
 };
 
 /*Render to cache function (returns true if worked correctly) Primary is used in
@@ -140,17 +135,17 @@ bool GPUModel::RenderSecondaryCamera(Pose model_pose) {
 Primary is used in monoplane and biplane, Secondary only used in biplane*/
 unsigned char* GPUModel::GetPrimaryCameraRenderedImagePointer() {
     return primary_cam_render_engine_->GetRenderOutput()
-        ->GetDeviceImagePointer();
+        .GetDeviceImagePointer();
 };
 
 unsigned char* GPUModel::GetSecondaryCameraRenderedImagePointer() {
     return secondary_cam_render_engine_->GetRenderOutput()
-        ->GetDeviceImagePointer();
+        .GetDeviceImagePointer();
 };
 
 /*Get pointer to rendered image on GPU (GPUImage)
 Primary is used in monoplane and biplane, Secondary only used in biplane*/
-GPUImage* GPUModel::GetPrimaryCameraRenderedImage() {
+GPUImage& GPUModel::GetPrimaryCameraRenderedImage() {
     return primary_cam_render_engine_->GetRenderOutput();
 };
 
@@ -170,7 +165,7 @@ int GPUModel::GetPrimaryTriangleCount() const {
     return primary_cam_render_engine_->GetTriangleCount();
 }
 
-GPUImage* GPUModel::GetSecondaryCameraRenderedImage() {
+GPUImage& GPUModel::GetSecondaryCameraRenderedImage() {
     return secondary_cam_render_engine_->GetRenderOutput();
 };
 

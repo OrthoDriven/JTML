@@ -6,6 +6,7 @@
 
 /*Include opencv for image processing on rendered outputs*/
 #include <opencv2/core/mat.hpp>
+#include <memory>
 
 #include "domain/preprocessor-defs.h"
 
@@ -92,8 +93,8 @@ public:
 
     /*Get pointer to rendered image on GPU (GPUImage)
     Primary is used in monoplane and biplane, Secondary only used in biplane*/
-    JTML_DLL GPUImage* GetPrimaryCameraRenderedImage();
-    JTML_DLL GPUImage* GetSecondaryCameraRenderedImage();
+    JTML_DLL GPUImage& GetPrimaryCameraRenderedImage();
+    JTML_DLL GPUImage& GetSecondaryCameraRenderedImage();
     JTML_DLL std::size_t GetPrimaryCubStorageBytes() const;
     JTML_DLL int GetPrimaryWidth() const;
     JTML_DLL int GetPrimaryHeight() const;
@@ -134,9 +135,9 @@ private:
     /*Render Engines*/
     /*Render Engine for primary camera (used in both monoplane and biplane
      * mode).*/
-    RenderEngine* primary_cam_render_engine_;
+    std::unique_ptr<RenderEngine> primary_cam_render_engine_;
     /*Render Engine for secondary camera (used solely in biplane mode).*/
-    RenderEngine* secondary_cam_render_engine_;
+    std::unique_ptr<RenderEngine> secondary_cam_render_engine_;
 
     /*Model name is the name (usually the company and a number) - this is the
     same as the text loaded to the model list on the home screen.*/

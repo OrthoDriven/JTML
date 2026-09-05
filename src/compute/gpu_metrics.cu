@@ -206,7 +206,7 @@ __global__ void WhitePixelSum(
 };
 
 /*Computes Sum of White Pixels in Image*/
-int GPUMetrics::ComputeSumWhitePixels(GPUImage* image, cudaError* error) {
+int GPUMetrics::ComputeSumWhitePixels(GPUImage& image, cudaError* error) {
     /*Reset Errors*/
     cudaGetLastError();
 
@@ -218,17 +218,17 @@ int GPUMetrics::ComputeSumWhitePixels(GPUImage* image, cudaError* error) {
     auto dim_grid_comparison_white_pix = dim3(
         ceil(sqrt(
             static_cast<double>(
-                image->GetFrameWidth() * image->GetFrameHeight()) /
+                image.GetFrameWidth() * image.GetFrameHeight()) /
             static_cast<double>(256))),
         ceil(sqrt(
             static_cast<double>(
-                image->GetFrameWidth() * image->GetFrameHeight()) /
+                image.GetFrameWidth() * image.GetFrameHeight()) /
             static_cast<double>(256))));
     WhitePixelSum<<<dim_grid_comparison_white_pix, 256>>>(
-        image->GetDeviceImagePointer(),
+        image.GetDeviceImagePointer(),
         dev_white_pix_count_,
-        image->GetFrameWidth(),
-        image->GetFrameHeight());
+        image.GetFrameWidth(),
+        image.GetFrameHeight());
     cudaMemcpy(
         &white_pix_count_,
         dev_white_pix_count_,
