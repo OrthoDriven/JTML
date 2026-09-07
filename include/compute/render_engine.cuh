@@ -149,7 +149,6 @@ private:
     simply to this transformed triangle and doesn't actually enter the model.
     This array has size equal to the # of triangles. TRUE if tangent, else
     FALSE*/
-    bool* dev_tangent_triangle_;
 
     /*The triangle coordinates in millimeters loaded from the STL file.
     Each triangle is represented as a 9-tuple in the following order: x_1, y_1,
@@ -246,29 +245,6 @@ private:
     dim3 dim_grid_vertices_;
     dim3 dim_grid_bounding_box_;
     dim3 dim_grid_fill_;
-
-    struct RenderPointerSet {
-        float* z_line_values = nullptr;
-        float* transformed_vertex_zs = nullptr;
-        bool* tangent_triangle = nullptr;
-        bool* backface = nullptr;
-        float* projected_triangles = nullptr;
-        int* projected_triangles_snapped = nullptr;
-        int* bounding_box_triangles = nullptr;
-        int* bounding_box_triangles_sizes = nullptr;
-        int* bounding_box_triangles_sizes_prefix = nullptr;
-        int* bounding_box = nullptr;
-        int* fragment_fill_device = nullptr;
-        int* fragment_fill_host = nullptr;
-        int* stride_prefixes = nullptr;
-        void* cub_storage = nullptr;
-        size_t cub_storage_bytes = 0;
-        unsigned char* output_device = nullptr;
-        int* bounding_box_host = nullptr;
-    };
-
-    unsigned char* active_output_device_ = nullptr;
-    int* active_bounding_box_host_ = nullptr;
 };
 }  // namespace gpu_cost_function
 #endif /* RENDER_ENGINE_H */

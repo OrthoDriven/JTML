@@ -217,7 +217,6 @@ RenderEngine::RenderEngine(
     dev_cub_storage_ = 0;
     cub_storage_bytes_ = 0;
 
-
     /*Initialize CUDA*/
     if (InitializeCUDA(triangles, normals, device) != cudaSuccess) {
         initialized_correctly_ = false;
@@ -225,30 +224,22 @@ RenderEngine::RenderEngine(
 }
 
 RenderEngine::RenderEngine() :
-    dev_tangent_triangle_(nullptr), dev_normals_(nullptr) {
+    fragment_fill_(nullptr),
+    dev_normals_(nullptr),
+    dev_backface_(nullptr),
+    dev_projected_triangles_(nullptr),
+    dev_projected_triangles_snapped_(nullptr),
+    dev_bounding_box_triangles_(nullptr),
+    dev_bounding_box_triangles_sizes_(nullptr),
+    dev_bounding_box_triangles_sizes_prefix_(nullptr),
+    dev_bounding_box_(nullptr),
+    dev_fragment_fill_(nullptr),
+    dev_stride_prefixes_(nullptr),
+    dev_cub_storage_(nullptr),
+    cub_storage_bytes_(0), initialized_correctly_(false) {
     /*Initialize Host Variables*/
-    fragment_fill_ = nullptr;
-
-    /*Initialize Private Device Variables*/
-
-    dev_backface_ = nullptr;
-
-    dev_projected_triangles_ = nullptr;
-    dev_projected_triangles_snapped_ = nullptr;
-    dev_bounding_box_triangles_ = nullptr;
-    dev_bounding_box_triangles_sizes_ = 0;
-    dev_bounding_box_triangles_sizes_prefix_ = 0;
-    dev_bounding_box_ = 0;
-    dev_fragment_fill_ = 0;
-    dev_stride_prefixes_ = 0;
-
-    /*Initialize CUB Temporary Storage*/
-    dev_cub_storage_ = 0;
-    cub_storage_bytes_ = 0;
 
 
-    /*Default Constructor Never Initialized*/
-    initialized_correctly_ = false;
 }
 
 RenderEngine::~RenderEngine() {

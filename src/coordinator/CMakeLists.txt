@@ -1,32 +1,6 @@
 # Copyright 2023 Gary J. Miller Orthopaedic Biomechanics Lab
 # SPDX-License-Identifier: AGPL-3.0-only OR MIT
 
-# 003 U3/U4: jtml_coordinator is the Qt orchestration layer (optimize_coordinator,
-# optimizer_manager). It consumes the single jtml_compute SHARED lib (via JTA_LIBS) --
-# the compute sources moved out of the coordinator into jtml_compute in U4.
-#
-# Plan 006 U5/U6 (the shared VM layer): the OptimizerRunController surface joins
-# this layer -- optimizer_run_controller_core.cpp (Qt/GPU-free run core: gate,
-# run-state machine, epoch, progress mapping, seed lifecycle) +
-# optimizer_run_driver.cpp (the OptimizerRunDriver seam + the production adapter
-# wrapping OptimizerManager UNTOUCHED) + optimizer_run_controller.cpp (the QObject
-# shell: the drive sequence, thread lifecycle + destructor contract, the 8
-# by-value relay binds). U6 adds session_state_controller.cpp (the QObject
-# notification shell over jta::SessionState: diff-based grouped emission, M9;
-# previous-mirror advance on CommitSelection, H2; ResetForDatasetClear + seed
-# drop, H5/M10b). Both front-ends drive the controllers; the view-specific
-# mappers stay view-side.
-#
-# Plan 008 U7 (Cut A): optimizer_stage_script.cpp -- the container's pure
-# surface (StageScript types, BuildStageScript / DeriveStageCostParams, the
-# jtml-production graph registry). NOT consumed by the manager yet (that is Cut
-# B / U9); the dedicated TU exists so the direct-compile tests can build the
-# pure builders without optimizer_manager.cpp's Qt/CUDA surface.
-#
-# AUTOMOC: the Q_OBJECT headers (optimize_coordinator.h, optimizer_manager.h,
-# optimizer_run_controller.h, session_state_controller.h) MUST be in the source
-# list (via the coordinator header GLOB below) or AUTOMOC never mocs them ->
-# undefined-vtable link error.
 set(CMAKE_AUTOMOC ON)
 
 file(GLOB HEADER_FILES CONFIGURE_DEPENDS

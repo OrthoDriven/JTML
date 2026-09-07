@@ -87,13 +87,6 @@ public:
     /*Set Current Frame Index*/
     JTML_DLL void setCurrentFrameIndex(unsigned int current_frame_index);
 
-    /*Stage accessor — plan 008 U2 second documented wizard-region exception:
-    minimal getStage() makes the stage-guard pin observable (stage_ is dead
-    constructor state today; cfm_index is the future source of truth).*/
-    Stage getStage() {
-        return stage_;
-    }
-
     /*Upload Data (Images,Poses etc.)*/
     JTML_DLL void UploadData(
         std::vector<gpu_cost_function::GPUEdgeFrame*>* gpu_edge_frames_A,
@@ -123,9 +116,6 @@ private:
 
 #include "DIRECT_DILATIONCustomVariables.h"
 
-    /*Stage Enum*/
-    Stage stage_;
-
     /*Storage for GPU Metrics class*/
     gpu_cost_function::GPUMetrics* gpu_metrics_;
 
@@ -140,14 +130,10 @@ private:
     std::vector<gpu_cost_function::GPUDilatedFrame*>* gpu_dilated_frames_B_;
     std::vector<gpu_cost_function::GPUIntensityFrame*>* gpu_intensity_frames_B_;
 
-    std::vector<gpu_cost_function::GPUFrame*>* gpu_distance_maps_;
-    std::vector<gpu_cost_function::GPUHeatmap*>* gpu_heatmaps_;
-
     /*Pointer to Vector of principal GPU Model Pointer*/
     gpu_cost_function::GPUModel* gpu_principal_model_;
     /*Pointer to Vector of non-principal GPU Model Pointers*/
     std::vector<gpu_cost_function::GPUModel*>* gpu_non_principal_models_;
-    float* prin_dist_;
     /*Current Frame Index (0 based)*/
     unsigned int current_frame_index_ = 0;
     std::unique_ptr<ObjectiveInstance> active_objective_instance_;

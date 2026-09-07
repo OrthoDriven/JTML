@@ -279,7 +279,8 @@ private:
      * ctor -- defaults reproduce the pre-Options search bit-identically.*/
     void RunDirectStage(
         Point6D range,
-        jta_cost_function::CostFunctionManager& stage_manager);
+        jta_cost_function::CostFunctionManager& stage_manager,
+        jta::StageKind kind);
 
     /*Cost Function Calls*/
     unsigned int cost_function_calls_{};

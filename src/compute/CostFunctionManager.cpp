@@ -9,7 +9,6 @@
 namespace jta_cost_function {
 /*Constructor/Destructor*/
 CostFunctionManager::CostFunctionManager(Stage stage) :
-    stage_(stage),
     gpu_metrics_(nullptr),
     gpu_edge_frames_A_(nullptr),
     gpu_dilated_frames_A_(nullptr),
@@ -19,24 +18,18 @@ CostFunctionManager::CostFunctionManager(Stage stage) :
     gpu_intensity_frames_B_(nullptr),
     gpu_principal_model_(nullptr),
     gpu_non_principal_models_(nullptr),
+    ,
     pose_storage_(nullptr) {
     /*Load the listed cost functions to the vector of available cost functions*/
     listCostFunctions();
 
     setActiveCostFunction(CostFunctionType::DirectDilation);
 
-    if (stage_ != Stage::Trunk && stage_ != Stage::Branch &&
-        stage_ != Stage::Leaf) {
-        stage_ = Stage::Trunk;
-    }
-
     /*Current Frame Index (0 based)*/
-    current_frame_index_ = 0;
 
     ///*Pose Storage*/
 };
 CostFunctionManager::CostFunctionManager() :
-    stage_(Stage::Trunk),
     gpu_metrics_(nullptr),
     gpu_edge_frames_A_(nullptr),
     gpu_dilated_frames_A_(nullptr),
@@ -46,7 +39,6 @@ CostFunctionManager::CostFunctionManager() :
     gpu_intensity_frames_B_(nullptr),
     gpu_principal_model_(nullptr),
     gpu_non_principal_models_(nullptr),
-    current_frame_index_(0),
     pose_storage_(nullptr),
     biplane_mode_(false) {
     listCostFunctions();
@@ -70,7 +62,6 @@ CostFunctionManager& CostFunctionManager::operator=(
     available_cost_functions_ = other.available_cost_functions_;
     active_cost_function_ = other.active_cost_function_;
     objective_spec = other.objective_spec;
-    stage_ = other.stage_;
 
     /* Bound runtime resources */
     gpu_metrics_ = other.gpu_metrics_;
@@ -83,23 +74,14 @@ CostFunctionManager& CostFunctionManager::operator=(
     gpu_dilated_frames_B_ = other.gpu_dilated_frames_B_;
     gpu_intensity_frames_B_ = other.gpu_intensity_frames_B_;
 
-    gpu_distance_maps_ = other.gpu_distance_maps_;
-    gpu_heatmaps_ = other.gpu_heatmaps_;
-
     gpu_principal_model_ = other.gpu_principal_model_;
     gpu_non_principal_models_ = other.gpu_non_principal_models_;
 
-    prin_dist_ = other.prin_dist_;
     pose_storage_ = other.pose_storage_;
 
     current_frame_index_ = other.current_frame_index_;
     biplane_mode_ = other.biplane_mode_;
 
-    /*
-     * ObjectiveInstance is bound/executable runtime state.
-     * Never copy it. InitializeActiveCostFunction() constructs a fresh
-     * instance after the copied manager is prepared for a run.
-     */
     active_objective_instance_.reset();
 
     return *this;

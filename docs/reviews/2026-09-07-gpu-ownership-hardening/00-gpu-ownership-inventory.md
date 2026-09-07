@@ -54,31 +54,31 @@ below rather than linked.
 
 22 raw-pointer members + 1 dead 17-field struct:
 
-| Member | Type | Acquire / Release | Class | Candidate | Egr. |
-|---|---|---|---|---|---|
-| `renderer_output_` (cuh:141) | `GPUImage*` | `new` in `InitializeCUDA` (cu:357) / `delete` in dtor (cu:262) | owns | **yes** — textbook | 2 |
-| `dev_triangles_` (159) | `float*` | cudaMalloc cu:316 / cudaFree cu:267 | owns | partial (deleter) | 2 |
-| `dev_normals_` (165) | `float*` | cudaMalloc cu:318 / cudaFree cu:268 | owns | partial | 2 |
-| `dev_backface_` (173) | `bool*` | cudaMalloc cu:320 / cudaFree cu:269 | owns | partial | 2 |
-| `dev_projected_triangles_` (183) | `float*` | cudaMalloc cu:322 / cudaFree cu:270 | owns | partial | 2 |
-| `dev_projected_triangles_snapped_` (187) | `int*` | cudaMalloc cu:325 / cudaFree cu:271 | owns | partial | 2 |
-| `dev_bounding_box_triangles_` (194) | `int*` | cudaMalloc cu:329 / cudaFree cu:272 | owns | partial | 2 |
-| `dev_bounding_box_triangles_sizes_` (198) | `int*` | cudaMalloc cu:332 / cudaFree cu:273; in/out of `cub::DeviceScan::ExclusiveSum` (cu:371–376) | owns | partial | 2 |
-| `dev_bounding_box_triangles_sizes_prefix_` (203) | `int*` | cudaMalloc cu:336 / cudaFree cu:274 | owns | partial | 2 |
-| `dev_bounding_box_` (207) | `int*` | cudaMalloc cu:341 / cudaFree cu:276; **handed to `GPUImage::SetDeviceBoundingBox` (cu:358)** | owns (cross-object borrow downstream) | partial | 3 |
-| `dev_fragment_fill_` (208) | `int*` | cudaMalloc cu:343 / cudaFree cu:277 | owns | partial | 2 |
-| `dev_stride_prefixes_` (216) | `int*` | cudaMalloc cu:345 (~10M ints) / cudaFree cu:278 | owns | partial | 2 |
-| `dev_cub_storage_` (221) | `void*` | size-query then cudaMalloc cu:371–378 / cudaFree cu:275 | owns | partial (`unique_ptr<void, cudaFreeDeleter>`) | 2 |
-| `dev_nextCandidate_` (225) | `int*` | cudaMalloc cu:380 / cudaFree+null cu:280,283 | owns | partial (tidy) | 1 |
-| `dev_nextChunk_` (226) | `int*` | cudaMalloc cu:381 / cudaFree+null cu:281,284 | owns | partial (tidy) | 1 |
-| `dev_overflowFlag_` (227) | `int*` | cudaMalloc cu:382 / cudaFree+null cu:282,285 | owns | partial (tidy) | 1 |
-| `host_overflowFlag_` (228) | `int*` | cudaHostAlloc cu:383 / cudaFreeHost+null cu:289 | owns | partial (pinned) | 1 |
-| `fragment_fill_` (135) | `int*` | cudaHostAlloc cu:311 / cudaFreeHost cu:288 (**not nulled** → double-free on failed init: error paths cu:292–296/349–353 + dtor cu:258–263) | owns | partial | 2 |
-| `dev_bounding_box_` (207) → see above | | | | | |
-| `dev_tangent_triangle_` (151) | `bool*` | **never allocated, used, or freed** | unclear (dead) | no — delete it | 3 |
-| `active_output_device_` (269) | `unsigned char*` | never acquired/released; zero refs | unclear (dead, graph-stack residue) | no — delete | 2 |
-| `active_bounding_box_host_` (270) | `int*` | never acquired/released; zero refs | unclear (dead) | no — delete | 2 |
-| `RenderPointerSet` (249–267) | 17-field struct of raw ptrs | never instantiated | unclear (dead) | no — delete | 1 |
+| Member                                           | Type                        | Acquire / Release                                                                                                                          | Class                                 | Candidate                                     | Egr. |
+|--------------------------------------------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|-----------------------------------------------|------|
+| `renderer_output_` (cuh:141)                     | `GPUImage*`                 | `new` in `InitializeCUDA` (cu:357) / `delete` in dtor (cu:262)                                                                             | owns                                  | **yes** — textbook                            | 2    |
+| `dev_triangles_` (159)                           | `float*`                    | cudaMalloc cu:316 / cudaFree cu:267                                                                                                        | owns                                  | partial (deleter)                             | 2    |
+| `dev_normals_` (165)                             | `float*`                    | cudaMalloc cu:318 / cudaFree cu:268                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_backface_` (173)                            | `bool*`                     | cudaMalloc cu:320 / cudaFree cu:269                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_projected_triangles_` (183)                 | `float*`                    | cudaMalloc cu:322 / cudaFree cu:270                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_projected_triangles_snapped_` (187)         | `int*`                      | cudaMalloc cu:325 / cudaFree cu:271                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_bounding_box_triangles_` (194)              | `int*`                      | cudaMalloc cu:329 / cudaFree cu:272                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_bounding_box_triangles_sizes_` (198)        | `int*`                      | cudaMalloc cu:332 / cudaFree cu:273; in/out of `cub::DeviceScan::ExclusiveSum` (cu:371–376)                                                | owns                                  | partial                                       | 2    |
+| `dev_bounding_box_triangles_sizes_prefix_` (203) | `int*`                      | cudaMalloc cu:336 / cudaFree cu:274                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_bounding_box_` (207)                        | `int*`                      | cudaMalloc cu:341 / cudaFree cu:276; **handed to `GPUImage::SetDeviceBoundingBox` (cu:358)**                                               | owns (cross-object borrow downstream) | partial                                       | 3    |
+| `dev_fragment_fill_` (208)                       | `int*`                      | cudaMalloc cu:343 / cudaFree cu:277                                                                                                        | owns                                  | partial                                       | 2    |
+| `dev_stride_prefixes_` (216)                     | `int*`                      | cudaMalloc cu:345 (~10M ints) / cudaFree cu:278                                                                                            | owns                                  | partial                                       | 2    |
+| `dev_cub_storage_` (221)                         | `void*`                     | size-query then cudaMalloc cu:371–378 / cudaFree cu:275                                                                                    | owns                                  | partial (`unique_ptr<void, cudaFreeDeleter>`) | 2    |
+| `dev_nextCandidate_` (225)                       | `int*`                      | cudaMalloc cu:380 / cudaFree+null cu:280,283                                                                                               | owns                                  | partial (tidy)                                | 1    |
+| `dev_nextChunk_` (226)                           | `int*`                      | cudaMalloc cu:381 / cudaFree+null cu:281,284                                                                                               | owns                                  | partial (tidy)                                | 1    |
+| `dev_overflowFlag_` (227)                        | `int*`                      | cudaMalloc cu:382 / cudaFree+null cu:282,285                                                                                               | owns                                  | partial (tidy)                                | 1    |
+| `host_overflowFlag_` (228)                       | `int*`                      | cudaHostAlloc cu:383 / cudaFreeHost+null cu:289                                                                                            | owns                                  | partial (pinned)                              | 1    |
+| `fragment_fill_` (135)                           | `int*`                      | cudaHostAlloc cu:311 / cudaFreeHost cu:288 (**not nulled** → double-free on failed init: error paths cu:292–296/349–353 + dtor cu:258–263) | owns                                  | partial                                       | 2    |
+| `dev_bounding_box_` (207) → see above            |                             |                                                                                                                                            |                                       |                                               |      |
+| `dev_tangent_triangle_` (151)                    | `bool*`                     | **never allocated, used, or freed**                                                                                                        | unclear (dead)                        | no — delete it                                | 3    |
+| `active_output_device_` (269)                    | `unsigned char*`            | never acquired/released; zero refs                                                                                                         | unclear (dead, graph-stack residue)   | no — delete                                   | 2    |
+| `active_bounding_box_host_` (270)                | `int*`                      | never acquired/released; zero refs                                                                                                         | unclear (dead)                        | no — delete                                   | 2    |
+| `RenderPointerSet` (249–267)                     | 17-field struct of raw ptrs | never instantiated                                                                                                                         | unclear (dead)                        | no — delete                                   | 1    |
 
 Systemic hazards in this lane:
 1. Neither class deletes copy ops → implicit shallow copies compile today.
@@ -111,22 +111,22 @@ hygiene if touched.
 
 ## Lane 2 — frame types
 
-| Class / Member | Detail | Class | Candidate | Egr. |
-|---|---|---|---|---|
-| `GPUFrame::gpu_image_` (`gpu_frame.cuh:56` pre-pass numbering) | `new` in param ctor (cu:15) / `delete` in dtor (cu:44); `= 0` in default ctor; **no deleted copy ops** (implicit shallow copy = double delete); **non-virtual dtor with 3 derived classes** | owns | **yes** | 2 |
-| `GPUIntensityFrame::gpu_inverted_image_` (`gpu_intensity_frame.cuh:37`) | `new` in param ctor / `delete` in dtor; **default ctor left it indeterminate → dtor deleted garbage on default-constructed objects (live latent bug)** | owns | **yes** — `unique_ptr` fixes for free | 3 |
-| `GPUHeatmap::dev_heatmap_` (`gpu_heatmaps.cuh:30`) | cudaMalloc (cu:42–44) / cudaFree (dtor cu:74–76 + error paths cu:49, 63 — the :49 path would free a failed cudaMalloc result) | owns | partial (deleter) | 2 |
-| `GPUEdgeFrame`, `GPUDilatedFrame` | int-only members, no pointers | — | none | — |
-| host `Frame` (`frame.h`) | all `cv::Mat` / `std::vector` | — | **clean, nothing to do** | — |
+| Class / Member                                                          | Detail                                                                                                                                                                                      | Class | Candidate                             | Egr. |
+|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------|---------------------------------------|------|
+| `GPUFrame::gpu_image_` (`gpu_frame.cuh:56` pre-pass numbering)          | `new` in param ctor (cu:15) / `delete` in dtor (cu:44); `= 0` in default ctor; **no deleted copy ops** (implicit shallow copy = double delete); **non-virtual dtor with 3 derived classes** | owns  | **yes**                               | 2    |
+| `GPUIntensityFrame::gpu_inverted_image_` (`gpu_intensity_frame.cuh:37`) | `new` in param ctor / `delete` in dtor; **default ctor left it indeterminate → dtor deleted garbage on default-constructed objects (live latent bug)**                                      | owns  | **yes** — `unique_ptr` fixes for free | 3    |
+| `GPUHeatmap::dev_heatmap_` (`gpu_heatmaps.cuh:30`)                      | cudaMalloc (cu:42–44) / cudaFree (dtor cu:74–76 + error paths cu:49, 63 — the :49 path would free a failed cudaMalloc result)                                                               | owns  | partial (deleter)                     | 2    |
+| `GPUEdgeFrame`, `GPUDilatedFrame`                                       | int-only members, no pointers                                                                                                                                                               | —     | none                                  | —    |
+| host `Frame` (`frame.h`)                                                | all `cv::Mat` / `std::vector`                                                                                                                                                               | —     | **clean, nothing to do**              | —    |
 
 ---
 
 ## Lane 3 — model & camera
 
-| Class / Member | Detail | Class | Candidate | Egr. |
-|---|---|---|---|---|
-| `GPUModel::primary_cam_render_engine_` (`gpu_model.cuh:137`) | `new` in both param ctors (cu:27, 69) / `delete` (cu:110); **biplane ctor leaks the primary engine if the secondary `new` throws** (no try/catch, raw assignment) | owns | **yes** — `make_unique` makes it exception-safe | 2 |
-| `GPUModel::secondary_cam_render_engine_` (`gpu_model.cuh:139`) | `new` in biplane ctor only (cu:80) / `delete` (cu:111); null in monoplane/default (guarded everywhere by `biplane_mode_`) | owns (conditionally present) | **yes** | 2 |
+| Class / Member                                                 | Detail                                                                                                                                                            | Class                        | Candidate                                       | Egr. |
+|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|-------------------------------------------------|------|
+| `GPUModel::primary_cam_render_engine_` (`gpu_model.cuh:137`)   | `new` in both param ctors (cu:27, 69) / `delete` (cu:110); **biplane ctor leaks the primary engine if the secondary `new` throws** (no try/catch, raw assignment) | owns                         | **yes** — `make_unique` makes it exception-safe | 2    |
+| `GPUModel::secondary_cam_render_engine_` (`gpu_model.cuh:139`) | `new` in biplane ctor only (cu:80) / `delete` (cu:111); null in monoplane/default (guarded everywhere by `biplane_mode_`)                                         | owns (conditionally present) | **yes**                                         | 2    |
 
 Non-findings: `camera_calibration.h` — value-only, clean. `pose_matrix.h/.cpp` —
 `GetModelPose(Pose*)` params are **non-owning out-slots, do not harden**. `gpu_arena.cuh` —

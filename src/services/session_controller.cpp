@@ -53,7 +53,6 @@ CalibrationParseResult SessionController::ParseCalibration(
                 // Negative For Offsets to make consistent with JointTrack
                 -1 * InputList[3].toDouble(),
                 InputList[4].toDouble());
-            float* prin_dist_ = &principal_calibration_file.principal_distance_;
             result.calibration = Calibration(principal_calibration_file);
             Calibration* cal_pointer_ = &result.calibration;
             result.kind = CalibrationParseResult::Kind::Monoplane;

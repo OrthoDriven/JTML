@@ -68,37 +68,8 @@ struct StageSpec {
 
 using StageScript = std::vector<StageSpec>;
 
-/*--- Convergence-tradeoff design note (angle 04 R3-2 deliverable) ----------
- * The stage sequence intentionally drops the DIRECT cover property at the
- * STAGE LOOP's cross-stage boundary: each stage re-seeds from the current
- * optimum and restarts on a hyper-rectangle that does NOT cover the previous
- * stage's domain (branch (15,15,25,25,25,25) ⊂ trunk (35)^6; leaf
- * (3,3,15,3,3,3) ⊂ branch — include/domain/settings_constants.h). This is
- * inherited lineage doctrine, not a future decision: "Therefore, by removing
- * unpromising regions of the domain, DIRECT-JTA sacrifices a notion of global
- * convergence for improved asymptotic performance" (Flood & Banks 2018, IEEE
- * TMI 37(1):326-335, the cover/restart passages).
- * A single DirectOptimizer run over its given range keeps DIRECT's per-box
- * cover guarantee; the guarantee fails only across stage boundaries. Restoring
- * cover (a "global" script whose branch/leaf ranges equal the trunk range)
- * "would negate the explore and exploit structure" of the lineage and is a
- * behavioral change requiring its own pin — never a silent fix.
- * DirectOptimizer::Options carries NO cover knob: cover is a stage-loop
- * property, intentionally dropped across stages, not a per-stage option.*/
-
-/*Per-stage cost parameters derived from the CFM parameter registry — a
- * literal relocation of the manager's per-manager parameter scan
- * (optimizer_manager.cpp, the dilation/dark-silhouette block). NEVER the CFM
- * internals: the wizard regions of CostFunctionManager.* are untouched, and
- * dilation stays cost-owned (the CFM parameter remains the single source of
- * truth).*/
 struct StageCostParams {
-    /*The active CFM's Dilation value (the "Dilation"/"DILATION"/"dilation"
-     * name match; ≤0 clamps to 0; DIRECT_MAHFOUZ forces 3 — exactly the
-     * manager's scan).*/
     int dilation = 0;
-    /*The active CFM's black/dark silhouette flag (the six bool name
-     * variants), default false.*/
     bool dark_silhouette = false;
 };
 

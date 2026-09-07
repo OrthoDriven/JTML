@@ -30,9 +30,7 @@ add_library(jtml_compute SHARED
     implant_mahfouz_metric.cu
     iou.cu
     l_1_1_matrix_diff_norm.cu
-    metric_toolbox.cu
     pose_matrix.cpp
-    registration_metric.cu
     render_engine.cu
     distance_map_metric.cu
     fast_implant_dilation_metric.cu

@@ -12,7 +12,6 @@
 #include <thread>
 #include <utility>
 
-#include "compute/gpu_heatmaps.cuh"
 #include "compute/gpu_model.cuh"
 #include "compute/pose_matrix.h"
 
@@ -901,39 +900,35 @@ void OptimizerManager::Optimize() {
         /*****************SCRIPT-DRIVEN STAGE LOOP (plan 008 U9) ******/
         /*The run's stage policy is DATA — stage_script_, built once in
          * Initialize from the settings + directive (U7's BuildStageScript; the
-         * Sym_Trap directive yields the leaf-only [{Leaf, repeat=0}]
-         * script, the normal directives the trunk/branch/leaf shape). The
-         * loop sits OUTSIDE the !sym_trap_call guard, mirroring the pre-Cut-B
-         * leaf section: under Sym_Trap the script holds only the leaf spec, so
-         * only leaf-init + dilate + emit + CalculateSymTrap run (no search;
-         * costCalls stays 0 — the U6 sym-trap pins). Each
-         * spec names its CostFunctionManager by cfm_index (0/1/2 -> the
-         * trunk/branch/leaf managers) and its cost parameters are derived
-         * from that manager's parameter registry via DeriveStageCostParams
-         * — the U7 pure relocation of the scan Initialize used to perform
-         * inline (same values: 6/4/1 dilation on the production shape).
-         * The emit order, the error gating, and the cumulative budget
-         * accounting are transcribed VERBATIM from the pre-Cut-B blocks:
-         *  - trunk: init + dilate + emit UNCONDITIONAL; search gated on
-         *    !error_occurrred_; destruct UNCONDITIONAL (the trunk side of
-         *    the leaf-destruct error-gating asymmetry, preserved verbatim
-         *    — flagged to the hygiene pass, NOT fixed);
-         *  - branch: init + dilate + emit ONCE PER GROUP (gated on
-         *    enable_branch_ && number_branches > 0 && !error_occurrred_ —
-         *    the group-once dilation pin); per-repeat re-seed from the
-         *    CURRENT optimum + budget_ += spec.budget (cumulative);
-         *  - leaf: init + dilate + emit gated on enable_leaf_ &&
-         *    !error_occurrred_; CalculateSymTrap under the Sym_Trap
-         *    directive (the repeat=0 no-search leaf); search gated on
-         *    enable_leaf_ && !error_occurrred_ && !sym_trap_call &&
-         *    repeat > 0; destruct gated on enable_leaf_ && !error_occurrred_
-         *    (the leaf side of the asymmetry, preserved verbatim);
-         *  - a cfm_index outside 0..2 fails fast through the manager's
-         *    existing error path (OptimizerError + error_occurrred_, no
-         *    silent stage skip).
-         * budget_ is NOT re-touched for the trunk spec (the pre-trunk
-         * block above already reset it to trunk_budget); branch/leaf
-         * accumulate so the caps gate stays on the cumulative
+         * Sym_Trap directive yields the leaf-only [{Leaf, repeat=0}] script,
+         * the normal directives the trunk/branch/leaf shape). The loop sits
+         * OUTSIDE the !sym_trap_call guard, mirroring the pre-Cut-B leaf
+         * section: under Sym_Trap the script holds only the leaf spec, so only
+         * leaf-init + dilate + emit + CalculateSymTrap run (no search;
+         * costCalls stays 0 — the U6 sym-trap pins). Each spec names its
+         * CostFunctionManager by cfm_index (0/1/2 -> the trunk/branch/leaf
+         * managers) and its cost parameters are derived from that manager's
+         * parameter registry via DeriveStageCostParams — the U7 pure relocation
+         * of the scan Initialize used to perform inline (same values: 6/4/1
+         * dilation on the production shape). The emit order, the error gating,
+         * and the cumulative budget accounting are transcribed VERBATIM from
+         * the pre-Cut-B blocks: - trunk: init + dilate + emit UNCONDITIONAL;
+         * search gated on !error_occurrred_; destruct UNCONDITIONAL (the trunk
+         * side of the leaf-destruct error-gating asymmetry, preserved verbatim
+         * — flagged to the hygiene pass, NOT fixed); - branch: init + dilate +
+         * emit ONCE PER GROUP (gated on enable_branch_ && number_branches > 0
+         * && !error_occurrred_ — the group-once dilation pin); per-repeat
+         * re-seed from the CURRENT optimum + budget_ += spec.budget
+         * (cumulative); - leaf: init + dilate + emit gated on enable_leaf_ &&
+         * !error_occurrred_; CalculateSymTrap under the Sym_Trap directive (the
+         * repeat=0 no-search leaf); search gated on enable_leaf_ &&
+         * !error_occurrred_ && !sym_trap_call && repeat > 0; destruct gated on
+         * enable_leaf_ && !error_occurrred_ (the leaf side of the asymmetry,
+         * preserved verbatim); - a cfm_index outside 0..2 fails fast through
+         * the manager's existing error path (OptimizerError + error_occurrred_,
+         * no silent stage skip). budget_ is NOT re-touched for the trunk spec
+         * (the pre-trunk block above already reset it to trunk_budget);
+         * branch/leaf accumulate so the caps gate stays on the cumulative
          * 20/25/30/35k shape.*/
         for (const jta::StageSpec& spec : stage_script_) {
             /*cfm_index -> the three managers (fail fast on a bad index).*/
@@ -995,7 +990,7 @@ void OptimizerManager::Optimize() {
                 ResetStageDilation(frame_index, trunk_params.dilation);
 
                 if (!error_occurrred_) {
-                    RunDirectStage(spec.range, *stage_manager);
+                    RunDirectStage(spec.range, *stage_manager, spec.kind);
                 }
 
                 /*Destruct Trunk Manager Initialization (unconditional —
@@ -1071,7 +1066,7 @@ void OptimizerManager::Optimize() {
                      * cost. budget_ is cumulative (trunk + branch);
                      * RunDirectStage uses it as the stage cap against the
                      * running cost_function_calls_ offset.*/
-                    RunDirectStage(spec.range, *stage_manager);
+                    RunDirectStage(spec.range, *stage_manager, spec.kind);
                 }
                 break;
             }
@@ -1136,7 +1131,7 @@ void OptimizerManager::Optimize() {
                      * budget_ is cumulative (trunk + branch + leaf);
                      * RunDirectStage uses it as the stage cap against the
                      * running cost_function_calls_ offset.*/
-                    RunDirectStage(spec.range, *stage_manager);
+                    RunDirectStage(spec.range, *stage_manager, spec.kind);
                 }
 
                 /*Destruct Leaf Initialization CFM — gated on
@@ -1158,8 +1153,6 @@ void OptimizerManager::Optimize() {
 
         /*****************STAGE LOOP END *****************************/
 
-        /*Update Comparison Image in Dilation Metric and Dilation Metric
-         * Dilation Level to Original*/
         dilate(
             frames_A_[frame_index].GetEdgeImage(),
             frames_A_[frame_index].GetDilationImage(),
@@ -1262,24 +1255,14 @@ void OptimizerManager::ResetStageDilation(size_t frame_index, int dilation) {
 
 void OptimizerManager::RunDirectStage(
     Point6D range,
-    jta_cost_function::CostFunctionManager& stage_manager) {
-    /*Cross the extracted pure optimizer boundary with the real GPU cost. The
-     * DirectOptimizer hands the injected lambda the *denormalized physical*
-     * point, so set the GPU model poses from it directly (primary, + biplane
-     * secondary via the calibration), then score the stage's cost function.
-     * The injected cost IS jta::BuildGpuCostAdapter (plan 008 U9) — the one
-     * shared lambda body the production runner, the Tier-2 oracle twin, and
-     * the z-profile probe converge on (set pose -> score the stage's active
-     * cost function; Calibration by value, monoplane default).
-     * No here-optimum tracking: DirectOptimizer owns that internally and we
-     * read it back after Run().*/
-
+    jta_cost_function::CostFunctionManager& stage_manager,
+    jta::StageKind kind) {
     auto serial_cost = jta::BuildGpuCostAdapter(
         gpu_principal_model_, calibration_, stage_manager);
 
 #if USE_RUST_DIRECT
     CppCost cost = CppCost(serial_cost);
-    bool use_bobyqa = stage_manager.getStage() == Stage::Leaf;
+    bool use_bobyqa = (kind == jta::StageKind::Leaf);
 
     rust::Box<direct_rs::DirectOptimizer> rust_opt = direct_rs::new_rust_opt(
         range.to_array(),
