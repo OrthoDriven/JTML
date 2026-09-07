@@ -14,7 +14,6 @@ add_library(jtml_domain STATIC
     cost.cpp
     data_structures_6D.cpp
     direct_data_storage.cpp
-    direct_optimizer.cpp
     model_list_builder.cpp
     optimize_intent_controller.cpp
     pose_copy.cpp

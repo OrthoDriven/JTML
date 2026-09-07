@@ -3,27 +3,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only OR MIT
  */
 
-/*Plan 008 U7 (Cut A): the optimizer-container pure surface — the StageScript
- * types, the named builders (BuildStageScript / DeriveStageCostParams), and
- * the named graph registry (ListStageGraphs / StageGraphByName) mirroring
- * CostFunctionManager::listCostFunctions (src/compute/CostFunctionManager.cpp)
- * and the golden-pinned mapping pattern of
- * jta::BuildCostFunctionRegistryEntries
- * (src/services/cost_function_registry.cpp). Zero production behavior change at
- * U7; since U9 (Cut B) the manager's Optimize() loop CONSUMES BuildStageScript
- * (stage_script_, built once in Initialize) — the named-graph REGISTRY below
- * is the validated configuration surface; wiring the manager to run a NAMED
- * graph (StageGraphByName instead of the builder) is a small pinned
- * follow-up. Requirements: R1 (stages-as-data), R2 (named registry), R4 (the
- * existing seams stay the execution surface), R5 (the schema must not preclude
- * biplane / tiered-dilation / polish), R6 (v1 ships jtml-production; stubs
- * allowed).
- *
- * The dedicated TU exists because the direct-compile test pattern (see
- * test/CMakeLists.txt) must compile these pure functions WITHOUT pulling
- * optimizer_manager.cpp's Qt/CUDA surface. Qt/GPU-free except for the
- * services OptimizerSettings parameter (Qt meta-type header only).*/
-
 #ifndef OPTIMIZER_STAGE_SCRIPT_H
 #define OPTIMIZER_STAGE_SCRIPT_H
 
@@ -32,6 +11,7 @@
 
 #include "CostFunction.h"
 #include "compute/Parameter.h"
+#include "compute/objective_spec.h"
 #include "domain/data_structures_6D.h"
 #include "domain/settings_constants.h"
 #include "services/optimizer_settings.h"
@@ -43,27 +23,14 @@ namespace jta {
  * kind is a schema note only (R5 — the registry's reserved stubs).*/
 enum class StageKind : unsigned char { Trunk = 0, Branch = 1, Leaf = 2 };
 
-/*One stage of the run script (angle 04 R2-2 schema, verified 1:1 against the
- * Optimize() loop blocks):
- *  - kind: the stage's search flavor;
- *  - range: the SetSearchRange input, applied per repeat iteration;
- *  - budget: per-repeat accumulator (budget_ += budget — cumulative semantics
- *    preserved; the running cost_function_calls_ offset resets ONLY at trunk);
- *  - repeat: RunDirectStage invocations. trunk/leaf = 1; branch =
- *    number_branches (materialized); repeat=0 expresses the Sym_Trap
- *    no-search leaf — init + dilate + emit (+ CalculateSymTrap) with NO
- *    search (U6-corrected: under Sym_Trap the engine's outer
- *    `if (!sym_trap_call)` guard at optimizer_manager.cpp wraps trunk AND
- *    branches, costCalls lands on 0, stageText stays Idle, only the 60
- *    uncounted CalculateSymTrap analysis evals run, and the early return
- *    skips the final UpdateDisplay);
- *  - cfm_index: 0/1/2 -> trunk_manager_ / branch_manager_ / leaf_manager_.*/
 struct StageSpec {
     StageKind kind = StageKind::Trunk;
     Point6D range;
     unsigned int budget = 0;
     unsigned int repeat = 0;
-    unsigned int cfm_index = 0;
+    unsigned int cfm_index = 0;  // TODO: Legacy, remove eventually
+    jta_cost_function::ObjectiveSpec obj_spec =
+        jta_cost_function::DirectDilationSpec{.dilation = 6};
 };
 
 using StageScript = std::vector<StageSpec>;
@@ -73,36 +40,38 @@ struct StageCostParams {
     bool dark_silhouette = false;
 };
 
-/*Reproduce the manager's parameter scan for one stage's CFM parameter
- * registry: last matching parameter wins, ≤0 clamp, the DIRECT_MAHFOUZ → 3
- * special case, and the six dark-silhouette bool name variants. The vectors
- * are taken by value exactly like the manager's inline scan copies them
- * (optimizer_manager.cpp: active_int_params / active_bool_params locals);
- * pass the getActiveCostFunctionClass()->getIntParameters()/getBoolParameters()
- * vectors verbatim.*/
 StageCostParams DeriveStageCostParams(
     const jta_cost_function::CostFunctionType cost_function_type,
     std::vector<jta_cost_function::Parameter<int>> int_params,
     std::vector<jta_cost_function::Parameter<bool>> bool_params);
 
-/*Build the run script for `settings` under `directive`, transcribing the
- * Optimize() loop's enabled-flag gating verbatim:
- *  - "Single" / "All" / "Each" / "From" / "Backward" (the manager's directive
- *    strings; the typed jta::OptimizerRunControllerCore::Directive maps onto
- *    them) all share ONE stage shape — directives select frames
- *    (img_indices_), never stages: [Trunk always] + [Branch iff
- *    enable_branch_ && number_branches > 0, repeat = number_branches] +
- *    [Leaf iff enable_leaf_, repeat = 1];
- *  - "Sym_Trap" yields the U6-corrected leaf-only script [{Leaf, repeat=0}]
- *    (gated on enable_leaf_ like the engine's leaf-init block) — NOT
- *    {Trunk, Branch, Leaf repeat=0}.
- * Error path: an unrecognized directive or a negative budget / negative
- * number_branches fails fast with a clear std::invalid_argument (the engine
- * silently accepts corrupted settings; the pure builder does not).*/
 StageScript BuildStageScript(
     const OptimizerSettings& settings,
     const std::string& directive);
 
+const StageScript jtml_production = {
+    StageSpec{
+        .kind = StageKind::Trunk,
+        .range = Point6D(50, 50, 50, 50, 50, 50),
+        .budget = 10000,
+        .repeat = 0,
+        .cfm_index = 0,
+        .obj_spec = jta_cost_function::DirectDilationSpec{.dilation = 6}},
+    StageSpec{
+        .kind = StageKind::Branch,
+        .range = Point6D(25, 25, 25, 25, 25, 25),
+        .budget = 5000,
+        .repeat = 0,
+        .cfm_index = 1,
+        .obj_spec = jta_cost_function::DirectDilationSpec{.dilation = 3}},
+    StageSpec{
+        .kind = StageKind::Leaf,
+        .range = Point6D(5, 5, 100, 5, 5, 5),
+        .budget = 5000,
+        .repeat = 0,
+        .cfm_index = 2,
+        .obj_spec = jta_cost_function::DirectDilationSpec{.dilation = 1}},
+};
 /*The cumulative budget caps the run lands on, one entry per search run
  * (RunDirectStage invocation), transcribing budget_ = trunk_budget at the
  * trunk and budget_ += stage budget per repeat thereafter. This is the U6

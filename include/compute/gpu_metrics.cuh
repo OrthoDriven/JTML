@@ -60,10 +60,10 @@ public:
     /*Computes Version of Mahfouz Metric Very Quickly (Subtle Changes and also
     Not Using Simulated Annealing Obviously...) The score returned is: This
     function is for implants. THIS FUNCTION DOES NOT HAVE AN ERROR CHECK*/
-    JTML_DLL double ImplantMahfouzMetric(
-        GPUImage& rendered_image,
-        GPUDilatedFrame* comparison_dilated_frame,
-        GPUIntensityFrame* comparison_intensity_frame);
+    // JTML_DLL double ImplantMahfouzMetric(
+    //     GPUImage& rendered_image,
+    //     GPUDilatedFrame* comparison_dilated_frame,
+    //     GPUIntensityFrame* comparison_intensity_frame);
 
     /*Computes Sum of White Pixels in Image*/
     JTML_DLL int ComputeSumWhitePixels(GPUImage& image, cudaError* error);

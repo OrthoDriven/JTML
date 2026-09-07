@@ -177,4 +177,5 @@ StageCostParams DeriveStageCostParams(
     }
     return out;
 }
-}  // namespace jta
+
+};  // namespace jta

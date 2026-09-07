@@ -25,19 +25,10 @@
 #include <QString>
 #include <memory>
 
-/*The full Initialize surface (Calibration, Frame/Model containers,
- * LocationStorage, OptimizerSettings, the three CostFunctionManagers, the
- * QModelIndexList). Included first: the header pulls CostFunctionManager.h
- * (torch ATen headers) — the established include-order rule.*/
 #include "coordinator/optimizer_manager.h"
 
 namespace jta {
 
-/*Everything OptimizerManager::Initialize consumes, packaged by the view
- * (BY VALUE — the manager works on copies) and forwarded by the controller
- * through the driver. `current_frame_index` / `primary_model_index` /
- * `directive` are filled by the controller from the gate intent + the typed
- * directive (the view leaves them at their defaults).*/
 struct OptimizerRunLaunch {
     Calibration calibration;
     std::vector<Frame> camera_a_frames;
@@ -48,16 +39,6 @@ struct OptimizerRunLaunch {
     unsigned int primary_model_index = 0;
     LocationStorage pose_matrix;
     OptimizerSettings settings;
-    /*Plan 008 U8: the per-stage optimizer-variant slot (origin R3). Defaults
-     * to the classic-DIRECT search (bit-identical); the production adapter
-     * forwards it verbatim into OptimizerManager::Initialize ->
-     * RunDirectStage's DirectOptimizer ctor. Non-default fields are plan-008
-     * fail-fast stubs (std::invalid_argument at DirectOptimizer
-     * construction).*/
-    DirectOptimizer::Options direct_options;
-    jta_cost_function::CostFunctionManager trunk_manager;
-    jta_cost_function::CostFunctionManager branch_manager;
-    jta_cost_function::CostFunctionManager leaf_manager;
     QString directive;
     int iter_count = 0;
 };

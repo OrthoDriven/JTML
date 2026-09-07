@@ -27,7 +27,6 @@ add_library(jtml_view STATIC
   frame_list_model.cpp
   mainscreen.cpp
   model_list_model.cpp
-  settings_control.cpp
   viewer.cpp
   qml/qml_settings_dialog.cpp
   ${HEADER_FILES}

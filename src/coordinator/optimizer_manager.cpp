@@ -31,13 +31,8 @@ bool OptimizerManager::Initialize(
     unsigned int primary_model_index,
     LocationStorage pose_matrix,
     const OptimizerSettings& opt_settings,
-    const jta_cost_function::CostFunctionManager& trunk_manager,
-    const jta_cost_function::CostFunctionManager& branch_manager,
-    const jta_cost_function::CostFunctionManager& leaf_manager,
     const QString& opt_directive,
-    QString& error_message,
-    int iter_count,
-    DirectOptimizer::Options direct_options) {
+    QString& error_message) {
     /*Success?*/
     succesfull_initialization_ = true;
 
@@ -104,16 +99,11 @@ bool OptimizerManager::Initialize(
     primary_model_index_ = primary_model_index;
 
     /*Store Optimizer Settings Locally*/
-    optimizer_settings_ = opt_settings;
     /*Store the per-stage optimizer-variant slot (plan 008 U8) -- consumed by
      * RunDirectStage's DirectOptimizer ctor; the defaults reproduce the
      * pre-Options search bit-identically.*/
-    direct_options_ = direct_options;
 
     /*Store Cost Function Managers Locally*/
-    trunk_manager_ = trunk_manager;
-    branch_manager_ = branch_manager;
-    leaf_manager_ = leaf_manager;
 
     /*Store Post Matrix on Cost Functions*/
     for (int i = 0; i < selected_models.size(); i++) {
@@ -217,8 +207,7 @@ bool OptimizerManager::Initialize(
      * Initialize) instead of the engine's silent acceptance — the pure
      * builder's documented strictness (U7), never hit by the tested shapes.*/
     try {
-        stage_script_ = jta::BuildStageScript(
-            optimizer_settings_, optimization_directive_.toStdString());
+        stage_script_ = jta::jtml_production;
     } catch (const std::invalid_argument& e) {
         error_message = QString::fromStdString(e.what());
         succesfull_initialization_ = false;
@@ -268,361 +257,11 @@ bool OptimizerManager::Initialize(
         return succesfull_initialization_;
     }
 
-    /*Get the Dilation + Dark Silhouette values for Trunk, Branch, and Leaf —
-     * one DeriveStageParams call per stage manager (the U7 pure relocation of
-     * the inline scan; the six-name variant list lives in ONE place, the pure
-     * TU). Values are identical to the pre-Cut-C inline scans (last-match-
-     * wins, ≤0 clamp, DIRECT_MAHFOUZ → 3, the six bool-name variants) — the
-     * U6 oracle re-verifies bit-identity.*/
-    const jta::StageCostParams trunk_params = DeriveStageParams(trunk_manager_);
-    trunk_dilation_val_ = trunk_params.dilation;
-    trunk_dark_silhouette_val_ = trunk_params.dark_silhouette;
-
-    const jta::StageCostParams branch_params =
-        DeriveStageParams(branch_manager_);
-    branch_dilation_val_ = branch_params.dilation;
-    branch_dark_silhouette_val_ = branch_params.dark_silhouette;
-
-    const jta::StageCostParams leaf_params = DeriveStageParams(leaf_manager_);
-    leaf_dilation_val_ = leaf_params.dilation;
-    leaf_dark_silhouette_val_ = leaf_params.dark_silhouette;
-
-    /*Upload GPU Frames*/
-    /*Intensity Frames*/
-    /*Trunk*/
-    /*Camera A*/
-    for (auto& i : frames_A_) {
-        auto* intensity_frame = new GPUIntensityFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetOriginalImage().data,
-            trunk_dark_silhouette_val_,
-            i.GetInvertedImage().data);
-        if (intensity_frame->IsInitializedCorrectly()) {
-            gpu_intensity_frames_trunk_A_.push_back(intensity_frame);
-        } else {
-            delete intensity_frame;
-            error_message = "Error uploading intensity frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* intensity_frame = new GPUIntensityFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetOriginalImage().data,
-                trunk_dark_silhouette_val_,
-                i.GetInvertedImage().data);
-            if (intensity_frame->IsInitializedCorrectly()) {
-                gpu_intensity_frames_trunk_B_.push_back(intensity_frame);
-            } else {
-                delete intensity_frame;
-                error_message = "Error uploading intensity frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-    /*Branch*/
-    /*Camera A*/
-    for (auto& i : frames_A_) {
-        auto* intensity_frame = new GPUIntensityFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetOriginalImage().data,
-            branch_dark_silhouette_val_,
-            i.GetInvertedImage().data);
-        if (intensity_frame->IsInitializedCorrectly()) {
-            gpu_intensity_frames_branch_A_.push_back(intensity_frame);
-        } else {
-            delete intensity_frame;
-            error_message = "Error uploading intensity frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* intensity_frame = new GPUIntensityFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetOriginalImage().data,
-                branch_dark_silhouette_val_,
-                i.GetInvertedImage().data);
-            if (intensity_frame->IsInitializedCorrectly()) {
-                gpu_intensity_frames_branch_B_.push_back(intensity_frame);
-            } else {
-                delete intensity_frame;
-                error_message = "Error uploading intensity frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-    /*Leaf*/
-    /*Camera A*/
-    for (auto& i : frames_A_) {
-        auto* intensity_frame = new GPUIntensityFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetOriginalImage().data,
-            leaf_dark_silhouette_val_,
-            i.GetInvertedImage().data);
-        if (intensity_frame->IsInitializedCorrectly()) {
-            gpu_intensity_frames_leaf_A_.push_back(intensity_frame);
-        } else {
-            delete intensity_frame;
-            error_message = "Error uploading intensity frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* intensity_frame = new GPUIntensityFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetOriginalImage().data,
-                leaf_dark_silhouette_val_,
-                i.GetInvertedImage().data);
-            if (intensity_frame->IsInitializedCorrectly()) {
-                gpu_intensity_frames_leaf_B_.push_back(intensity_frame);
-            } else {
-                delete intensity_frame;
-                error_message = "Error uploading intensity frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-
-    /*Dilation Frames*/
-    /*Reverse Order So That The Dilation Images Show Trunk Values*/
-    /*Leaf*/
-    /*Camera A*/
-    /*Update Dilation Images to Leaf Mode*/
-    for (auto& i : frames_A_) {
-        dilate(
-            i.GetEdgeImage(),
-            i.GetDilationImage(),
-            cv::Mat(),
-            cv::Point(-1, -1),
-            leaf_dilation_val_); /*Reset Dilation In That Image*/
-    }
-    for (auto& i : frames_A_) {
-        auto* dilated_frame = new GPUDilatedFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetDilationImage().data,
-            leaf_dilation_val_);
-        if (dilated_frame->IsInitializedCorrectly()) {
-            gpu_dilated_frames_leaf_A_.push_back(dilated_frame);
-        } else {
-            delete dilated_frame;
-            error_message = "Error uploading dilated frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            dilate(
-                i.GetEdgeImage(),
-                i.GetDilationImage(),
-                cv::Mat(),
-                cv::Point(-1, -1),
-                leaf_dilation_val_); /*Reset Dilation In That Image*/
-        }
-    }
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* dilated_frame = new GPUDilatedFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetDilationImage().data,
-                leaf_dilation_val_);
-            if (dilated_frame->IsInitializedCorrectly()) {
-                gpu_dilated_frames_leaf_B_.push_back(dilated_frame);
-            } else {
-                delete dilated_frame;
-                error_message = "Error uploading dilated frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-    /*Branch*/
-    /*Camera A*/
-    for (auto& i : frames_A_) {
-        dilate(
-            i.GetEdgeImage(),
-            i.GetDilationImage(),
-            cv::Mat(),
-            cv::Point(-1, -1),
-            branch_dilation_val_); /*Reset Dilation In That Image*/
-    }
-    for (auto& i : frames_A_) {
-        auto* dilated_frame = new GPUDilatedFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetDilationImage().data,
-            branch_dilation_val_);
-        if (dilated_frame->IsInitializedCorrectly()) {
-            gpu_dilated_frames_branch_A_.push_back(dilated_frame);
-        } else {
-            delete dilated_frame;
-            error_message = "Error uploading dilated frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            dilate(
-                i.GetEdgeImage(),
-                i.GetDilationImage(),
-                cv::Mat(),
-                cv::Point(-1, -1),
-                branch_dilation_val_); /*Reset Dilation In That Image*/
-        }
-    }
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* dilated_frame = new GPUDilatedFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetDilationImage().data,
-                branch_dilation_val_);
-            if (dilated_frame->IsInitializedCorrectly()) {
-                gpu_dilated_frames_branch_B_.push_back(dilated_frame);
-            } else {
-                delete dilated_frame;
-                error_message = "Error uploading dilated frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-    /*Trunk*/
-    /*Camera A*/
-    for (auto& i : frames_A_) {
-        dilate(
-            i.GetEdgeImage(),
-            i.GetDilationImage(),
-            cv::Mat(),
-            cv::Point(-1, -1),
-            trunk_dilation_val_); /*Reset Dilation In That Image*/
-    }
-    for (auto& i : frames_A_) {
-        auto* dilated_frame = new GPUDilatedFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetDilationImage().data,
-            trunk_dilation_val_);
-        if (dilated_frame->IsInitializedCorrectly()) {
-            gpu_dilated_frames_trunk_A_.push_back(dilated_frame);
-        } else {
-            delete dilated_frame;
-            error_message = "Error uploading dilated frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            dilate(
-                i.GetEdgeImage(),
-                i.GetDilationImage(),
-                cv::Mat(),
-                cv::Point(-1, -1),
-                trunk_dilation_val_); /*Reset Dilation In That Image*/
-        }
-    }
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* dilated_frame = new GPUDilatedFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetDilationImage().data,
-                trunk_dilation_val_);
-            if (dilated_frame->IsInitializedCorrectly()) {
-                gpu_dilated_frames_trunk_B_.push_back(dilated_frame);
-            } else {
-                delete dilated_frame;
-                error_message = "Error uploading dilated frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-
-    /*Edge Frames*/
-    /*Camera A*/
-    for (auto& i : frames_A_) {
-        auto* edge_frame = new GPUEdgeFrame(
-            width,
-            height,
-            cuda_device_id,
-            i.GetEdgeImage().data,
-            i.GetHighThreshold(),
-            i.GetLowThreshold(),
-            i.GetAperture());
-        if (edge_frame->IsInitializedCorrectly()) {
-            gpu_edge_frames_A_.push_back(edge_frame);
-        } else {
-            delete edge_frame;
-            error_message = "Error uploading edge frame to GPU!";
-            succesfull_initialization_ = false;
-            return succesfull_initialization_;
-        }
-    }
-    /*Camera B*/
-    if (calibration_.biplane_calibration) {
-        for (auto& i : frames_B_) {
-            auto* edge_frame = new GPUEdgeFrame(
-                width,
-                height,
-                cuda_device_id,
-                i.GetEdgeImage().data,
-                i.GetHighThreshold(),
-                i.GetLowThreshold(),
-                i.GetAperture());
-            if (edge_frame->IsInitializedCorrectly()) {
-                gpu_edge_frames_B_.push_back(edge_frame);
-            } else {
-                delete edge_frame;
-                error_message = "Error uploading edge frame to GPU!";
-                succesfull_initialization_ = false;
-                return succesfull_initialization_;
-            }
-        }
-    }
-
-    /*Upload GPU Models*/
-    /*Monoplane Calibration*/
+    /* Upload GPU Models */
+    /* Monoplane Calibration */
     if (!calibration_.biplane_calibration) {
-        /*Principal Model*/
-        gpu_principal_model_ = new GPUModel(
+        /* Principal Model */
+        gpu_principal_model_ = std::make_unique<GPUModel>(
             primary_model_.model_name_,
             true,
             width,
@@ -635,15 +274,15 @@ bool OptimizerManager::Initialize(
             calibration_.camera_A_principal_);
 
         if (!gpu_principal_model_->IsInitializedCorrectly()) {
-            delete gpu_principal_model_;
-            gpu_principal_model_ = nullptr;
+            gpu_principal_model_.reset();
             error_message = "Error uploading principal model to GPU!";
             succesfull_initialization_ = false;
             return succesfull_initialization_;
         }
-        /*Non-principal models*/
+
+        /* Non-principal models */
         for (int i = 1; i < selected_model_list_.size(); i++) {
-            auto* gpu_non_principal_model = new GPUModel(
+            auto gpu_non_principal_model = std::make_unique<GPUModel>(
                 all_models_[selected_model_list_[i].row()].model_name_,
                 true,
                 width,
@@ -658,20 +297,21 @@ bool OptimizerManager::Initialize(
                         .triangle_vertices_.size() /
                     9,
                 calibration_.camera_A_principal_);
+
             if (gpu_non_principal_model->IsInitializedCorrectly()) {
-                gpu_non_principal_models_.push_back(gpu_non_principal_model);
+                gpu_non_principal_models_.push_back(
+                    std::move(gpu_non_principal_model));
             } else {
-                delete gpu_non_principal_model;
                 error_message = "Error uploading non-principal model to GPU!";
                 succesfull_initialization_ = false;
                 return succesfull_initialization_;
             }
         }
     }
-    /*Biplane Calibration*/
+    /* Biplane Calibration */
     else {
-        /*Principal Model*/
-        gpu_principal_model_ = new GPUModel(
+        /* Principal Model */
+        gpu_principal_model_ = std::make_unique<GPUModel>(
             primary_model_.model_name_,
             true,
             width,
@@ -685,16 +325,17 @@ bool OptimizerManager::Initialize(
             primary_model_.triangle_vertices_.size() / 9,
             calibration_.camera_A_principal_,
             calibration_.camera_B_principal_);
+
         if (!gpu_principal_model_->IsInitializedCorrectly()) {
-            delete gpu_principal_model_;
-            gpu_principal_model_ = nullptr;
+            gpu_principal_model_.reset();
             error_message = "Error uploading principal model to GPU!";
             succesfull_initialization_ = false;
             return succesfull_initialization_;
         }
-        /*Non-principal models*/
+
+        /* Non-principal models */
         for (int i = 1; i < selected_model_list_.size(); i++) {
-            auto* gpu_non_principal_model = new GPUModel(
+            auto gpu_non_principal_model = std::make_unique<GPUModel>(
                 all_models_[selected_model_list_[i].row()].model_name_,
                 true,
                 width,
@@ -712,10 +353,11 @@ bool OptimizerManager::Initialize(
                     9,
                 calibration_.camera_A_principal_,
                 calibration_.camera_B_principal_);
+
             if (gpu_non_principal_model->IsInitializedCorrectly()) {
-                gpu_non_principal_models_.push_back(gpu_non_principal_model);
+                gpu_non_principal_models_.push_back(
+                    std::move(gpu_non_principal_model));
             } else {
-                delete gpu_non_principal_model;
                 error_message = "Error uploading non-principal model to GPU!";
                 succesfull_initialization_ = false;
                 return succesfull_initialization_;
@@ -724,50 +366,12 @@ bool OptimizerManager::Initialize(
     }
 
     /*Initialize GPU Metrics*/
-    gpu_metrics_ = new GPUMetrics();
+    gpu_metrics_ = std::make_unique<GPUMetrics>();
     if (!gpu_metrics_->IsInitializedCorrectly()) {
         error_message = "GPU metrics class not initialized correctly!";
         succesfull_initialization_ = false;
         return succesfull_initialization_;
     }
-
-    /*Upload Data To CostFunction Managers*/
-    trunk_manager_.UploadData(
-        &gpu_edge_frames_A_,
-        &gpu_dilated_frames_trunk_A_,
-        &gpu_intensity_frames_trunk_A_,
-        &gpu_edge_frames_B_,
-        &gpu_dilated_frames_trunk_B_,
-        &gpu_intensity_frames_trunk_B_,
-        gpu_principal_model_,
-        &gpu_non_principal_models_,
-        gpu_metrics_,
-        &pose_storage_,
-        calibration_.biplane_calibration);
-    branch_manager_.UploadData(
-        &gpu_edge_frames_A_,
-        &gpu_dilated_frames_branch_A_,
-        &gpu_intensity_frames_branch_A_,
-        &gpu_edge_frames_B_,
-        &gpu_dilated_frames_branch_B_,
-        &gpu_intensity_frames_branch_B_,
-        gpu_principal_model_,
-        &gpu_non_principal_models_,
-        gpu_metrics_,
-        &pose_storage_,
-        calibration_.biplane_calibration);
-    leaf_manager_.UploadData(
-        &gpu_edge_frames_A_,
-        &gpu_dilated_frames_leaf_A_,
-        &gpu_intensity_frames_leaf_A_,
-        &gpu_edge_frames_B_,
-        &gpu_dilated_frames_leaf_B_,
-        &gpu_intensity_frames_leaf_B_,
-        gpu_principal_model_,
-        &gpu_non_principal_models_,
-        gpu_metrics_,
-        &pose_storage_,
-        calibration_.biplane_calibration);
 
     return succesfull_initialization_;
 };
@@ -796,7 +400,7 @@ void OptimizerManager::Optimize() {
                 i.GetDilationImage(),
                 cv::Mat(),
                 cv::Point(-1, -1),
-                trunk_dilation_val_); /*Reset Dilation In That Image*/
+                6); /*Reset Dilation In That Image*/
         }
         /*Camera B*/
         if (calibration_.biplane_calibration) {
@@ -806,7 +410,7 @@ void OptimizerManager::Optimize() {
                     i.GetDilationImage(),
                     cv::Mat(),
                     cv::Point(-1, -1),
-                    trunk_dilation_val_); /*Reset Dilation In That Image*/
+                    6); /*Reset Dilation In That Image*/
             }
         }
 
@@ -821,9 +425,12 @@ void OptimizerManager::Optimize() {
 
     /*Loop Over Each Frame Loaded*/
     for (int frame_index : img_indices_) {
+        int width = frames_A_[0].GetEdgeImage().cols;
+        int height = frames_A_[0].GetEdgeImage().rows;
+        int cuda_device_id = 0;
+
         if (!sym_trap_call) {
             /*Set Up Search Range and Starting Point*/
-            SetSearchRange(optimizer_settings_.trunk_range);
             if (!init_prev_frame_ || frame_index == 0) {
                 Pose starting_pose;
                 pose_storage_.GetModelPose(frame_index, &starting_pose);
@@ -880,11 +487,6 @@ void OptimizerManager::Optimize() {
                 }
             }
 
-            /*Set Current Frame Index for CFMs*/
-            trunk_manager_.setCurrentFrameIndex(frame_index);
-            branch_manager_.setCurrentFrameIndex(frame_index);
-            leaf_manager_.setCurrentFrameIndex(frame_index);
-
             /*Reset Budget and Cost Function Calls*/
             budget_ = optimizer_settings_.trunk_budget;
             cost_function_calls_ = 0;
@@ -897,282 +499,65 @@ void OptimizerManager::Optimize() {
             update_screen_clock_ = clock();
         }
 
-        /*****************SCRIPT-DRIVEN STAGE LOOP (plan 008 U9) ******/
-        /*The run's stage policy is DATA — stage_script_, built once in
-         * Initialize from the settings + directive (U7's BuildStageScript; the
-         * Sym_Trap directive yields the leaf-only [{Leaf, repeat=0}] script,
-         * the normal directives the trunk/branch/leaf shape). The loop sits
-         * OUTSIDE the !sym_trap_call guard, mirroring the pre-Cut-B leaf
-         * section: under Sym_Trap the script holds only the leaf spec, so only
-         * leaf-init + dilate + emit + CalculateSymTrap run (no search;
-         * costCalls stays 0 — the U6 sym-trap pins). Each spec names its
-         * CostFunctionManager by cfm_index (0/1/2 -> the trunk/branch/leaf
-         * managers) and its cost parameters are derived from that manager's
-         * parameter registry via DeriveStageCostParams — the U7 pure relocation
-         * of the scan Initialize used to perform inline (same values: 6/4/1
-         * dilation on the production shape). The emit order, the error gating,
-         * and the cumulative budget accounting are transcribed VERBATIM from
-         * the pre-Cut-B blocks: - trunk: init + dilate + emit UNCONDITIONAL;
-         * search gated on !error_occurrred_; destruct UNCONDITIONAL (the trunk
-         * side of the leaf-destruct error-gating asymmetry, preserved verbatim
-         * — flagged to the hygiene pass, NOT fixed); - branch: init + dilate +
-         * emit ONCE PER GROUP (gated on enable_branch_ && number_branches > 0
-         * && !error_occurrred_ — the group-once dilation pin); per-repeat
-         * re-seed from the CURRENT optimum + budget_ += spec.budget
-         * (cumulative); - leaf: init + dilate + emit gated on enable_leaf_ &&
-         * !error_occurrred_; CalculateSymTrap under the Sym_Trap directive (the
-         * repeat=0 no-search leaf); search gated on enable_leaf_ &&
-         * !error_occurrred_ && !sym_trap_call && repeat > 0; destruct gated on
-         * enable_leaf_ && !error_occurrred_ (the leaf side of the asymmetry,
-         * preserved verbatim); - a cfm_index outside 0..2 fails fast through
-         * the manager's existing error path (OptimizerError + error_occurrred_,
-         * no silent stage skip). budget_ is NOT re-touched for the trunk spec
-         * (the pre-trunk block above already reset it to trunk_budget);
-         * branch/leaf accumulate so the caps gate stays on the cumulative
-         * 20/25/30/35k shape.*/
         for (const jta::StageSpec& spec : stage_script_) {
-            /*cfm_index -> the three managers (fail fast on a bad index).*/
-            jta_cost_function::CostFunctionManager* stage_manager = nullptr;
-            switch (spec.cfm_index) {
-            case 0U:
-                stage_manager = &trunk_manager_;
-                break;
-            case 1U:
-                stage_manager = &branch_manager_;
-                break;
-            case 2U:
-                stage_manager = &leaf_manager_;
-                break;
-            default:
-                emit OptimizerError(
-                    QString::fromStdString(
-                        "OptimizerManager: stage cfm_index " +
-                        std::to_string(spec.cfm_index) +
-                        " out of range (valid 0..2); run aborted"));
+            std::unique_ptr<ObjectiveInstance> obj_instance_;
+            std::unique_ptr<GPUDilatedFrame> frame_a;
+            match(
+                spec.obj_spec,
+                [&](const jta_cost_function::DirectDilationSpec& s) {
+                    std::unique_ptr<GPUDilatedFrame> frame_b = nullptr;
+
+                    dilate(
+                        frames_A_[frame_index].GetEdgeImage(),
+                        frames_A_[frame_index].GetDilationImage(),
+                        cv::Mat(),
+                        cv::Point(-1, -1),
+                        s.dilation);
+
+                    frame_a = std::make_unique<GPUDilatedFrame>(
+                        width,
+                        height,
+                        cuda_device_id,
+                        frames_A_[frame_index].GetDilationImage().data,
+                        s.dilation);
+
+                    obj_instance_ = std::make_unique<DirectDilationObjective>(
+                        s,
+                        gpu_principal_model_.get(),
+                        frame_a.get(),
+                        gpu_metrics_.get());
+                },
+                [&](const auto&) { error_occurrred_ = true; });
+
+            if (!obj_instance_) {
+                emit OptimizerError("Failed to construct objective");
                 error_occurrred_ = true;
                 break;
             }
-            if (stage_manager == nullptr) {
-                break; /*bad cfm_index: the error was emitted above*/
-            }
 
-            switch (spec.kind) {
-            /**************TRUNK SPEC (cfm 0)**********************/
-            case jta::StageKind::Trunk: {
-                /*Call Trunk Initializer (unconditional — verbatim)*/
-                if (std::holds_alternative<
-                        jta_cost_function::DirectDilationSpec>(
-                        stage_manager->objective_spec)) {
-                    const auto& spec =
-                        std::get<jta_cost_function::DirectDilationSpec>(
-                            stage_manager->objective_spec);
-
-                    std::cout << "ObjectiveSpec dilation: " << spec.dilation
-                              << '\n';
-                }
-
-                int legacy_dilation = -1;
-                stage_manager->getActiveCostFunctionClass()
-                    ->getIntParameterValue("Dilation", legacy_dilation);
-
-                std::cout << "Legacy dilation: " << legacy_dilation << '\n';
-                if (!stage_manager->InitializeActiveCostFunction(
-                        error_message)) {
-                    emit OptimizerError(QString::fromStdString(error_message));
-                    error_occurrred_ = true;
-                }
-
-                const jta::StageCostParams trunk_params =
-                    DeriveStageParams(*stage_manager);
-
-                /*Make Sure Dilation Image is Showing Trunk Value (Should be
-                 * Unnecessary)*/
-                ResetStageDilation(frame_index, trunk_params.dilation);
-
-                if (!error_occurrred_) {
-                    RunDirectStage(spec.range, *stage_manager, spec.kind);
-                }
-
-                /*Destruct Trunk Manager Initialization (unconditional —
-                 * verbatim)*/
-                if (!stage_manager->DestructActiveCostFunction(error_message)) {
-                    emit OptimizerError(QString::fromStdString(error_message));
-                    error_occurrred_ = true;
-                }
+            if (!obj_instance_->initialize(error_message)) {
+                emit OptimizerError(QString::fromStdString(error_message));
+                error_occurrred_ = true;
                 break;
             }
-            /**************BRANCH SPEC (cfm 1)*********************/
-            case jta::StageKind::Branch: {
-                /*Construct Branch Manager Initialization — the GROUP init +
-                 * dilate + emit fires exactly once per frame (the group-once
-                 * dilation pin).*/
 
-                if (std::holds_alternative<
-                        jta_cost_function::DirectDilationSpec>(
-                        stage_manager->objective_spec)) {
-                    const auto& spec =
-                        std::get<jta_cost_function::DirectDilationSpec>(
-                            stage_manager->objective_spec);
+            RunDirectStage(spec.range, *obj_instance_, spec.kind, spec);
+            SetStartingPoint(current_optimum_location_);
 
-                    std::cout << "ObjectiveSpec dilation: " << spec.dilation
-                              << '\n';
-                }
-
-                int legacy_dilation = -1;
-                stage_manager->getActiveCostFunctionClass()
-                    ->getIntParameterValue("Dilation", legacy_dilation);
-
-                std::cout << "Legacy dilation: " << legacy_dilation << '\n';
-                if (optimizer_settings_.enable_branch_ &&
-                    optimizer_settings_.number_branches > 0 &&
-                    !error_occurrred_) {
-                    if (!stage_manager->InitializeActiveCostFunction(
-                            error_message)) {
-                        emit OptimizerError(
-                            QString::fromStdString(error_message));
-                        error_occurrred_ = true;
-                    }
-
-                    const jta::StageCostParams branch_params =
-                        DeriveStageParams(*stage_manager);
-
-                    /*Make Sure Dilation Image is Showing Branch Value */
-                    ResetStageDilation(frame_index, branch_params.dilation);
-                }
-
-                /*Move to Branch If Necessary: one search per repeat, each
-                 * re-seeded from the CURRENT optimum (the per-repeat re-seed
-                 * lineage invariant — reading current_optimum_location_,
-                 * never a captured one).*/
-                for (unsigned int branch_index = 0; branch_index < spec.repeat;
-                     branch_index++) {
-                    /*If Error*/
-                    if (error_occurrred_) {
-                        break;
-                    }
-
-                    /*Update Search Stage Flag as Branch*/
-                    search_stage_flag_ = Stage::Branch;
-
-                    /*Reset Storage, Starting Point, Range, new budget,
-                     * comparison image*/
-                    /*Reset Starting Point*/
-                    SetStartingPoint(current_optimum_location_);
-                    /*Reset Range*/
-                    SetSearchRange(spec.range);
-                    /*Reset Budget and Cost Function Calls*/
-                    budget_ += spec.budget;
-                    /*Run this branch stage of DIRECT bound to the real GPU
-                     * cost. budget_ is cumulative (trunk + branch);
-                     * RunDirectStage uses it as the stage cap against the
-                     * running cost_function_calls_ offset.*/
-                    RunDirectStage(spec.range, *stage_manager, spec.kind);
-                }
+            if (error_occurrred_) {
                 break;
-            }
-            /**************LEAF SPEC (cfm 2)***********************/
-            case jta::StageKind::Leaf: {
-                if (std::holds_alternative<
-                        jta_cost_function::DirectDilationSpec>(
-                        stage_manager->objective_spec)) {
-                    const auto& spec =
-                        std::get<jta_cost_function::DirectDilationSpec>(
-                            stage_manager->objective_spec);
-
-                    std::cout << "ObjectiveSpec dilation: " << spec.dilation
-                              << '\n';
-                }
-
-                int legacy_dilation = -1;
-                stage_manager->getActiveCostFunctionClass()
-                    ->getIntParameterValue("Dilation", legacy_dilation);
-
-                std::cout << "Legacy dilation: " << legacy_dilation << '\n';
-                /*Construct Leaf Initialization*/
-                if (optimizer_settings_.enable_leaf_ && !error_occurrred_) {
-                    if (!stage_manager->InitializeActiveCostFunction(
-                            error_message)) {
-                        emit OptimizerError(
-                            QString::fromStdString(error_message));
-                        error_occurrred_ = true;
-                    }
-
-                    const jta::StageCostParams leaf_params =
-                        DeriveStageParams(*stage_manager);
-
-                    /*Make Sure Dilation Image is Showing Leaf Value */
-                    ResetStageDilation(frame_index, leaf_params.dilation);
-                }
-
-                /*Sym_Trap: the repeat=0 no-search leaf — init + dilate +
-                 * emit + CalculateSymTrap, NO search (gated ONLY on
-                 * sym_trap_call, verbatim — the engine runs CalculateSymTrap
-                 * even after a leaf-init error, a latent hazard preserved
-                 * here).*/
-                if (sym_trap_call) {
-                    CalculateSymTrap();
-                }
-
-                /*Move to Leaf Search If Necessary*/
-                if (optimizer_settings_.enable_leaf_ && !error_occurrred_ &&
-                    !sym_trap_call && spec.repeat > 0) {
-                    /*Update Search Stage Flag as Leaf*/
-                    search_stage_flag_ = Stage::Leaf;
-
-                    /*Reset Storage, Starting Point, Range, new budget,
-                     * comparison image*/
-                    /*Reset Starting Point*/
-                    SetStartingPoint(current_optimum_location_);
-                    /*Reset Range*/
-                    SetSearchRange(spec.range);
-                    /*Reset Budget and Cost Function Calls*/
-                    budget_ += spec.budget;
-                    /*Run the leaf stage of DIRECT bound to the real GPU cost.
-                     * budget_ is cumulative (trunk + branch + leaf);
-                     * RunDirectStage uses it as the stage cap against the
-                     * running cost_function_calls_ offset.*/
-                    RunDirectStage(spec.range, *stage_manager, spec.kind);
-                }
-
-                /*Destruct Leaf Initialization CFM — gated on
-                 * !error_occurrred_ (the leaf side of the leaf-destruct
-                 * error-gating asymmetry; preserved verbatim, flagged to the
-                 * hygiene pass).*/
-                if (optimizer_settings_.enable_leaf_ && !error_occurrred_) {
-                    if (!stage_manager->DestructActiveCostFunction(
-                            error_message)) {
-                        emit OptimizerError(
-                            QString::fromStdString(error_message));
-                        error_occurrred_ = true;
-                    }
-                }
-                break;
-            }
             }
         }
 
         /*****************STAGE LOOP END *****************************/
 
-        dilate(
-            frames_A_[frame_index].GetEdgeImage(),
-            frames_A_[frame_index].GetDilationImage(),
-            cv::Mat(),
-            cv::Point(-1, -1),
-            trunk_dilation_val_); /*Reset Dilation In That Image*/
-        if (calibration_.biplane_calibration) {
-            dilate(
-                frames_B_[frame_index].GetEdgeImage(),
-                frames_B_[frame_index].GetDilationImage(),
-                cv::Mat(),
-                cv::Point(-1, -1),
-                trunk_dilation_val_); /*Reset Dilation In That Image*/
-        }
         emit UpdateDilationBackground();
 
         /*Move on and Wrap Up*/
-        if (error_occurrred_ || std::cmp_equal(frame_index, end_frame_index_)) {
-            progress_next_frame_ = false;
-        }
+        // if (error_occurrred_ || std::cmp_equal(frame_index,
+        // end_frame_index_)) {
+        //     progress_next_frame_ = false;
+        // }
         emit OptimizedFrame(
             current_optimum_location_.x,
             current_optimum_location_.y,
@@ -1218,20 +603,6 @@ void OptimizerManager::Optimize() {
     emit finished();
 }
 
-jta::StageCostParams OptimizerManager::DeriveStageParams(
-    jta_cost_function::CostFunctionManager& manager) {
-    /*The one-line shim over jta::DeriveStageCostParams (U7 pure TU — the
-     * six-name variant list lives there, in ONE place). Every call site stays
-     * exactly where the pre-shim DeriveStageCostParams calls were: in the
-     * stage loop the call runs AFTER the stage's InitializeActiveCostFunction
-     * (the init-gating order is load-bearing) — never hoisted above the kind
-     * switch.*/
-    return jta::DeriveStageCostParams(
-        manager.getActiveCostFunction(),
-        manager.getActiveCostFunctionClass()->getIntParameters(),
-        manager.getActiveCostFunctionClass()->getBoolParameters());
-}
-
 void OptimizerManager::ResetStageDilation(size_t frame_index, int dilation) {
     /*Make Sure the Dilation Image is Showing the Given Dilation Value (Reset
      * Dilation In That Image) — the dilate-A / dilate-B (if biplane) / emit
@@ -1255,10 +626,13 @@ void OptimizerManager::ResetStageDilation(size_t frame_index, int dilation) {
 
 void OptimizerManager::RunDirectStage(
     Point6D range,
-    jta_cost_function::CostFunctionManager& stage_manager,
-    jta::StageKind kind) {
-    auto serial_cost = jta::BuildGpuCostAdapter(
-        gpu_principal_model_, calibration_, stage_manager);
+    ObjectiveInstance& objective,
+    jta::StageKind kind,
+    jta::StageSpec stage_spec) {
+    // auto serial_cost = jta::BuildGpuCostAdapter(
+    //     gpu_principal_model_.get(), calibration_, stage_manager);
+    auto serial_cost = jta::BuildGPUCostAdapter(
+        gpu_principal_model_.get(), calibration_, objective);
 
 #if USE_RUST_DIRECT
     CppCost cost = CppCost(serial_cost);
@@ -1267,7 +641,7 @@ void OptimizerManager::RunDirectStage(
     rust::Box<direct_rs::DirectOptimizer> rust_opt = direct_rs::new_rust_opt(
         range.to_array(),
         starting_point_.to_array(),
-        (budget_ - cost_function_calls_),
+        (stage_spec.budget),
         use_bobyqa);
 
     RunOutcome out = rust_opt->run_rust_opt(cost);
@@ -1332,105 +706,6 @@ void OptimizerManager::RunDirectStage(
 #endif
 }
 
-void OptimizerManager::CalculateSymTrap() {
-    if (current_optimum_location_.xa == 0 &&
-        current_optimum_location_.ya == 0 &&
-        current_optimum_location_.za == 0) {
-        std::cout << "ERROR: INVALID STARTING POSE FOR SYMMETRY TRAP" << '\n';
-        return;
-    }
-    // Store cost values to input to csv
-    std::vector<double> Costs;
-
-    // Get number of iterations from sym_trap spin box
-    // int iter_val = sym_trap_obj->getIterCount() * 3;
-    int iter_val = 60;  // iter_count * 3;
-    std::cout << "Sym Trap Iteration size: " << iter_val << '\n';
-
-    // Get pose list from sym trap
-    std::vector<Point6D> pose_list(0);
-    Point6D pose_6D(current_optimum_location_);
-    create_vector_of_poses(pose_list, pose_6D, 20);
-
-    int progress_val = 0;
-    // Calculate cost function at each pose
-    for (int i = 0; i < iter_val; i++) {
-        emit onUpdateOrientationSymTrap(
-            pose_list.at(i).x,
-            pose_list.at(i).y,
-            pose_list.at(i).z,
-            pose_list.at(i).xa,
-            pose_list.at(i).ya,
-            pose_list.at(i).za);
-        std::this_thread::sleep_for(std::chrono::milliseconds(5000 / iter_val));
-        double myCost =
-            EvaluateCostFunctionAtPoint(pose_list.at(i), 2);  // Use leaf
-        Costs.push_back(myCost);
-        std::cout << i + 1 << ": " << myCost << " @ rotation ("
-                  << pose_list.at(i).xa << " " << pose_list.at(i).ya << " "
-                  << pose_list.at(i).za << ")" << '\n';
-
-        // Update progress bar according to number of iterations
-        progress_val = (i + 1) * 100 / iter_val;
-        emit onProgressBarUpdate(progress_val);
-    }
-
-    // set model back to intial pose
-    emit onUpdateOrientationSymTrap(
-        pose_6D.x, pose_6D.y, pose_6D.z, pose_6D.xa, pose_6D.ya, pose_6D.za);
-
-    // Csv of position and cost value (xangle,yangle,zangle,cost value \n)
-    std::ofstream myfile;
-    myfile.open("Results.csv");
-    for (int i = 0; i < iter_val; i++) {
-        myfile << pose_list.at(i).xa << "," << pose_list.at(i).ya << ","
-               << pose_list.at(i).za << "," << Costs.at(i) << "\n";
-    }
-    myfile.close();
-
-    // Used for Sym Trap VTK plot
-    std::ofstream myfile2;
-    myfile2.open("Results.xyz");
-    for (int i = 0; i < iter_val; i++) {
-        myfile2 << pose_list.at(i).xa << " " << pose_list.at(i).ya << " "
-                << Costs.at(i) << "\n";
-    }
-    myfile2.close();
-
-    std::ofstream myfile3;
-    myfile3.open("Results2D.xy");
-    for (int i = 0; i < iter_val; i++) {
-        myfile3 << i - (iter_val / 3) << " " << Costs.at(i) << "\n";
-    }
-    myfile3.close();
-
-    emit onProgressBarUpdate(100);
-}
-
-double OptimizerManager::EvaluateCostFunctionAtPoint(Point6D point, int stage) {
-    enum Dilation { Trunk, Branch, Leaf };
-
-    /*Send the already-physical pose directly (no denormalize step).*/
-    Pose pose(point.x, point.y, point.z, point.xa, point.ya, point.za);
-    gpu_principal_model_->SetCurrentPrimaryCameraPose(pose);
-
-    double result = 0;
-    switch (stage) {
-    case Trunk:
-        result = trunk_manager_.callActiveCostFunction();
-        break;
-    case Branch:
-        result = branch_manager_.callActiveCostFunction();
-        break;
-    case Leaf:
-        result = leaf_manager_.callActiveCostFunction();
-        break;
-    }
-    emit CostFuncAtPoint(result);
-
-    return result;
-}
-
 void OptimizerManager::onStopOptimizer() {
     error_occurrred_ = true;
 }
@@ -1454,95 +729,13 @@ void OptimizerManager::create_image_indices(
 }
 
 /*Destructor*/
-OptimizerManager::~OptimizerManager() {
-    /*GPU Metrics Class*/
-    delete gpu_metrics_;
+OptimizerManager::~OptimizerManager() {};
 
-    /* DESTRUCT CUDA Cost Function Objects (Vector of GPU Models and vector of
-    GPU Frames - note Dilated and Intensity must have own vector for each stage
-    because their values could change with the stage from a black silhouette
-    bool or a dilation int)*/
-    /*Camera A (Monoplane or Biplane)*/
-    for (auto& i : gpu_intensity_frames_trunk_A_) {
-        delete i;
-    }
-    for (auto& i : gpu_intensity_frames_branch_A_) {
-        delete i;
-    }
-    for (auto& i : gpu_intensity_frames_leaf_A_) {
-        delete i;
-    }
-    for (auto& i : gpu_edge_frames_A_) {
-        delete i;
-    }
-    for (auto& i : gpu_dilated_frames_trunk_A_) {
-        delete i;
-    }
-    for (auto& i : gpu_dilated_frames_branch_A_) {
-        delete i;
-    }
-    for (auto& i : gpu_dilated_frames_leaf_A_) {
-        delete i;
-    }
-    /*Camera B (Biplane only)*/
-    for (auto& i : gpu_intensity_frames_trunk_B_) {
-        delete i;
-    }
-    for (auto& i : gpu_intensity_frames_branch_B_) {
-        delete i;
-    }
-    for (auto& i : gpu_intensity_frames_leaf_B_) {
-        delete i;
-    }
-    for (auto& i : gpu_edge_frames_B_) {
-        delete i;
-    }
-    for (auto& i : gpu_dilated_frames_trunk_B_) {
-        delete i;
-    }
-    for (auto& i : gpu_dilated_frames_branch_B_) {
-        delete i;
-    }
-    for (auto& i : gpu_dilated_frames_leaf_B_) {
-        delete i;
-    }
-
-    /*Models*/
-    delete gpu_principal_model_;
-    for (auto& gpu_non_principal_model : gpu_non_principal_models_) {
-        delete gpu_non_principal_model;
-    }
-};
-
-namespace jta {
-bool RunDirectStageGuarded(::DirectOptimizer& opt, QString* errorOut) {
-    try {
-        bool ok = opt.Run();
-        if (!ok) {
-            if (errorOut != nullptr) {
-                *errorOut = QStringLiteral("Error optimizing current frame!");
-            }
-            return false;
-        }
-        if (errorOut != nullptr) {
-            errorOut->clear();
-        }
-        return true;
-    } catch (const std::invalid_argument& e) {
-        if (errorOut != nullptr) {
-            *errorOut = QString::fromStdString(
-                std::string("DirectOptimizer contract violation: ") + e.what());
-        }
-        return false;
-    }
-}
-}  // namespace jta
-
-std::function<double(const Point6D&)> jta::BuildGpuCostAdapter(
+std::function<double(const Point6D&)> jta::BuildGPUCostAdapter(
     gpu_cost_function::GPUModel* principal_model,
     Calibration calibration,
-    jta_cost_function::CostFunctionManager& stage_manager) {
-    return [principal_model, calibration, &stage_manager](
+    ObjectiveInstance& objective) {
+    return [principal_model, calibration, &objective](
                const Point6D& physical) mutable -> double {
         Pose pose(
             physical.x,
@@ -1552,20 +745,6 @@ std::function<double(const Point6D&)> jta::BuildGpuCostAdapter(
             physical.ya,
             physical.za);
         principal_model->SetCurrentPrimaryCameraPose(pose);
-        if (calibration.biplane_calibration) {
-            /*convert_Pose_A_to_Pose_B is a NON-const Calibration member (it
-             * builds local matrices only); `mutable` keeps the by-value
-             * capture writable without changing behavior (calibration is
-             * never modified).*/
-            Point6D physical_B = calibration.convert_Pose_A_to_Pose_B(physical);
-            principal_model->SetCurrentSecondaryCameraPose(Pose(
-                physical_B.x,
-                physical_B.y,
-                physical_B.z,
-                physical_B.xa,
-                physical_B.ya,
-                physical_B.za));
-        }
-        return stage_manager.callActiveCostFunction();
+        return objective.evaluate(pose);
     };
 }

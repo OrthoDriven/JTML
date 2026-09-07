@@ -1,5 +1,6 @@
 /*Render Engine Header*/
 #include <cub/block/block_scan.cuh>
+#include <memory>
 
 #include "compute/render_engine.cuh"
 #include "cub/cub.cuh"
@@ -236,10 +237,9 @@ RenderEngine::RenderEngine() :
     dev_fragment_fill_(nullptr),
     dev_stride_prefixes_(nullptr),
     dev_cub_storage_(nullptr),
-    cub_storage_bytes_(0), initialized_correctly_(false) {
+    cub_storage_bytes_(0),
+    initialized_correctly_(false) {
     /*Initialize Host Variables*/
-
-
 }
 
 RenderEngine::~RenderEngine() {

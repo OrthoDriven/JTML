@@ -23,6 +23,7 @@
 
 /*Key Event*/
 #include <QKeyEvent>
+#include <numbers>
 
 /*Direct Data Structures*/
 #include "compute/curvature_utilities.h"
@@ -57,94 +58,27 @@
 #include "services/model.h"
 
 /*Optimizer Settings*/
+#include "coordinator/optimizer_run_controller.h"
+#include "coordinator/session_state_controller.h"
 #include "services/optimizer_settings.h"
-
-/*Settings persistence service (plan 004 U3 / R9): owns the QSettings
- * round-trip for cost-function/optimizer/edge settings; widget-free.*/
-#include "services/settings_service.h"
-
-/*Session controller (plan 004 U6 / R6+R10): owns the load path (calibration/
- * image/model parsing + dataset population) and the camera A/B switching
- * state; widget-free and headless-testable (it never touches interactor.h's
- * file-scope globals -- this TU is the only interactor.h includer).*/
 #include "services/session_controller.h"
-
-/*Study-load controller (plan 006 U7 / R11): the ONE shared load path both
- * front-ends call -- calibration one-use-per-session + dataset-replace
- * policy, parse -> populate -> dedup -> counts relocated verbatim from the
- * load slots (R13); the scene/background/VTK updates stay view-side. It
- * wraps session_controller_ (declared before it) -- the shared active-
- * camera / count mirrors stay on the one instance the camera slots use --
- * and consults the injected run-in-flight probe (L17) at each load, wired
- * from the session-state controller's M7 probe below.*/
+#include "services/settings_service.h"
 #include "services/study_load_controller.h"
 
-/*Optimizer Run Controller (plan 006 U5): the shared run controller — gate,
- * drive sequence, run-state machine, progress, stop, seed, epoch/thread
- * lifecycle, destructor contract. MainScreen's LaunchOptimizer + locking
- * thin onto it; the 16-control DisableAll/EnableAll stays a view-side
- * mapper with EnableAll driven by the controller's terminal-frame relay
- * (pinned unlock-after-error).*/
-#include "coordinator/optimizer_run_controller.h"
-
-/*Session-state controller (plan 006 U6): the QObject notification shell
- * over jta::SessionState — MainScreen's SyncSessionState + the
- * previous-frame/model bookkeeping relocate here (R5/R6/R10, AE2). The
- * controller wraps session_state_ by pointer (declared before it) and
- * diffs + emits; the selection handlers advance the mirrors through
- * CommitSelection AFTER their save-last-pose, exactly like the old
- * previous_frame_index_ / previous_model_indices_ writes (H2/M9).*/
-#include "coordinator/session_state_controller.h"
-
 /*Optimizer Settings Control Window*/
-#include "view/settings_control.h"
-/*App-State Service (plan U7, R8/E11)*/
-#include "domain/session_state.h"
 
-/* Symmetry Trap Analysis Window*/
-
-/*Cost Function Library*/
-#include "compute/CostFunctionManager.h"
-
-/*CostFunctionTools*/
 #include "compute/camera_calibration.h"
+#include "domain/session_state.h"
 
 /*machine_learning_tools*/
 #include "../../src/view/qml/qml_settings_dialog.h"
 #include "compute/machine_learning_tools.h"
-/*Segmentation controller (plan 004 U8 / R12): owns the per-frame segment +
- * implant-estimate ops (GPU/torch). The view owns the per-frame loops, the
- * progress, processEvents, and the render interleave; the controller exposes
- * per-frame operations only. jtml_services is GPU-linked as of U8.
- *
- * INCLUDE ORDER NOTE: this header pulls torch, and PyTorch's ivalue_inl.h
- * does `#undef slots` (the Qt keyword macro). It must stay AFTER the
- * coordinator/view headers that use the raw `public slots:` keyword
- * (optimizer_manager.h / settings_control.h / drr_tool.h) -- same constraint
- * as the torch-bearing machine_learning_tools.h include above.*/
 #include "services/ml_orchestrator.h"
 #include "services/segmentation_controller.h"
-#include "view/viewer.h"
-
-/*List view-models (plan 004 U2, R4/R5): the image/model QListViews render
- * these passively; selection lives in the views' QItemSelectionModel (model +
- * selectionModel together are the headless-testable unit).*/
 #include "view/frame_list_model.h"
 #include "view/model_list_model.h"
+#include "view/viewer.h"
 
-/**
- * @brief The MainScreen object that inherits the QMainWindow object type. This
- * object serves as the class hosting all the items on the main window.
- *
- * Role (plan 004, R2): View + composition root. Widget wiring, VTK render
- * binding, layout/resize, and the irreducible view-only slots (display-mode
- * radios, interaction modes, reset view, key handling) stay here; everything
- * else lives in the extracted seams: view-models (FrameListModel /
- * ModelListModel), services (SessionController, SettingsService, EdgeProcessor,
- * SegmentationController, ImplantEstimator), domain (pose_copy, pose_file_io,
- * SessionState, OptimizeIntentController, ModelListBuilder,
- * ambiguous_pose_processing), coordinator (OptimizeCoordinator).
- */
 class MainScreen : public QMainWindow {
     Q_OBJECT
 
@@ -168,7 +102,7 @@ Q_SIGNALS:
     void UpdateDisplayText(bool);
 
 private:
-    double pi = 3.14159265358979323846;
+    double pi = std::numbers::pi;
 
     Ui::MainScreenClass ui;
 
@@ -231,64 +165,20 @@ private:
     std::vector<Model> loaded_models;
     /*Location Storage Class*/
     LocationStorage model_locations_;
-    /*List view-models (plan 004 U2): write-once display-name models behind
-     * the two passive QListViews (ui.image_list_widget / model_list_widget).
-     * MainScreen's list bookkeeping (addItem/count/currentRow) is gone; the
-     * views read the models, and selection state lives in the views'
-     * QItemSelectionModel, which SyncSessionState reads.*/
+
     FrameListModel frame_list_model_;
     ModelListModel model_list_model_;
 
-    /*App-State Service: owns the pure, widget-free session facts (model
-     * list, selection, primary model, current frame). MainScreen keeps it
-     * current from widget events; the rest of MainScreen reads it instead of
-     * reaching into the UI directly (plan U7, R8/E11). Holds no widgets or
-     * render binding, so it is headless-testable. NOT an observable
-     * ViewModel (R12: no binding framework).*/
     jta::SessionState session_state_;
 
-    /*Shared session-state controller (plan 006 U6): the diff + notification
-     * shell wrapping session_state_ (declared BEFORE it — the controller
-     * holds &session_state_). SyncSessionState writes through
-     * UpdateSession; the selection handlers call CommitSelection after
-     * their save-last-pose (the old previous_frame_index_ /
-     * previous_model_indices_ writes are gone — the mirrors live in the
-     * session state, H2). The injected run-in-flight probe (M7) reads the
-     * run controller; the seed-clear (H5/M10b) drops its pending seed on a
-     * dataset clear (the widgets app has no clear path today — the wiring
-     * keeps ResetForDatasetClear complete).*/
     SessionStateController session_state_controller_;
 
-    /*Session controller (plan 004 U6 / R6+R10): owns the load path
-     * (calibration/image/model parsing + dataset population) and the camera
-     * A/B switching state. Operates on the view's dataset
-     * (loaded_frames/loaded_models/model_locations_) by reference; the view
-     * keeps ownership + the dialogs, view-model insertion, interactor.h
-     * global writes, and VTK wiring.*/
     jta::SessionController session_controller_;
 
-    /*Shared study-load controller (plan 006 U7 / R11): the load slots thin
-     * onto it (calibration one-use + dataset-replace policy, parse ->
-     * populate -> dedup -> counts); it wraps session_controller_ (declared
-     * before it) and probes session_state_controller_.runInFlight() (M7 -
-     * L17) at each load. The camera slots keep using session_controller_
-     * directly (U9 thins them later).*/
     jta::StudyLoadController study_load_controller_;
 
-    /*Segmentation controller (plan 004 U8 / R12): per-frame segment +
-     * implant-estimate operations (SegmentFrame / EstimateImplantPose). The
-     * view keeps the loops, the torch model loading, the progress/render
-     * interleave, and the Frame post-processing; the controller wraps the
-     * GPU/torch calls verbatim (per-frame API -- no controller-owned loop).*/
     jta::SegmentationController segmentation_controller_;
 
-    /*Shared ML orchestrator (plan 006 U8 / R12 part): the per-frame
-     * segment -> estimate -> SavePose -> seed chain. The slots inject the
-     * torch/CUDA ops (wrapping segmentation_controller_ above) and keep
-     * the .pt loads, the per-frame loops, the dilation/edge parameter
-     * sourcing and the progress/render interleave. The estimate's
-     * SavePose into model_locations_ IS the widgets seed (LaunchOptimizer
-     * copies the storage by value — no explicit run-controller seed).*/
     jta::MlOrchestrator ml_orchestrator_;
 
     /*Pull the current widget state into session_state_. Called wherever the
@@ -298,11 +188,6 @@ private:
     /*Save the Pose From The Last Selected Frame*/
     void SaveLastPose();
 
-    /*Settings persistence (plan 004 U3): the service owns the QSettings
-     * round-trip (registry parity: org JointTrackAutoGPU / app Version340 /
-     * groups CostFunctionSettings / OptimizerSettings / EdgeDetectionSettings /
-     * FirstTime). The view maps the GPU-linked CostFunctionManagers <-> raw
-     * registry entries and owns the CUDA probe + dialogs.*/
     jta::SettingsService settings_service_;
 
     /*Optimizer Settings That Must Be Set in Constructor and Changed on
@@ -312,16 +197,6 @@ private:
     /*Copy of the Above Only Used While Optimizing to Display Output*/
     OptimizerSettings display_optimizer_settings_;
 
-    /*Cost Function Managers (from JTA Cost Function Library) for each stage of
-     * DIRECT-JTA Optimizer*/
-    jta_cost_function::CostFunctionManager trunk_manager_;
-    jta_cost_function::CostFunctionManager branch_manager_;
-    jta_cost_function::CostFunctionManager
-        leaf_manager_;  // For extra Z-translation usually (esp. when monoplane)
-
-    /*Function That Saves Dilation as 0 if No Trunk Manager has a Dilation Int
-    Parameter, else saves all the Dilation Images for Each Frame as the Dilation
-    Constant*/
     void UpdateDilationFrames();
 
     /*Optimization Function: Packages Off The Optimization process in
@@ -329,40 +204,14 @@ private:
 
     /*Launch Optimizer*/
 
-    void LaunchOptimizer(
-        OptimizerRunController::Directive
-            directive);  // Directive Says whether it is Optimize Single,
-                         // From, All, or Each (or Sym_Trap)
+    void LaunchOptimizer(OptimizerRunController::Directive directive);
 
-    /*The shared optimizer-run controller (plan 006 U5): owns the drive
-     * sequence + thread lifecycle; the view maps the relays onto the
-     * widgets (actors, selection advance, DisableAll/EnableAll mapper).*/
     OptimizerRunController optimizer_run_controller_;
 
     /*Disable and Enable MainScreen During and After Optimization*/
     void DisableAll();
 
     void EnableAll();
-
-    /*Function That Loads Settings from Registry or (If First Time Loading
-    Saves Default Settings*/
-    void LoadSettingsBetweenSessions();
-
-    /*Builds the raw CostFunctionSettings registry entries (key format
-     * STAGE@ACTIVE_CF / STAGE@CFname@ParamName@TYPE) from the three cost
-     * function managers -- relocated verbatim from the first-run save and
-     * onSaveSettings (plan 004 U3). The service round-trips the entries;
-     * the view maps managers <-> entries because the GPU-linked
-     * CostFunctionManager must not enter the QtCore-only service.*/
-    std::vector<jta::RegistryEntry> BuildCostFunctionRegistryEntries(
-        jta_cost_function::CostFunctionManager& trunk_manager,
-        jta_cost_function::CostFunctionManager& branch_manager,
-        jta_cost_function::CostFunctionManager& leaf_manager) const;
-
-    /*Optimizer Window Control*/
-    SettingsControl* settings_control = nullptr;
-
-    /*Sym Trap Window*/
 
     /*Calculate Viewing Angle (Accounts for Offsets)*/
     double CalculateViewingAngle(int width, int height, bool CameraA);
@@ -383,12 +232,7 @@ public Q_SLOTS:
     void on_load_model_button_clicked();       /*Load Models*/
 
     /*Biplane View Button (Monoplane is Biplane A, Biplans is Biplane B*/
-    /*Plan 006 U9: the VM slice of both camera slots is thinned onto the
-     * shared seams — the active-camera mirror write (SetActiveCamera on the
-     * shared SessionController; the radio stays the source of truth) and the
-     * inline save-last-pose copies (SaveLastPoseToStorage, the pinned
-     * camera-A/B table rows). Radio decisions (DecideCameraRadios) and the
-     * display-only blocks stay view-side (L16).*/
+
     void on_camera_A_radio_button_clicked();
 
     void on_single_model_radio_button_clicked();
@@ -442,8 +286,6 @@ public Q_SLOTS:
 
     void on_actionStop_Optimizer_triggered();
 
-    void on_actionOptimizer_Settings_triggered();
-
     void on_actionReset_View_triggered();
 
     void on_actionReset_Normal_Up_triggered();
@@ -490,10 +332,6 @@ public Q_SLOTS:
         double,
         unsigned int);
 
-    /*Finished Optimizing Frame, Send Optimum to MainScreen (the shared
-     * controller's terminal-frame relay; the out-of-bounds status travels
-     * on the relay so the view can box — L14). The controller already
-     * persisted the pose at its tracked current frame.*/
     void onOptimizedFrame(
         double,
         double,
@@ -507,8 +345,6 @@ public Q_SLOTS:
         QString,
         bool);
 
-    /*The shared controller's severity-carrying message channel (L14): the
-     * widgets preserves its box-type distinctions.*/
     void onControllerMessage(
         const QString& title,
         const QString& message,
@@ -525,11 +361,6 @@ public Q_SLOTS:
     updateOrientationSymTrap_MS(double, double, double, double, double, double);
 
     /*On Optimizer Control Windows Save Setting*/
-    void onSaveSettings(
-        OptimizerSettings,
-        jta_cost_function::CostFunctionManager,
-        jta_cost_function::CostFunctionManager,
-        jta_cost_function::CostFunctionManager);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;

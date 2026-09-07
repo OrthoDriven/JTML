@@ -6,7 +6,6 @@
 #include "compute/gpu_frame.cuh"
 #include "compute/gpu_heatmaps.cuh"
 #include "compute/gpu_image.cuh"
-#include "compute/gpu_intensity_frame.cuh"
 #include "compute/gpu_metrics.cuh"
 #include "compute/gpu_model.cuh"
 #include "compute/objective_instance.hpp"

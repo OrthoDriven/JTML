@@ -2,12 +2,13 @@
 #define OBJECTIVE_SPEC_H_
 
 #include <optional>
+#include <utility>
 #include <variant>
 
 namespace jta_cost_function {
 
 struct DirectDilationSpec {
-    int dilation = 6;
+    int dilation = 2;
 };
 
 struct SymmetryTrapSpec {
@@ -54,5 +55,19 @@ using ObjectiveSpec = std::variant<
 // objective_spec.h
 std::optional<int> getDilation(const ObjectiveSpec& spec);
 }  // namespace jta_cost_function
+
+template <class... Fs>
+struct Overloaded : Fs... {
+    using Fs::operator()...;
+};
+
+template <class... Fs>
+Overloaded(Fs...) -> Overloaded<Fs...>;
+
+template <class Variant, class... Fs>
+decltype(auto) match(Variant&& variant, Fs&&... fs) {
+    return std::visit(
+        Overloaded{std::forward<Fs>(fs)...}, std::forward<Variant>(variant));
+}
 
 #endif  // OBJECTIVE_SPEC_H_

@@ -24,10 +24,8 @@ add_library(jtml_compute SHARED
     gpu_frame.cu
     gpu_image.cu
     gpu_image_functions.cu
-    gpu_intensity_frame.cu
     gpu_metrics.cu
     gpu_model.cu
-    implant_mahfouz_metric.cu
     iou.cu
     l_1_1_matrix_diff_norm.cu
     pose_matrix.cpp
@@ -36,14 +34,10 @@ add_library(jtml_compute SHARED
     fast_implant_dilation_metric.cu
     gpu_heatmaps.cu
     curvature_hausdorf_metric.cu
-    # --- compute layer (003 U2) ---
     frame.cu
     curvature_utilities.cpp
     machine_learning_tools.cpp
-    # --- cost functions (ex-JTA_Cost_Functions) ---
     CostFunction.cpp
-    CostFunctionManager.cpp
-    DIRECT_DILATION.cpp
     objective_spec.cpp
     objective_instance.cpp
     ../objectives/direct_dilation.cpp

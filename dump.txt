@@ -1,0 +1,918 @@
+           PID: 2104541 (joint-track-mac)
+           UID: 1000 (ajj)
+           GID: 1000 (ajj)
+        Signal: 11 (SEGV)
+     Timestamp: Tue 2026-09-08 12:00:32 EDT (1min 9s ago)
+  Command Line: /home/ajj/repo/uf/JTML/.build/bin/joint-track-machine-learning
+    Executable: /home/ajj/repo/uf/JTML/.build/bin/joint-track-machine-learning
+ Control Group: /user.slice/user-1000.slice/user@1000.service/app.slice/app-ghostty-surface-transient-31626.scope
+          Unit: user@1000.service
+     User Unit: app-ghostty-surface-transient-31626.scope
+         Slice: user-1000.slice
+     Owner UID: 1000 (ajj)
+       Boot ID: 033f71112a6f4353b3f98812df4dad0d
+    Machine ID: c0bfe561da61424eba090b1e89ae8990
+      Hostname: nebby-fedora
+       Storage: /var/lib/systemd/coredump/core.joint-track-mac.1000.033f71112a6f4353b3f98812df4dad0d.2104541.1788883232000000.zst (present)
+  Size on Disk: 364.4M
+       Message: Process 2104541 (joint-track-mac) of user 1000 dumped core.
+                
+                Module libdrm.so.2 without build-id.
+                Module libxcb-present.so.0 without build-id.
+                Module libxcb-dri3.so.0 without build-id.
+                Module libXext.so.6 without build-id.
+                Module libxcb-glx.so.0 without build-id.
+                Module libqxcb-glx-integration.so without build-id.
+                Module libqwebp.so without build-id.
+                Module libqwbmp.so without build-id.
+                Module libqtiff.so without build-id.
+                Module libqtga.so without build-id.
+                Module libQt6Svg.so.6 without build-id.
+                Module libqsvg.so without build-id.
+                Module libqjpeg.so without build-id.
+                Module libqico.so without build-id.
+                Module libqicns.so without build-id.
+                Module libqgif.so without build-id.
+                Module libXfixes.so.3 without build-id.
+                Module libXrender.so.1 without build-id.
+                Module libXcursor.so.1 without build-id.
+                Module libcomposeplatforminputcontextplugin.so without build-id.
+                Module libuuid.so.1 without build-id.
+                Module libxcb-util.so.1 without build-id.
+                Module libxkbcommon-x11.so.0 without build-id.
+                Module libICE.so.6 without build-id.
+                Module libSM.so.6 without build-id.
+                Module libX11-xcb.so.1 without build-id.
+                Module libxcb-xkb.so.1 without build-id.
+                Module libxcb-xfixes.so.0 without build-id.
+                Module libxcb-sync.so.1 without build-id.
+                Module libxcb-shm.so.0 without build-id.
+                Module libxcb-shape.so.0 without build-id.
+                Module libxcb-render-util.so.0 without build-id.
+                Module libxcb-render.so.0 without build-id.
+                Module libxcb-randr.so.0 without build-id.
+                Module libxcb-keysyms.so.1 without build-id.
+                Module libxcb-image.so.0 without build-id.
+                Module libxcb-icccm.so.4 without build-id.
+                Module libxcb-cursor.so.0 without build-id.
+                Module libQt6XcbQpa.so.6 without build-id.
+                Module libqxcb.so without build-id.
+                Module libvtkFiltersCellGrid-9.7.so.1 without build-id.
+                Module libvtkexpat-9.7.so.1 without build-id.
+                Module libvtkIOCellGrid-9.7.so.1 without build-id.
+                Module libvtkIOXMLParser-9.7.so.1 without build-id.
+                Module libopenjph.so.0.31 without build-id.
+                Module libbrotlicommon.so.1 without build-id.
+                Module libXdmcp.so.6 without build-id.
+                Module libXau.so.6 without build-id.
+                Module libQt6QmlWorkerScript.so.6 without build-id.
+                Module libvtkIOLegacy-9.7.so.1 without build-id.
+                Module libvtkIOXML-9.7.so.1 without build-id.
+                Module libvtkfreetype-9.7.so.1 without build-id.
+                Module libImath.so.30 without build-id.
+                Module libIex.so.33 without build-id.
+                Module libOpenEXRCore.so.33 without build-id.
+                Module libIlmThread.so.33 without build-id.
+                Module libbrotlienc.so.1 without build-id.
+                Module libhwy.so.1 without build-id.
+                Module libjxl_cms.so.0.12 without build-id.
+                Module libdeflate.so.0 without build-id.
+                Module libLerc.so.4 without build-id.
+                Module liblzma.so.5 without build-id.
+                Module libsharpyuv.so.0 without build-id.
+                Module libaom.so.3 without build-id.
+                Module libSvtAv1Enc.so.4 without build-id.
+                Module librav1e.so.0.8 without build-id.
+                Module libdav1d.so.6 without build-id.
+                Module libicudata.so.78 without build-id.
+                Module libcrypto.so.3 without build-id.
+                Module libbrotlidec.so.1 without build-id.
+                Module libgraphite2.so.3 without build-id.
+                Module libdbus-1.so.3 without build-id.
+                Module libpcre2-8.so.0 without build-id.
+                Module libiconv.so.2 without build-id.
+                Module libxcb.so.1 without build-id.
+                Module libexpat.so.1 without build-id.
+                Module libQt6QmlModels.so.6 without build-id.
+                Module libQt6QmlMeta.so.6 without build-id.
+                Module libopencv_flann.so.500 without build-id.
+                Module libvtklzma-9.7.so.1 without build-id.
+                Module libvtklz4-9.7.so.1 without build-id.
+                Module libvtkFiltersReduction-9.7.so.1 without build-id.
+                Module libvtkverdict-9.7.so.1 without build-id.
+                Module libvtkImagingSources-9.7.so.1 without build-id.
+                Module libGLdispatch.so.0 without build-id.
+                Module libvtkCommonCache-9.7.so.1 without build-id.
+                Module libvtkParallelCore-9.7.so.1 without build-id.
+                Module libvtkParallelDIY-9.7.so.1 without build-id.
+                Module libvtkFiltersStatistics-9.7.so.1 without build-id.
+                Module libvtkFiltersHyperTree-9.7.so.1 without build-id.
+                Module libvtkRenderingAnnotation-9.7.so.1 without build-id.
+                Module libvtkImagingGeneral-9.7.so.1 without build-id.
+                Module libvtkFiltersTexture-9.7.so.1 without build-id.
+                Module libvtkFiltersModeling-9.7.so.1 without build-id.
+                Module libvtkRenderingContext2D-9.7.so.1 without build-id.
+                Module libvtkRenderingFreeType-9.7.so.1 without build-id.
+                Module libvtkx11-9.7.so.1 without build-id.
+                Module libvtkglad-9.7.so.1 without build-id.
+                Module libvtkRenderingUI-9.7.so.1 without build-id.
+                Module libvtkRenderingLabel-9.7.so.1 without build-id.
+                Module libvtkRenderingHyperTreeGrid-9.7.so.1 without build-id.
+                Module libOpenEXR.so.33 without build-id.
+                Module libopenjp2.so.7 without build-id.
+                Module libjxl_threads.so.0.12 without build-id.
+                Module libjxl.so.0.12 without build-id.
+                Module libtiff.so.6 without build-id.
+                Module libwebpdemux.so.2 without build-id.
+                Module libwebpmux.so.3 without build-id.
+                Module libwebp.so.7 without build-id.
+                Module libjpeg.so.8 without build-id.
+                Module libavif.so.16 without build-id.
+                Module libzstd.so.1 without build-id.
+                Module libpcre2-16.so.0 without build-id.
+                Module libdouble-conversion.so.3 without build-id.
+                Module libicuuc.so.78 without build-id.
+                Module libicui18n.so.78 without build-id.
+                Module libQt6Network.so.6 without build-id.
+                Module libfreetype.so.6 without build-id.
+                Module libharfbuzz.so.0 without build-id.
+                Module libpng16.so.16 without build-id.
+                Module libGL.so.1 without build-id.
+                Module libxkbcommon.so.0 without build-id.
+                Module libQt6DBus.so.6 without build-id.
+                Module libglib-2.0.so.0 without build-id.
+                Module libX11.so.6 without build-id.
+                Module libfontconfig.so.1 without build-id.
+                Module libEGL.so.1 without build-id.
+                Module libQt6Quick.so.6 without build-id.
+                Module liblapack.so.3 without build-id.
+                Module libz.so.1 without build-id.
+                Module libopencv_geometry.so.500 without build-id.
+                Module libnccl.so.2 without build-id.
+                Module libabsl_log_severity.so.2605.0.0 without build-id.
+                Module libabsl_raw_logging_internal.so.2605.0.0 without build-id.
+                Module libabsl_throw_delegate.so.2605.0.0 without build-id.
+                Module libabsl_spinlock_wait.so.2605.0.0 without build-id.
+                Module libabsl_base.so.2605.0.0 without build-id.
+                Module libabsl_strings_internal.so.2605.0.0 without build-id.
+                Module libabsl_source_location.so.2605.0.0 without build-id.
+                Module libabsl_int128.so.2605.0.0 without build-id.
+                Module libabsl_strings.so.2605.0.0 without build-id.
+                Module libutf8_validity.so.35.1.0 without build-id.
+                Module libabsl_time_zone.so.2605.0.0 without build-id.
+                Module libabsl_civil_time.so.2605.0.0 without build-id.
+                Module libabsl_time.so.2605.0.0 without build-id.
+                Module libabsl_tracing_internal.so.2605.0.0 without build-id.
+                Module libabsl_malloc_internal.so.2605.0.0 without build-id.
+                Module libabsl_kernel_timeout_internal.so.2605.0.0 without build-id.
+                Module libabsl_graphcycles_internal.so.2605.0.0 without build-id.
+                Module libabsl_utf8_for_code_point.so.2605.0.0 without build-id.
+                Module libabsl_decode_rust_punycode.so.2605.0.0 without build-id.
+                Module libabsl_demangle_rust.so.2605.0.0 without build-id.
+                Module libabsl_demangle_internal.so.2605.0.0 without build-id.
+                Module libabsl_debugging_internal.so.2605.0.0 without build-id.
+                Module libabsl_symbolize.so.2605.0.0 without build-id.
+                Module libabsl_stacktrace.so.2605.0.0 without build-id.
+                Module libabsl_synchronization.so.2605.0.0 without build-id.
+                Module libabsl_str_format_internal.so.2605.0.0 without build-id.
+                Module libabsl_strerror.so.2605.0.0 without build-id.
+                Module libabsl_leak_check.so.2605.0.0 without build-id.
+                Module libabsl_crc_cpu_detect.so.2605.0.0 without build-id.
+                Module libabsl_crc_internal.so.2605.0.0 without build-id.
+                Module libabsl_crc32c.so.2605.0.0 without build-id.
+                Module libabsl_crc_cord_state.so.2605.0.0 without build-id.
+                Module libabsl_cordz_handle.so.2605.0.0 without build-id.
+                Module libabsl_exponential_biased.so.2605.0.0 without build-id.
+                Module libabsl_cordz_functions.so.2605.0.0 without build-id.
+                Module libabsl_city.so.2605.0.0 without build-id.
+                Module libabsl_hash.so.2605.0.0 without build-id.
+                Module libabsl_cord_internal.so.2605.0.0 without build-id.
+                Module libabsl_cordz_info.so.2605.0.0 without build-id.
+                Module libabsl_cord.so.2605.0.0 without build-id.
+                Module libabsl_status.so.2605.0.0 without build-id.
+                Module libabsl_statusor.so.2605.0.0 without build-id.
+                Module libabsl_random_seed_gen_exception.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_seed_material.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_platform.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_randen_slow.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_randen_hwaes_impl.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_randen_hwaes.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_randen.so.2605.0.0 without build-id.
+                Module libabsl_random_internal_entropy_pool.so.2605.0.0 without build-id.
+                Module libabsl_random_seed_sequences.so.2605.0.0 without build-id.
+                Module libabsl_random_distributions.so.2605.0.0 without build-id.
+                Module libabsl_hashtablez_sampler.so.2605.0.0 without build-id.
+                Module libabsl_raw_hash_set.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_fnmatch.so.2605.0.0 without build-id.
+                Module libabsl_vlog_config_internal.so.2605.0.0 without build-id.
+                Module libabsl_log_globals.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_globals.so.2605.0.0 without build-id.
+                Module libabsl_log_initialize.so.2605.0.0 without build-id.
+                Module libabsl_flags_commandlineflag_internal.so.2605.0.0 without build-id.
+                Module libabsl_flags_commandlineflag.so.2605.0.0 without build-id.
+                Module libabsl_flags_private_handle_accessor.so.2605.0.0 without build-id.
+                Module libabsl_flags_program_name.so.2605.0.0 without build-id.
+                Module libabsl_flags_config.so.2605.0.0 without build-id.
+                Module libabsl_flags_reflection.so.2605.0.0 without build-id.
+                Module libabsl_flags_marshalling.so.2605.0.0 without build-id.
+                Module libabsl_flags_internal.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_proto.so.2605.0.0 without build-id.
+                Module libabsl_log_entry.so.2605.0.0 without build-id.
+                Module libabsl_log_sink.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_log_sink_set.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_structured_proto.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_format.so.2605.0.0 without build-id.
+                Module libabsl_examine_stack.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_nullguard.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_message.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_conditions.so.2605.0.0 without build-id.
+                Module libabsl_die_if_null.so.2605.0.0 without build-id.
+                Module libabsl_log_internal_check_op.so.2605.0.0 without build-id.
+                Module libprotobuf.so.35.1.0 without build-id.
+                Module libomp.so without build-id.
+                Module libsleef.so.3 without build-id.
+                Module libmkl_core.so.3 without build-id.
+                Module libmkl_gnu_thread.so.3 without build-id.
+                Module libmkl_intel_lp64.so.3 without build-id.
+                Module libvtkloguru-9.7.so.1 without build-id.
+                Module libvtkkissfft-9.7.so.1 without build-id.
+                Module libvtkCommonMisc-9.7.so.1 without build-id.
+                Module libvtkFiltersGeometry-9.7.so.1 without build-id.
+                Module libvtkCommonComputationalGeometry-9.7.so.1 without build-id.
+                Module libvtkjsoncpp-9.7.so.1 without build-id.
+                Module libvtkCommonColor-9.7.so.1 without build-id.
+                Module libvtkjpeg-9.7.so.1 without build-id.
+                Module libvtktoken-9.7.so.1 without build-id.
+                Module libvtkpugixml-9.7.so.1 without build-id.
+                Module libvtktiff-9.7.so.1 without build-id.
+                Module libvtkpng-9.7.so.1 without build-id.
+                Module libvtkmetaio-9.7.so.1 without build-id.
+                Module libvtkDICOMParser-9.7.so.1 without build-id.
+                Module libvtkImagingCore-9.7.so.1 without build-id.
+                Module libvtkzlib-9.7.so.1 without build-id.
+                Module libvtkscn-9.7.so.1 without build-id.
+                Module libvtkfmt-9.7.so.1 without build-id.
+                Module libvtkIOCore-9.7.so.1 without build-id.
+                Module libvtkFiltersCore-9.7.so.1 without build-id.
+                Module libvtkFiltersVerdict-9.7.so.1 without build-id.
+                Module libvtkFiltersGeneral-9.7.so.1 without build-id.
+                Module libvtkFiltersHybrid-9.7.so.1 without build-id.
+                Module libOpenGL.so.0 without build-id.
+                Module libGLX.so.0 without build-id.
+                Module libQt6OpenGL.so.6 without build-id.
+                Module libvtkCommonSystem-9.7.so.1 without build-id.
+                Module libvtkFiltersSources-9.7.so.1 without build-id.
+                Module libvtkFiltersExtraction-9.7.so.1 without build-id.
+                Module libQt6OpenGLWidgets.so.6 without build-id.
+                Module libvtkInteractionWidgets-9.7.so.1 without build-id.
+                Module libvtkRenderingOpenGL2-9.7.so.1 without build-id.
+                Module libopencv_imgcodecs.so.500 without build-id.
+                Module libstdc++.so.6 without build-id.
+                Module libgcc_s.so.1 without build-id.
+                Module libQt6Core.so.6 without build-id.
+                Module libQt6Qml.so.6 without build-id.
+                Module libQt6Gui.so.6 without build-id.
+                Module libQt6Widgets.so.6 without build-id.
+                Module libQt6QuickWidgets.so.6 without build-id.
+                Module libopencv_core.so.500 without build-id.
+                Module libopencv_imgproc.so.500 without build-id.
+                Module libc10_cuda.so without build-id.
+                Module libtorch_cuda.so without build-id.
+                Module libtorch_cpu.so without build-id.
+                Module libtorch.so without build-id.
+                Module libvtksys-9.7.so.1 without build-id.
+                Module libvtkCommonCore-9.7.so.1 without build-id.
+                Module libvtkCommonMath-9.7.so.1 without build-id.
+                Module libvtkCommonTransforms-9.7.so.1 without build-id.
+                Module libvtkCommonDataModel-9.7.so.1 without build-id.
+                Module libvtkCommonExecutionModel-9.7.so.1 without build-id.
+                Module libvtkRenderingCore-9.7.so.1 without build-id.
+                Module libvtkInteractionStyle-9.7.so.1 without build-id.
+                Module libvtkIOImage-9.7.so.1 without build-id.
+                Module libvtkIOGeometry-9.7.so.1 without build-id.
+                Module libvtkGUISupportQt-9.7.so.1 without build-id.
+                Module libjtml_compute.so without build-id.
+                Module libc10.so without build-id.
+                Module joint-track-machine-learning without build-id.
+                Stack trace of thread 2108105:
+                #0  0x00007f13cd0120f0 _ZN17gpu_cost_function8GPUImage13GetFrameWidthEv (libjtml_compute.so + 0x120f0)
+                #1  0x00007f13cd013c13 _ZN17gpu_cost_function10GPUMetrics21ComputeSumWhitePixelsERNS_8GPUImageEP9cudaError (libjtml_compute.so + 0x13c13)
+                #2  0x00007f13cd02ace4 _ZN23DirectDilationObjective10initializeERNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE (libjtml_compute.so + 0x2ace4)
+                #3  0x000055f3d29c7cc8 _ZN16OptimizerManager8OptimizeEv (joint-track-machine-learning + 0x8fcc8)
+                #4  0x00007f1392c18d2d _Z10doActivateILb0EEvP7QObjectiPPv (libQt6Core.so.6 + 0x218d2d)
+                #5  0x00007f1392cdcae4 _ZN7QThread7startedENS_14QPrivateSignalE (libQt6Core.so.6 + 0x2dcae4)
+                #6  0x00007f1392d9527a _ZN14QThreadPrivate5startEPv (libQt6Core.so.6 + 0x39527a)
+                #7  0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #8  0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2104643:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876574 __syscall_cancel (libc.so.6 + 0x6f574)
+                #3  0x00007f13928efdfe __poll (libc.so.6 + 0xe8dfe)
+                #4  0x00007f132545c663 _xcb_conn_wait (libxcb.so.1 + 0xe663)
+                #5  0x00007f132545e0db xcb_wait_for_event (libxcb.so.1 + 0x100db)
+                #6  0x00007f13169007c9 _ZN14QXcbEventQueue3runEv (libQt6XcbQpa.so.6 + 0x5d7c9)
+                #7  0x00007f1392d95283 _ZN14QThreadPrivate5startEPv (libQt6Core.so.6 + 0x395283)
+                #8  0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #9  0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2104642:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876574 __syscall_cancel (libc.so.6 + 0x6f574)
+                #3  0x00007f13928f0426 ppoll (libc.so.6 + 0xe9426)
+                #4  0x00007f137f505f51 g_main_context_iterate_unlocked.isra.0 (libglib-2.0.so.0 + 0x5ff51)
+                #5  0x00007f137f5065fe g_main_context_iteration (libglib-2.0.so.0 + 0x605fe)
+                #6  0x00007f1392edbcb6 _ZN20QEventDispatcherGlib13processEventsE6QFlagsIN10QEventLoop17ProcessEventsFlagEE (libQt6Core.so.6 + 0x4dbcb6)
+                #7  0x00007f1392bbd93c _ZN10QEventLoop4execE6QFlagsINS_17ProcessEventsFlagEE (libQt6Core.so.6 + 0x1bd93c)
+                #8  0x00007f1392cdf55f _ZN7QThread4execEv (libQt6Core.so.6 + 0x2df55f)
+                #9  0x00007f13874d605f _ZN22QDBusConnectionManager3runEv (libQt6DBus.so.6 + 0x4105f)
+                #10 0x00007f1392d95283 _ZN14QThreadPrivate5startEPv (libQt6Core.so.6 + 0x395283)
+                #11 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #12 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106416:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106415:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106420:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106418:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106414:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106422:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106417:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106425:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106421:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106419:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106426:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106423:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106428:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106429:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106436:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106430:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106437:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106438:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106433:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106434:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106441:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2104541:
+                #0  0x00007f1393c05084 _ZN8QPalette8setBrushENS_10ColorGroupENS_9ColorRoleERK6QBrush (libQt6Gui.so.6 + 0x205084)
+                #1  0x00007f139467a880 _ZN11QRenderRule16configurePaletteEP8QPaletteNS0_9ColorRoleES2_ (libQt6Widgets.so.6 + 0x27a880)
+                #2  0x00007f13946a2fec _ZNK16QStyleSheetStyle11drawControlEN6QStyle14ControlElementEPK12QStyleOptionP8QPainterPK7QWidget (libQt6Widgets.so.6 + 0x2a2fec)
+                #3  0x00007f13946226cf _ZNK12QCommonStyle11drawControlEN6QStyle14ControlElementEPK12QStyleOptionP8QPainterPK7QWidget (libQt6Widgets.so.6 + 0x2226cf)
+                #4  0x00007f13946a2ee7 _ZNK16QStyleSheetStyle11drawControlEN6QStyle14ControlElementEPK12QStyleOptionP8QPainterPK7QWidget (libQt6Widgets.so.6 + 0x2a2ee7)
+                #5  0x00007f13947ada8d _ZN11QPushButton10paintEventEP11QPaintEvent (libQt6Widgets.so.6 + 0x3ada8d)
+                #6  0x00007f13945fd260 _ZN7QWidget5eventEP6QEvent (libQt6Widgets.so.6 + 0x1fd260)
+                #7  0x00007f139458e15a _ZN19QApplicationPrivate13notify_helperEP7QObjectP6QEvent (libQt6Widgets.so.6 + 0x18e15a)
+                #8  0x00007f1392bb0078 _ZN16QCoreApplication15notifyInternal2EP7QObjectP6QEvent (libQt6Core.so.6 + 0x1b0078)
+                #9  0x00007f13945f36fc _ZN14QWidgetPrivate14sendPaintEventERK7QRegion (libQt6Widgets.so.6 + 0x1f36fc)
+                #10 0x00007f13945f4089 _ZN14QWidgetPrivate10drawWidgetEP12QPaintDeviceRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f4089)
+                #11 0x00007f13945f54e8 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f54e8)
+                #12 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #13 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #14 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #15 0x00007f13945f3cd5 _ZN14QWidgetPrivate10drawWidgetEP12QPaintDeviceRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f3cd5)
+                #16 0x00007f13945f54e8 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f54e8)
+                #17 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #18 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #19 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #20 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #21 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #22 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #23 0x00007f13945f5317 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f5317)
+                #24 0x00007f13945f3cd5 _ZN14QWidgetPrivate10drawWidgetEP12QPaintDeviceRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f3cd5)
+                #25 0x00007f13945f54e8 _ZN14QWidgetPrivate22paintSiblingsRecursiveEP12QPaintDeviceRK5QListIP7QObjectEiRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f54e8)
+                #26 0x00007f13945f3cd5 _ZN14QWidgetPrivate10drawWidgetEP12QPaintDeviceRK7QRegionRK6QPoint6QFlagsINS_14DrawWidgetFlagEEP8QPainterP21QWidgetRepaintManager (libQt6Widgets.so.6 + 0x1f3cd5)
+                #27 0x00007f139460479a _ZN21QWidgetRepaintManager13paintAndFlushEv (libQt6Widgets.so.6 + 0x20479a)
+                #28 0x00007f13945fd446 _ZN7QWidget5eventEP6QEvent (libQt6Widgets.so.6 + 0x1fd446)
+                #29 0x00007f139458e15a _ZN19QApplicationPrivate13notify_helperEP7QObjectP6QEvent (libQt6Widgets.so.6 + 0x18e15a)
+                #30 0x00007f1392bb0078 _ZN16QCoreApplication15notifyInternal2EP7QObjectP6QEvent (libQt6Core.so.6 + 0x1b0078)
+                #31 0x00007f1392bb4299 _ZN23QCoreApplicationPrivate16sendPostedEventsEP7QObjectiP11QThreadData (libQt6Core.so.6 + 0x1b4299)
+                #32 0x00007f1392edc778 _ZL23postEventSourceDispatchP8_GSourcePFiPvES1_ (libQt6Core.so.6 + 0x4dc778)
+                #33 0x00007f137f50281a g_main_dispatch (libglib-2.0.so.0 + 0x5c81a)
+                #34 0x00007f137f505e77 g_main_context_iterate_unlocked.isra.0 (libglib-2.0.so.0 + 0x5fe77)
+                #35 0x00007f137f5065fe g_main_context_iteration (libglib-2.0.so.0 + 0x605fe)
+                #36 0x00007f1392edbcb6 _ZN20QEventDispatcherGlib13processEventsE6QFlagsIN10QEventLoop17ProcessEventsFlagEE (libQt6Core.so.6 + 0x4dbcb6)
+                #37 0x00007f1392bbd93c _ZN10QEventLoop4execE6QFlagsINS_17ProcessEventsFlagEE (libQt6Core.so.6 + 0x1bd93c)
+                #38 0x00007f1392bba989 _ZN16QCoreApplication4execEv (libQt6Core.so.6 + 0x1ba989)
+                #39 0x000055f3d2976d42 main (joint-track-machine-learning + 0x3ed42)
+                #40 0x00007f139280a681 __libc_start_call_main (libc.so.6 + 0x3681)
+                #41 0x00007f139280a798 __libc_start_main@@GLIBC_2.34 (libc.so.6 + 0x3798)
+                #42 0x000055f3d297687e _start (joint-track-machine-learning + 0x3e87e)
+                
+                Stack trace of thread 2106440:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106413:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106424:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2108102:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928792e2 pthread_cond_timedwait@@GLIBC_2.3.2 (libc.so.6 + 0x722e2)
+                #4  0x00007f130feafe00 n/a (libcuda.so.1 + 0x2afe00)
+                #5  0x00007f130ff41953 n/a (libcuda.so.1 + 0x341953)
+                #6  0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #7  0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2108101:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876574 __syscall_cancel (libc.so.6 + 0x6f574)
+                #3  0x00007f13928efdfe __poll (libc.so.6 + 0xe8dfe)
+                #4  0x00007f130ff5d3f7 n/a (libcuda.so.1 + 0x35d3f7)
+                #5  0x00007f131001f0c5 n/a (libcuda.so.1 + 0x41f0c5)
+                #6  0x00007f130ff41953 n/a (libcuda.so.1 + 0x341953)
+                #7  0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #8  0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106431:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106427:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106432:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106443:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2108103:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876574 __syscall_cancel (libc.so.6 + 0x6f574)
+                #3  0x00007f13928efdfe __poll (libc.so.6 + 0xe8dfe)
+                #4  0x00007f130ff5d3f7 n/a (libcuda.so.1 + 0x35d3f7)
+                #5  0x00007f131001f0c5 n/a (libcuda.so.1 + 0x41f0c5)
+                #6  0x00007f130ff41953 n/a (libcuda.so.1 + 0x341953)
+                #7  0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #8  0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106442:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2108104:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876574 __syscall_cancel (libc.so.6 + 0x6f574)
+                #3  0x00007f13928efdfe __poll (libc.so.6 + 0xe8dfe)
+                #4  0x00007f130ff5d3f7 n/a (libcuda.so.1 + 0x35d3f7)
+                #5  0x00007f131001f0c5 n/a (libcuda.so.1 + 0x41f0c5)
+                #6  0x00007f130ff41953 n/a (libcuda.so.1 + 0x341953)
+                #7  0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #8  0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106439:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                
+                Stack trace of thread 2106435:
+                #0  0x00007f1392882312 __syscall_cancel_arch (libc.so.6 + 0x7b312)
+                #1  0x00007f139287652c __internal_syscall_cancel (libc.so.6 + 0x6f52c)
+                #2  0x00007f1392876877 __GI___futex_abstimed_wait_cancelable64 (libc.so.6 + 0x6f877)
+                #3  0x00007f13928790cc pthread_cond_wait@@GLIBC_2.3.2 (libc.so.6 + 0x720cc)
+                #4  0x00007f1388b9a9f7 _Z16__kmp_suspend_64ILb0ELb1EEviP11kmp_flag_64IXT_EXT0_EE (libomp.so + 0xaa9f7)
+                #5  0x00007f1388b6171f _Z19__kmp_wait_templateI11kmp_flag_64ILb0ELb1EELb1ELb0ELb1EEbP8kmp_infoPT_Pv.constprop.0.isra.0 (libomp.so + 0x7171f)
+                #6  0x00007f1388b65304 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv (libomp.so + 0x75304)
+                #7  0x00007f1388b6a18f _Z18__kmp_fork_barrierii (libomp.so + 0x7a18f)
+                #8  0x00007f1388b34cd6 __kmp_launch_thread (libomp.so + 0x44cd6)
+                #9  0x00007f1388b98d32 _ZL19__kmp_launch_workerPv (libomp.so + 0xa8d32)
+                #10 0x00007f1392879c19 start_thread (libc.so.6 + 0x72c19)
+                #11 0x00007f13928fd5cc __clone3 (libc.so.6 + 0xf65cc)
+                ELF object binary architecture: AMD x86-64
+
+GNU gdb (Fedora Linux) 17.2-2.fc44
+Copyright (C) 2025 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from /home/ajj/repo/uf/JTML/.build/bin/joint-track-machine-learning...
+[New LWP 2108105]
+[New LWP 2104643]
+[New LWP 2104642]
+[New LWP 2106416]
+[New LWP 2106415]
+[New LWP 2106420]
+[New LWP 2106418]
+[New LWP 2106414]
+[New LWP 2106422]
+[New LWP 2106417]
+[New LWP 2106425]
+[New LWP 2106421]
+[New LWP 2106419]
+[New LWP 2106426]
+[New LWP 2106423]
+[New LWP 2106428]
+[New LWP 2106429]
+[New LWP 2106436]
+[New LWP 2106430]
+[New LWP 2106437]
+[New LWP 2106438]
+[New LWP 2106433]
+[New LWP 2106434]
+[New LWP 2106441]
+[New LWP 2104541]
+[New LWP 2106440]
+[New LWP 2106413]
+[New LWP 2106424]
+[New LWP 2108102]
+[New LWP 2108101]
+[New LWP 2106431]
+[New LWP 2106427]
+[New LWP 2106432]
+[New LWP 2106443]
+[New LWP 2108103]
+[New LWP 2106442]
+[New LWP 2108104]
+[New LWP 2106439]
+[New LWP 2106435]
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <ima:enforcing>
+  <https://debuginfod.fedoraproject.org/>
+  <ima:ignore>
+[?2004hEnable debuginfod for this session? (y or [n]) q[?2004l[?2004h(gdb) [?2004l[?2004h(gdb) ex^Q[?2004l[?2004h(gdb) [?2004l[?2004h(gdb) [?2004l[?2004h(gdb) [?2004l[?2004h(gdb) [?2004l[?2004h(gdb) [?2004l[?2004h(gdb) [?2004l[?2004h(gdb) [?2004l

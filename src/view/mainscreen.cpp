@@ -50,7 +50,6 @@
 
 /*STL Reader*/
 #include "services/STLReader.h"
-#include "services/cost_function_registry.h"
 #include "services/edge_processor.h"
 #include "services/save_last_pose.h"
 
@@ -82,17 +81,6 @@ int MainScreen::curr_frame() {
 }
 
 void MainScreen::SyncSessionState() {
-    /*Write the current list state through the shared session controller
-     * (plan 006 U6: the widgets' session bookkeeping relocated — the
-     * controller diffs + emits; the previous-selection mirrors are moved
-     * by CommitSelection in the selection handlers AFTER the view's
-     * save-last-pose, exactly like the old previous_frame_index_ /
-     * previous_model_indices_ writes). Model/frame counts come from the
-     * view-models, selection/current from the views' QItemSelectionModel
-     * (plan 004 U2: MainScreen's list bookkeeping is gone; model +
-     * selectionModel together are the headless-testable unit). Keep the
-     * VIEW (colors/opacity/VTK renders) in the slots; only the state
-     * moves.*/
     QModelIndexList selected =
         ui.model_list_widget->selectionModel()->selectedRows();
     std::vector<int> rows;
@@ -112,10 +100,6 @@ vtkSmartPointer<KeyPressInteractorStyle> key_press_vtk;
 
 /*New Function*/
 double MainScreen::CalculateViewingAngle(int width, int height, bool CameraA) {
-    // Used to Set Height/2 = To The Bigger of the Width/2 + X Offset vs
-    // Height/2
-    // + Y Offset,
-    //  now just set to height/2 + y_offset
     if (CameraA) {
         double y =
             height * calibration_file_.camera_A_principal_.pixel_pitch_ / 2.0 +
@@ -133,37 +117,19 @@ double MainScreen::CalculateViewingAngle(int width, int height, bool CameraA) {
 /*Constructor*/
 MainScreen::MainScreen(QWidget* parent) :
     QMainWindow(parent),
-    /*Plan 006 U6: the shared session-state controller wraps session_state_
-     * (declared before it in the header). The run-in-flight probe (M7) reads
-     * the run controller via a captured lambda — invoked only after
-     * construction, so the member init order is safe. The previous-frame/
-     * model mirrors default to -1/empty inside session_state_ (the old
-     * previous_frame_index_ = -1 line is gone).*/
+
     session_state_controller_(
         &session_state_,
         [this] { return optimizer_run_controller_.running(); }),
-    /*Plan 006 U7: the shared study-load controller wraps session_controller_
-     * (declared before it in the header) and consults the session-state
-     * controller's M7 run-in-flight probe at each load (L17 — the widgets'
-     * DisableAll already covers the load buttons during a run; the shared
-     * check is defense-in-depth). The lambda is invoked only at load time,
-     * never during construction.*/
+
     study_load_controller_(&session_controller_, [this] {
         return session_state_controller_.runInFlight();
     }) {
     ui.setupUi(this);
 
-    /*View-models (plan 004 U2): the lists are passive QListViews over
-     * headless-testable QAbstractListModel classes; selection lives in the
-     * views' QItemSelectionModel. setModel() MUST precede the selectionChanged
-     * connects (setModel replaces the selection model — a connect issued
-     * before it dies silently).*/
     ui.image_list_widget->setModel(&frame_list_model_);
     ui.model_list_widget->setModel(&model_list_model_);
-    /*Explicit connects replace the by-name auto-connect that silently stops
-     * connecting on QListView (no itemSelectionChanged signal).
-     * selectionChanged ONLY — currentChanged is deliberately not connected
-     * (MultiSelection arrow-key behavior).*/
+
     connect(
         ui.image_list_widget->selectionModel(),
         &QItemSelectionModel::selectionChanged,
@@ -175,9 +141,6 @@ MainScreen::MainScreen(QWidget* parent) :
         this,
         &MainScreen::on_model_list_widget_itemSelectionChanged);
 
-    /*Plan 006 U5: the shared optimizer-run controller's relays -> the
-     * widgets mappers (the controller re-emits the manager's worker-thread
-     * signals by-value on its own thread — QTBUG-2842).*/
     connect(
         &optimizer_run_controller_,
         &OptimizerRunController::messageRequested,
@@ -219,7 +182,6 @@ MainScreen::MainScreen(QWidget* parent) :
     ui.high_threshold_slider->setMaximum(800);
 
     /*Load Settings (THIS MUST BE DONE FIRST)*/
-    LoadSettingsBetweenSessions();
 
     /*Set Label to Threshold Values*/
     ui.low_threshold_value->setText(
@@ -232,26 +194,6 @@ MainScreen::MainScreen(QWidget* parent) :
     QApplication::setFont(application_font);
 
     /*Set Up Settings Control Window*/
-    settings_control = new SettingsControl(this);
-    connect(
-        settings_control,
-        SIGNAL(SaveSettings(
-            OptimizerSettings,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager)),
-        this,
-        SLOT(onSaveSettings(
-            OptimizerSettings,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager,
-            jta_cost_function::CostFunctionManager)),
-        Qt::DirectConnection);
-
-    /* SYM TRAP */
-    // The standalone sym-trap window was removed; the Sym_Trap directive
-    // runs through LaunchOptimizer (no UpdateTimeRemaining progress
-    // binding remains).
 
     /*Disable Stop Optimizer*/
     ui.actionStop_Optimizer->setDisabled(true);
@@ -1484,7 +1426,6 @@ void MainScreen::on_actionLoad_Kinematics_triggered() {
     }
 }
 
-
 /*Stop Optimizer*/
 void MainScreen::on_actionStop_Optimizer_triggered() {
     if (ui.actionStop_Optimizer->isEnabled()) {
@@ -1738,40 +1679,6 @@ void MainScreen::segmentHelperFunction(
         };
     QList<int> failed_frames;
     for (int i = 0; i < ui.image_list_widget->model()->rowCount(); i++) {
-        int dilation_val =
-            jta_cost_function::getDilation(trunk_manager_.objective_spec)
-                .value_or(0);
-
-        const jta::MlSegmentStatus status = ml_orchestrator_.SegmentFrame(
-            loaded_frames[i],
-            ui.aperture_spin_box->value(),
-            ui.low_threshold_slider->value(),
-            ui.high_threshold_slider->value(),
-            dilation_val,
-            /*full_postprocessing=*/true,
-            segment_op);
-        if (status != jta::MlSegmentStatus::Ok) {
-            failed_frames.push_back(i);
-            break;
-        }
-        if (calibrated_for_biplane_viewport_) {
-            /*Per-frame segment (plan 006 U8 / R12): same shared op for the
-             * camera-B frame (the biplane branch keeps edge + dilation
-             * only — the mono distance/curvature tail is skipped).*/
-            const jta::MlSegmentStatus status_b = ml_orchestrator_.SegmentFrame(
-                loaded_frames_B[i],
-                ui.aperture_spin_box->value(),
-                ui.low_threshold_slider->value(),
-                ui.high_threshold_slider->value(),
-                dilation_val,
-                /*full_postprocessing=*/false,
-                segment_op);
-            if (status_b != jta::MlSegmentStatus::Ok) {
-                failed_frames.push_back(i);
-                break;
-            }
-        }
-
         ui.pose_progress->setValue(
             20 +
             30 * static_cast<double>(i + 1) /
@@ -2282,23 +2189,6 @@ void MainScreen::on_actionControls_triggered() {
     cntrls.exec();
 }
 
-/*Optimizer Window*/
-void MainScreen::on_actionOptimizer_Settings_triggered() {
-    switch (settings_impl()) {
-    case SettingsImpl::CppWidgets:
-        settings_control->show();
-        settings_control->raise();
-        settings_control->activateWindow();
-        break;
-
-    case SettingsImpl::RustQml: {
-        QmlSettingsDialog dialog(this);
-        dialog.exec();
-        break;
-    }
-    }
-}
-
 /*PREPROCESSOR BUTTONS*/
 /*Load Calibration Button*/
 void MainScreen::on_load_calibration_button_clicked() {
@@ -2464,9 +2354,7 @@ void MainScreen::on_load_calibration_button_clicked() {
 
 /*Load Image Button*/
 void MainScreen::on_load_image_button_clicked() {
-    int dilation_val =
-        jta_cost_function::getDilation(trunk_manager_.objective_spec)
-            .value_or(0);
+    int dilation_val = 4;
 
     /*Check to See if Calibration Loaded*/
     if (calibrated_for_monoplane_viewport_ == false &&
@@ -3833,15 +3721,13 @@ void MainScreen::on_aperture_spin_box_valueChanged() {
                     .GetHighThreshold();
         }
 
-        int dilation_val =
-            jta_cost_function::getDilation(trunk_manager_.objective_spec)
-                .value_or(0);
+        int dilation_val = 4;
         jta::EdgeProcessingParams edge_params{
             ui.aperture_spin_box->value(),
             low_val,
             high_val,
             dilation_val,
-            std::string(to_string(trunk_manager_.getActiveCostFunction()))};
+            "DIRECT DILATION"};
 
         if (ui.image_list_widget->currentIndex().row() >= 0 &&
             ui.image_list_widget->currentIndex().row() < loaded_frames.size()) {
@@ -3912,16 +3798,14 @@ void MainScreen::on_low_threshold_slider_valueChanged() {
 
         /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
          * Values for Viewing Purposes*/
-        int dilation_val =
-            jta_cost_function::getDilation(trunk_manager_.objective_spec)
-                .value_or(0);
+        int dilation_val = 4;
 
         jta::EdgeProcessingParams edge_params{
             aperture,
             ui.low_threshold_slider->value(),
             high_val,
             dilation_val,
-            std::string(to_string(trunk_manager_.getActiveCostFunction()))};
+            "DirectDilation"};
 
         if (ui.image_list_widget->currentIndex().row() >= 0 &&
             ui.image_list_widget->currentIndex().row() < loaded_frames.size()) {
@@ -3991,16 +3875,14 @@ void MainScreen::on_high_threshold_slider_valueChanged() {
 
         /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
          * Values for Viewing Purposes*/
-        int dilation_val =
-            jta_cost_function::getDilation(trunk_manager_.objective_spec)
-                .value_or(0);
+        int dilation_val = 4;
 
         jta::EdgeProcessingParams edge_params{
             aperture,
             low_val,
             ui.high_threshold_slider->value(),
             dilation_val,
-            std::string(to_string(trunk_manager_.getActiveCostFunction()))};
+            "DirectDilation"};
 
         if (ui.image_list_widget->currentIndex().row() >= 0 &&
             ui.image_list_widget->currentIndex().row() < loaded_frames.size()) {
@@ -4045,16 +3927,14 @@ void MainScreen::on_high_threshold_slider_valueChanged() {
 void MainScreen::on_apply_all_edge_button_clicked() {
     /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
      * Values for Viewing Purposes*/
-    int dilation_val =
-        jta_cost_function::getDilation(trunk_manager_.objective_spec)
-            .value_or(0);
+    int dilation_val = 4;
 
     jta::EdgeProcessingParams edge_params{
         ui.aperture_spin_box->value(),
         ui.low_threshold_slider->value(),
         ui.high_threshold_slider->value(),
         dilation_val,
-        std::string(to_string(trunk_manager_.getActiveCostFunction()))};
+        "DirectDilation"};
 
     /*Apply Edge Detect to All Images*/
     jta::EdgeProcessor::ApplyToFrames(edge_params, loaded_frames);
@@ -4246,9 +4126,6 @@ void MainScreen::LaunchOptimizer(OptimizerRunController::Directive directive) {
     req.launch.selected_model_indexes = selected;
     req.launch.pose_matrix = model_locations_;
     req.launch.settings = optimizer_settings_;
-    req.launch.trunk_manager = trunk_manager_;
-    req.launch.branch_manager = branch_manager_;
-    req.launch.leaf_manager = leaf_manager_;
     req.launch.iter_count = iter_count;
 
     if (directive == OptimizerRunController::Directive::Each ||
@@ -4565,244 +4442,13 @@ void MainScreen::onUpdateDilationBackground() {
     }
 }
 
-/*Function to load settings from registry and also check if First Time
- * Loading*/
-void MainScreen::LoadSettingsBetweenSessions() {
-    /*Check if Loaded Before*/
-    jta::SettingsService::LoadResult result = settings_service_.LoadSettings();
-    bool first_time_loading = result.first_time;
-
-    /*Not First Time Loading*/
-    if (!first_time_loading) {
-        /*Apply Saved Cost Function Settings*/
-        std::vector<jta::RegistryEntry> cost_function_settings_keys =
-            result.cost_function_entries;
-        for (int i = 0; i < cost_function_settings_keys.size(); i++) {
-            /*If 2 codes, should be the STAGE and ACTIVE_CF.
-            If 4 codes, should be the STAGE, Cost Function Name, Parameter
-            Name, Parameter Type*/
-            QStringList key_codes =
-                cost_function_settings_keys[i].key.split("@");
-            if (key_codes.size() == 2 && key_codes[1] == "ACTIVE_CF") {
-                auto cost_function_type = cost_function_type_from_string(
-                    cost_function_settings_keys[i]
-                        .value.toString()
-                        .toStdString());
-
-                if (!cost_function_type) {
-                    continue;
-                }
-
-                if (key_codes[0] == "TRUNK") {
-                    trunk_manager_.setActiveCostFunction(*cost_function_type);
-                } else if (key_codes[0] == "BRANCH") {
-                    branch_manager_.setActiveCostFunction(*cost_function_type);
-                } else if (key_codes[0] == "LEAF") {
-                    leaf_manager_.setActiveCostFunction(*cost_function_type);
-                } else {
-                    QMessageBox::critical(
-                        this,
-                        "Error",
-                        "Error in key registry! Code A",
-                        QMessageBox::Ok);
-                }
-            } else if (key_codes.size() == 4) {
-                auto cost_function_type =
-                    cost_function_type_from_string(key_codes[1].toStdString());
-
-                if (!cost_function_type) {
-                    continue;
-                }
-
-                jta_cost_function::CostFunctionManager* manager = nullptr;
-                const char* parameter_type_error = nullptr;
-
-                if (key_codes[0] == "TRUNK") {
-                    manager = &trunk_manager_;
-                    parameter_type_error = "Error in key registry! Code D";
-                } else if (key_codes[0] == "BRANCH") {
-                    manager = &branch_manager_;
-                    parameter_type_error = "Error in key registry! Code E";
-                } else if (key_codes[0] == "LEAF") {
-                    manager = &leaf_manager_;
-                    parameter_type_error = "Error in key registry! Code F";
-                } else {
-                    QMessageBox::critical(
-                        this,
-                        "Error",
-                        "Error in key registry! Code B",
-                        QMessageBox::Ok);
-                    continue;
-                }
-
-                auto* cost_function =
-                    manager->getCostFunctionClass(*cost_function_type);
-
-                if (key_codes[3] == "DOUBLE") {
-                    cost_function->setDoubleParameterValue(
-                        key_codes[2].toStdString(),
-                        cost_function_settings_keys[i].value.toDouble());
-                } else if (key_codes[3] == "INT") {
-                    cost_function->setIntParameterValue(
-                        key_codes[2].toStdString(),
-                        cost_function_settings_keys[i].value.toInt());
-                } else if (key_codes[3] == "BOOL") {
-                    cost_function->setBoolParameterValue(
-                        key_codes[2].toStdString(),
-                        cost_function_settings_keys[i].value.toBool());
-                } else {
-                    QMessageBox::critical(
-                        this, "Error", parameter_type_error, QMessageBox::Ok);
-                }
-            } else {
-                QMessageBox::critical(
-                    this,
-                    "Error",
-                    "Error in key registry! Code C",
-                    QMessageBox::Ok);
-            }
-        }
-
-        /*Load Optimizer Settings*/
-        optimizer_settings_ = result.optimizer;
-
-        /*Edge Detection Settings*/
-        ui.aperture_spin_box->setValue(result.edge.aperture);
-        ui.low_threshold_slider->setValue(result.edge.low_thresh);
-        ui.high_threshold_slider->setValue(result.edge.high_thresh);
-    } else {
-        /*Check CUDA Compatibility*/
-        int gpu_device_count = 0, device_count;
-        struct cudaDeviceProp properties;
-        cudaError_t cudaResultCode = cudaGetDeviceCount(&device_count);
-        if (cudaResultCode != cudaSuccess) {
-            device_count = 0;
-        }
-        /* Machines with no GPUs can still report one emulation device */
-        for (int device = 0; device < device_count; ++device) {
-            cudaGetDeviceProperties(&properties, device);
-            if (properties.major != 9999 &&
-                properties.major >= 5) /* 9999 means emulation only */
-            {
-                ++gpu_device_count;
-            }
-        }
-        /*If no Cuda Compatitble Devices with Compute Capability Greater
-         * Than 5, Exit*/
-        if (gpu_device_count == 0) {
-            if (device_count == 0) {
-                QMessageBox::critical(
-                    this,
-                    "Error!",
-                    "No CUDA capable GPU detected! Optimizer will not run!",
-                    QMessageBox::Ok);
-            } else if (properties.major == 9999) {
-                QMessageBox::critical(
-                    this,
-                    "Error!",
-                    "GPU is emulation only! Optimizer will not run!",
-                    QMessageBox::Ok);
-            } else {
-                QMessageBox::critical(
-                    this,
-                    "Error!",
-                    "GPU does not have high enough compute "
-                    "capability! Optimizer will "
-                    "not run!\nPlease upgrade to device with "
-                    "compute capability 5.0 or "
-                    "higher!",
-                    QMessageBox::Ok);
-            }
-        } else {
-            /*First Time Loading Message Will Now Go Away By Marking in
-             * Registry*/
-            /*DEPRECATED BUT STILL IN THE CODE - WHATEVER*/
-            settings_service_.MarkFirstTimeDone();
-        }
-
-        /*Save Default Settings*/
-        /*Default Optimizer Settings*/
-        optimizer_settings_ = OptimizerSettings();
-
-        /*Default 3 Cost Function Managers*/
-        trunk_manager_ = jta_cost_function::CostFunctionManager(Stage::Trunk);
-        branch_manager_ = jta_cost_function::CostFunctionManager(Stage::Branch);
-        leaf_manager_ = jta_cost_function::CostFunctionManager(Stage::Leaf);
-
-        /*Change the Default Settings of Dilation for branch and leaf to 4
-         * and 1 respectively*/
-        branch_manager_.getCostFunctionClass(CostFunctionType::DirectDilation)
-            ->setIntParameterValue("Dilation", 4);
-        leaf_manager_.getCostFunctionClass(CostFunctionType::DirectDilation)
-            ->setIntParameterValue("Dilation", 1);
-
-        /*Save to Registry*/
-        settings_service_.SaveCostFunctionSettings(
-            BuildCostFunctionRegistryEntries(
-                trunk_manager_, branch_manager_, leaf_manager_));
-        settings_service_.SaveOptimizerSettings(optimizer_settings_);
-
-        /*Edge Detection Settings*/
-        ui.aperture_spin_box->setValue(APERTURE);
-        ui.low_threshold_slider->setValue(LOW_THRESH);
-        ui.high_threshold_slider->setValue(HIGH_THRESH);
-
-        /*Save*/
-        settings_service_.SaveEdgeSettings(
-            ui.aperture_spin_box->value(),
-            ui.low_threshold_slider->value(),
-            ui.high_threshold_slider->value());
-    }
-}
-
-/*Function to Save Settings from Optimizer Control Window to both Registry
- * and Optimizer Settings Class*/
-/*On Optimizer Control Windows Save Setting*/
-void MainScreen::onSaveSettings(
-    OptimizerSettings opt_settings,
-    jta_cost_function::CostFunctionManager trunk_manager,
-    jta_cost_function::CostFunctionManager branch_manager,
-    jta_cost_function::CostFunctionManager leaf_manager) {
-    /*Save to Optimizer Settings*/
-    optimizer_settings_ = opt_settings;
-
-    /*Save 3 Cost Function Managers*/
-    trunk_manager_ = trunk_manager;
-    branch_manager_ = branch_manager;
-    leaf_manager_ = leaf_manager;
-
-    /*Save to Registry*/
-    settings_service_.SaveCostFunctionSettings(BuildCostFunctionRegistryEntries(
-        trunk_manager_, branch_manager_, leaf_manager_));
-    settings_service_.SaveOptimizerSettings(optimizer_settings_);
-
-    /*Update Dilation Frames*/
-    UpdateDilationFrames();
-}
-
-/*Builds the raw CostFunctionSettings registry entries (key formats
- * STAGE@ACTIVE_CF / STAGE@CFname@ParamName@TYPE) from the three cost function
- * managers. The mapping itself moved to the shared services layer (plan 006
- * U1 — jta::BuildCostFunctionRegistryEntries in jtml_services, which the QML
- * SettingsBridge calls too); this view method is now a thin wrapper keeping
- * the widgets call sites unchanged.*/
-std::vector<jta::RegistryEntry> MainScreen::BuildCostFunctionRegistryEntries(
-    jta_cost_function::CostFunctionManager& trunk_manager,
-    jta_cost_function::CostFunctionManager& branch_manager,
-    jta_cost_function::CostFunctionManager& leaf_manager) const {
-    return jta::BuildCostFunctionRegistryEntries(
-        trunk_manager, branch_manager, leaf_manager);
-}
-
 /*Function That Saves Dilation as 0 if No Trunk Manager has a Dilation Int
 Parameter, else saves all the Dilation Images for Each Frame as the Dilation
 Constant*/
 void MainScreen::UpdateDilationFrames() {
     /*If TRUNK is Has Integer Parameter called Dilation, Update Dilation
      * Values for Viewing Purposes*/
-    int dilation_val =
-        jta_cost_function::getDilation(trunk_manager_.objective_spec)
-            .value_or(3);
+    int dilation_val = 3;
 
     /*Apply Dilation to All Images*/
     for (int i = 0; i < loaded_frames.size(); i++) {

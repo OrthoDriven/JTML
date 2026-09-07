@@ -53,7 +53,7 @@ public:
         return manager_;
     }
 
-    bool ThreadActive() const override {
+    [[nodiscard]] bool ThreadActive() const override {
         return thread_ && thread_->isRunning();
     }
 
@@ -70,13 +70,8 @@ public:
             launch.primary_model_index,
             launch.pose_matrix,
             launch.settings,
-            launch.trunk_manager,
-            launch.branch_manager,
-            launch.leaf_manager,
             launch.directive,
-            error_message,
-            launch.iter_count,
-            launch.direct_options);
+            error_message);
     }
 
     void Start() override {
